@@ -33,16 +33,16 @@
                               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="passfMatKhau" pref="176" max="32767" attributes="0"/>
-                                  <Component id="txtTaiKhoan" max="32767" attributes="0"/>
+                                  <Component id="passfPassword" pref="176" max="32767" attributes="0"/>
+                                  <Component id="txtAccount" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="cbHienMatKhau" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
-                              <Component id="btnDangNhap" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbShowPassword" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
+                              <Component id="btnLogin" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="btnDangKy" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnResister" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
@@ -62,20 +62,20 @@
               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txtTaiKhoan" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtAccount" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="passfMatKhau" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="passfPassword" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="cbHienMatKhau" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnDangNhap" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cbShowPassword" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnLogin" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="btnDangKy" min="-2" max="-2" attributes="0"/>
+              <Component id="btnResister" min="-2" max="-2" attributes="0"/>
               <EmptySpace pref="23" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -92,37 +92,37 @@
         <Property name="text" type="java.lang.String" value="M&#x1ead;t kh&#x1ea9;u:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="txtTaiKhoan">
+    <Component class="javax.swing.JTextField" name="txtAccount">
     </Component>
     <Component class="javax.swing.JLabel" name="lblDangNhap">
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x110;&#x103;ng nh&#x1ead;p"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="btnDangNhap">
+    <Component class="javax.swing.JButton" name="btnLogin">
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x110;&#x103;ng nh&#x1ead;p"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDangNhapActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLoginActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="cbHienMatKhau">
+    <Component class="javax.swing.JCheckBox" name="cbShowPassword">
       <Properties>
         <Property name="text" type="java.lang.String" value="HI&#x1ec7;n m&#x1ead;t kh&#x1ea9;u"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbHienMatKhauActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbShowPasswordActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JPasswordField" name="passfMatKhau">
+    <Component class="javax.swing.JPasswordField" name="passfPassword">
     </Component>
-    <Component class="javax.swing.JButton" name="btnDangKy">
+    <Component class="javax.swing.JButton" name="btnResister">
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x110;&#x103;ng k&#xfd;"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDangKyActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnResisterActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

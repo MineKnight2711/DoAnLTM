@@ -2,8 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package facial_recognition;
+package Form;
 
+import facial_recognition.Account;
+import facial_recognition.DBAccess;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -21,7 +23,7 @@ public class FrmLogin extends javax.swing.JFrame {
         initComponents();        
         TextChangeEvent();
         access = new DBAccess();
-        btnDangNhap.setEnabled(false);        
+        btnLogin.setEnabled(false);        
     }
 
     /**
@@ -35,12 +37,12 @@ public class FrmLogin extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        txtTaiKhoan = new javax.swing.JTextField();
+        txtAccount = new javax.swing.JTextField();
         lblDangNhap = new javax.swing.JLabel();
-        btnDangNhap = new javax.swing.JButton();
-        cbHienMatKhau = new javax.swing.JCheckBox();
-        passfMatKhau = new javax.swing.JPasswordField();
-        btnDangKy = new javax.swing.JButton();
+        btnLogin = new javax.swing.JButton();
+        cbShowPassword = new javax.swing.JCheckBox();
+        passfPassword = new javax.swing.JPasswordField();
+        btnResister = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -50,24 +52,24 @@ public class FrmLogin extends javax.swing.JFrame {
 
         lblDangNhap.setText("Đăng nhập");
 
-        btnDangNhap.setText("Đăng nhập");
-        btnDangNhap.addActionListener(new java.awt.event.ActionListener() {
+        btnLogin.setText("Đăng nhập");
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDangNhapActionPerformed(evt);
+                btnLoginActionPerformed(evt);
             }
         });
 
-        cbHienMatKhau.setText("HIện mật khẩu");
-        cbHienMatKhau.addActionListener(new java.awt.event.ActionListener() {
+        cbShowPassword.setText("HIện mật khẩu");
+        cbShowPassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbHienMatKhauActionPerformed(evt);
+                cbShowPasswordActionPerformed(evt);
             }
         });
 
-        btnDangKy.setText("Đăng ký");
-        btnDangKy.addActionListener(new java.awt.event.ActionListener() {
+        btnResister.setText("Đăng ký");
+        btnResister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDangKyActionPerformed(evt);
+                btnResisterActionPerformed(evt);
             }
         });
 
@@ -85,13 +87,13 @@ public class FrmLogin extends javax.swing.JFrame {
                                 .addComponent(jLabel1)
                                 .addGap(30, 30, 30)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(passfMatKhau, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-                                    .addComponent(txtTaiKhoan)))
+                                    .addComponent(passfPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
+                                    .addComponent(txtAccount)))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(cbHienMatKhau)
-                                .addGap(53, 53, 53)
-                                .addComponent(btnDangNhap))
-                            .addComponent(btnDangKy)))
+                                .addComponent(cbShowPassword)
+                                .addGap(54, 54, 54)
+                                .addComponent(btnLogin))
+                            .addComponent(btnResister)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(139, 139, 139)
                         .addComponent(lblDangNhap)))
@@ -105,17 +107,17 @@ public class FrmLogin extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(txtTaiKhoan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(41, 41, 41)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(passfMatKhau, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(passfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbHienMatKhau)
-                    .addComponent(btnDangNhap))
+                    .addComponent(cbShowPassword)
+                    .addComponent(btnLogin))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnDangKy)
+                .addComponent(btnResister)
                 .addContainerGap(23, Short.MAX_VALUE))
         );
 
@@ -123,14 +125,19 @@ public class FrmLogin extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnDangNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangNhapActionPerformed
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
-        String account = txtTaiKhoan.getText();
+        String account = txtAccount.getText();
         //char[] password = passfMatKhau.getPassword();               
-        String password = new String(passfMatKhau.getPassword());
-        
-       access.Login(account, password);
-    }//GEN-LAST:event_btnDangNhapActionPerformed
+        String password = new String(passfPassword.getPassword());
+        if(access.Login(account, password)){
+            Account acc = access.getUser(account);
+            FrmInfo open = new FrmInfo(acc);
+            open.setVisible(true);
+            this.dispose();
+        }
+        return;
+    }//GEN-LAST:event_btnLoginActionPerformed
 
     private void TextChangeEvent(){
         textChangeListener = new DocumentListener(){
@@ -149,31 +156,31 @@ public class FrmLogin extends javax.swing.JFrame {
                 updateTextFields();
             }
             private void updateTextFields(){
-                if(txtTaiKhoan.getText().isEmpty() || passfMatKhau.getText().isEmpty()){
-                    btnDangNhap.setEnabled(false);
+                if(txtAccount.getText().isEmpty() || passfPassword.getText().isEmpty()){
+                    btnLogin.setEnabled(false);
                 }
                 else
-                    btnDangNhap.setEnabled(true);
+                    btnLogin.setEnabled(true);
             }
         };
-        txtTaiKhoan.getDocument().addDocumentListener(textChangeListener);
-        passfMatKhau.getDocument().addDocumentListener(textChangeListener);
+        txtAccount.getDocument().addDocumentListener(textChangeListener);
+        passfPassword.getDocument().addDocumentListener(textChangeListener);
     }
     
-    private void cbHienMatKhauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbHienMatKhauActionPerformed
+    private void cbShowPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbShowPasswordActionPerformed
         // TODO add your handling code here:
-        if(cbHienMatKhau.isSelected())
-            passfMatKhau.setEchoChar((char) 0);
+        if(cbShowPassword.isSelected())
+            passfPassword.setEchoChar((char) 0);
         else
-            passfMatKhau.setEchoChar('\u2022');             
-    }//GEN-LAST:event_cbHienMatKhauActionPerformed
+            passfPassword.setEchoChar('\u2022');             
+    }//GEN-LAST:event_cbShowPasswordActionPerformed
 
-    private void btnDangKyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangKyActionPerformed
+    private void btnResisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResisterActionPerformed
         // TODO add your handling code here:
         FrmRegister open = new FrmRegister();
         open.setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_btnDangKyActionPerformed
+    }//GEN-LAST:event_btnResisterActionPerformed
 
     /**
      * @param args the command line arguments
@@ -211,13 +218,13 @@ public class FrmLogin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnDangKy;
-    private javax.swing.JButton btnDangNhap;
-    private javax.swing.JCheckBox cbHienMatKhau;
+    private javax.swing.JButton btnLogin;
+    private javax.swing.JButton btnResister;
+    private javax.swing.JCheckBox cbShowPassword;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lblDangNhap;
-    private javax.swing.JPasswordField passfMatKhau;
-    private javax.swing.JTextField txtTaiKhoan;
+    private javax.swing.JPasswordField passfPassword;
+    private javax.swing.JTextField txtAccount;
     // End of variables declaration//GEN-END:variables
 }

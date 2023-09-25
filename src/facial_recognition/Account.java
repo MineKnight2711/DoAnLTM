@@ -17,11 +17,11 @@ public class Account {
     
     private String Password;
     
-    private String Frist_Name;
+    private String First_Name;
     
     private String Last_Name;
     
-    private String Brithday;
+    private Date Brithday;
     
     private String Gender;
     
@@ -34,7 +34,7 @@ public class Account {
     public String getID_User() {
         return ID_User;
     }
-
+    
     public void setID_User(String ID_User) {
         this.ID_User = ID_User;
     }
@@ -56,11 +56,11 @@ public class Account {
     }
 
     public String getFrist_Name() {
-        return Frist_Name;
+        return First_Name;
     }
 
-    public void setFrist_Name(String Frist_Name) {
-        this.Frist_Name = Frist_Name;
+    public void setFrist_Name(String First_Name) {
+        this.First_Name = First_Name;
     }
 
     public String getLast_Name() {
@@ -71,11 +71,11 @@ public class Account {
         this.Last_Name = Last_Name;
     }
 
-    public String getBrithday() {
+    public Date getBrithday() {
         return Brithday;
     }
 
-    public void setBrithday(String Brithday) {
+    public void setBrithday(Date Brithday) {
         this.Brithday = Brithday;
     }
 

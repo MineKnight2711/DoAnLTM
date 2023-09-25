@@ -29,7 +29,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
-              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+              <Component id="pnlInfo" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
@@ -43,18 +43,15 @@
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="lblTaoTaiKhoan" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="182" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
+                      <Component id="pnlAccount" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
                   </Group>
               </Group>
+          </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="lblTaoTaiKhoan" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="149" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -67,18 +64,18 @@
                   <Component id="btnTroVe" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+              <Component id="pnlInfo" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="lblTaoTaiKhoan" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
+              <Component id="pnlAccount" min="-2" max="-2" attributes="0"/>
               <EmptySpace pref="18" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JPanel" name="jPanel1">
+    <Container class="javax.swing.JPanel" name="pnlInfo">
 
       <Layout>
         <DimensionLayout dim="0">
@@ -96,17 +93,17 @@
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="txtHo" max="32767" attributes="0"/>
-                                  <Component id="txtTenLotTen" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="dcNgaySinh" alignment="0" pref="175" max="32767" attributes="0"/>
+                                  <Component id="txtLastName" max="32767" attributes="0"/>
+                                  <Component id="txtFirstName" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="dcBrithday" alignment="0" pref="175" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                                  <Component id="rbNam" min="-2" max="-2" attributes="0"/>
+                                  <Component id="rbMale" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="rbNu" min="-2" max="-2" attributes="0"/>
+                                  <Component id="rbFemale" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="rbKhac" min="-2" max="-2" attributes="0"/>
+                                  <Component id="rbOther" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -119,14 +116,14 @@
                                   </Group>
                                   <EmptySpace max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="txtDiaChi" max="32767" attributes="0"/>
+                                      <Component id="txtAddress" max="32767" attributes="0"/>
                                       <Component id="txtEmail" pref="175" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Component id="lblSoDienThoai" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="txtSoDienThoai" min="-2" pref="175" max="-2" attributes="0"/>
+                                  <Component id="txtPhone" min="-2" pref="175" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
@@ -142,25 +139,25 @@
                   <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lblHo" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtHo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtLastName" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtTenLotTen" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtFirstName" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                      <Component id="dcNgaySinh" min="-2" max="-2" attributes="0"/>
+                      <Component id="dcBrithday" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="rbNam" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="rbNu" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="rbKhac" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="rbMale" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="rbFemale" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="rbOther" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                       </Group>
@@ -171,12 +168,12 @@
                   </Group>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lblSoDienThoai" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtSoDienThoai" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtPhone" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lblDiaChi" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtDiaChi" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtAddress" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -194,15 +191,15 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtEmailActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtDiaChi">
+        <Component class="javax.swing.JTextField" name="txtAddress">
         </Component>
-        <Component class="javax.swing.JTextField" name="txtSoDienThoai">
+        <Component class="javax.swing.JTextField" name="txtPhone">
         </Component>
-        <Component class="javax.swing.JTextField" name="txtTenLotTen">
+        <Component class="javax.swing.JTextField" name="txtFirstName">
         </Component>
-        <Component class="javax.swing.JTextField" name="txtHo">
+        <Component class="javax.swing.JTextField" name="txtLastName">
           <Events>
-            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtHoKeyPressed"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtLastNameKeyPressed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblGioiTinh">
@@ -240,26 +237,26 @@
             <Property name="text" type="java.lang.String" value="Ng&#xe0;y sinh:"/>
           </Properties>
         </Component>
-        <Component class="com.toedter.calendar.JDateChooser" name="dcNgaySinh">
+        <Component class="com.toedter.calendar.JDateChooser" name="dcBrithday">
         </Component>
-        <Component class="javax.swing.JRadioButton" name="rbNu">
+        <Component class="javax.swing.JRadioButton" name="rbFemale">
           <Properties>
             <Property name="text" type="java.lang.String" value="N&#x1eef;"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JRadioButton" name="rbKhac">
+        <Component class="javax.swing.JRadioButton" name="rbOther">
           <Properties>
             <Property name="text" type="java.lang.String" value="Kh&#xe1;c"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JRadioButton" name="rbNam">
+        <Component class="javax.swing.JRadioButton" name="rbMale">
           <Properties>
             <Property name="text" type="java.lang.String" value="Nam"/>
           </Properties>
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPanel" name="jPanel2">
+    <Container class="javax.swing.JPanel" name="pnlAccount">
 
       <Layout>
         <DimensionLayout dim="0">
@@ -268,9 +265,9 @@
                   <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="cbHienMatKhau" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbShowPassword" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
-                          <Component id="btnTaoTaiKhoan" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnCreateAccount" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="1" attributes="0">
@@ -287,13 +284,13 @@
                               <Group type="102" attributes="0">
                                   <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="passfMatKhau" pref="162" max="32767" attributes="0"/>
-                                      <Component id="txtTaiKhoan" max="32767" attributes="0"/>
+                                      <Component id="passfPassword" pref="162" max="32767" attributes="0"/>
+                                      <Component id="txtAccount" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" attributes="0">
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="passfNhapLaiMatKhau" max="32767" attributes="0"/>
+                                  <Component id="passfRe_enterPassword" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -310,12 +307,12 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="lblTaiKhoan" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtTaiKhoan" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtAccount" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="lblMatKhau" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="passfMatKhau" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="passfPassword" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
                       </Group>
@@ -323,14 +320,14 @@
                           <EmptySpace min="96" pref="96" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="lblNhapLaiMatKhau" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="passfNhapLaiMatKhau" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="passfRe_enterPassword" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="cbHienMatKhau" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnTaoTaiKhoan" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbShowPassword" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnCreateAccount" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="21" max="32767" attributes="0"/>
               </Group>
@@ -353,27 +350,27 @@
             <Property name="text" type="java.lang.String" value="Nh&#x1ead;p l&#x1ea1;i m&#x1ead;t kh&#x1ea9;u:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtTaiKhoan">
+        <Component class="javax.swing.JTextField" name="txtAccount">
         </Component>
-        <Component class="javax.swing.JCheckBox" name="cbHienMatKhau">
+        <Component class="javax.swing.JCheckBox" name="cbShowPassword">
           <Properties>
             <Property name="text" type="java.lang.String" value="Hi&#x1ec7;n m&#x1ead;t kh&#x1ea9;u"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbHienMatKhauActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbShowPasswordActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btnTaoTaiKhoan">
+        <Component class="javax.swing.JButton" name="btnCreateAccount">
           <Properties>
             <Property name="text" type="java.lang.String" value="T&#x1ea1;o t&#xe0;i kho&#x1ea3;n"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTaoTaiKhoanActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCreateAccountActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JPasswordField" name="passfNhapLaiMatKhau">
+        <Component class="javax.swing.JPasswordField" name="passfRe_enterPassword">
         </Component>
-        <Component class="javax.swing.JPasswordField" name="passfMatKhau">
+        <Component class="javax.swing.JPasswordField" name="passfPassword">
         </Component>
       </SubComponents>
     </Container>
