@@ -498,7 +498,7 @@ public class FrmInfo extends javax.swing.JFrame {
                 LogOut();
             }
         }
-        catch(Exception ex){
+        catch(Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
     }//GEN-LAST:event_btnChangePasswordActionPerformed
