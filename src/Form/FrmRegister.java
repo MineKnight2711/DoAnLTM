@@ -442,7 +442,7 @@ public class FrmRegister extends javax.swing.JFrame {
         String password1 = new String(passfRe_enterPassword.getPassword());
         if(!inputCheck.CheckBrithday(dcBrithday.getDate()))
             return;
-        if(!inputCheck.CheckSDT(txtPhone.getText()) == false)
+        if(!inputCheck.CheckSDT(txtPhone.getText()))
             return;
         if(!inputCheck.CheckEmail(txtEmail.getText()))
             return;
@@ -450,14 +450,13 @@ public class FrmRegister extends javax.swing.JFrame {
             return;
         try{ 
             password =  BCrypt.withDefaults().hashToString(12, password.toCharArray());
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");;
-            String birthday = sdf.format(dcBrithday.getDate());  
-            Date brith = sdf.parse(birthday);
+            Date selectedDate = dcBrithday.getDate();
+            java.sql.Date birthday = new java.sql.Date(selectedDate.getTime());
             acc = new Account();
             acc.setID_User("");
             acc.setFrist_Name(txtFirstName.getText());
             acc.setLast_Name(txtLastName.getText());
-            acc.setBrithday(brith);
+            acc.setBrithday(birthday);
             acc.setGender(ChonGioiTinh());
             acc.setPhone(txtPhone.getText());
             acc.setAddress(txtAddress.getText());

@@ -44,7 +44,7 @@ public class DBAccess {
                         JOptionPane.showMessageDialog(null, "Đăng nhập thành công");
                         return true;
                     } else {
-                        JOptionPane.showMessageDialog(null, "Tài khoản hoặc mật khẩu không hợp lệ");
+                        JOptionPane.showMessageDialog(null, "Mật khẩu không hợp lệ");
                         return false;
                     }
                 } else {
@@ -69,6 +69,29 @@ public class DBAccess {
         }
     }
     
+    public boolean ChangePassword(String queryCheck, String query, String oldPass){
+        try{
+                String pass;
+                PreparedStatement statement = con.prepareStatement(queryCheck);
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()){
+                    pass = resultSet.getString("Password");
+                    BCrypt.Result result = BCrypt.verifyer().verify(oldPass.toCharArray(), pass);
+                    if(!result.verified){
+                        JOptionPane.showMessageDialog(null, "Mật khẩu cũ không hợp lệ");
+                        return false;
+                    }
+                }
+                stmt.executeUpdate(query);
+                JOptionPane.showMessageDialog(null, "Đổi mật khẩu thành công");
+                return true;
+            }
+            catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex);
+                return false;
+        }        
+    }
+    
     public Account getUser(String account) {
         String query = "SELECT * FROM user WHERE Account = ?";
         try (PreparedStatement statement = con.prepareStatement(query)) {
@@ -78,7 +101,6 @@ public class DBAccess {
                     Account user = new Account();
                     user.setID_User(resultSet.getString("ID_User"));
                     user.setAccount(resultSet.getString("Account"));
-                    user.setPassword(resultSet.getString("Password"));
                     user.setFrist_Name(resultSet.getString("First_Name"));
                     user.setLast_Name(resultSet.getString("Last_Name"));
                     user.setBrithday(resultSet.getDate("Brithday"));

@@ -4,6 +4,7 @@
  */
 package Form;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import facial_recognition.Account;
 import facial_recognition.DBAccess;
 import java.text.DateFormat;
@@ -69,6 +70,7 @@ public class FrmInfo extends javax.swing.JFrame {
         rbOther = new javax.swing.JRadioButton();
         rbMale = new javax.swing.JRadioButton();
         btnUpdateInfo = new javax.swing.JButton();
+        btnResetInfo = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         lblMatKhauCu = new javax.swing.JLabel();
         lblMatKhau = new javax.swing.JLabel();
@@ -117,14 +119,22 @@ public class FrmInfo extends javax.swing.JFrame {
             }
         });
 
+        btnResetInfo.setText("Đặt lại thông tin");
+        btnResetInfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetInfoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
+                .addGap(13, 13, 13)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addComponent(lblHo)
@@ -141,7 +151,7 @@ public class FrmInfo extends javax.swing.JFrame {
                                 .addComponent(rbMale)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(rbFemale)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                                 .addComponent(rbOther))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -154,11 +164,13 @@ public class FrmInfo extends javax.swing.JFrame {
                                     .addComponent(lblEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lblDiaChi))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnUpdateInfo)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txtAddress)
-                                        .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)))))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtAddress)
+                                    .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnResetInfo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnUpdateInfo)))
                         .addGap(6, 6, 6)))
                 .addGap(42, 42, 42))
         );
@@ -200,8 +212,10 @@ public class FrmInfo extends javax.swing.JFrame {
                     .addComponent(lblEmail)
                     .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnUpdateInfo)
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnUpdateInfo)
+                    .addComponent(btnResetInfo))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         lblMatKhauCu.setText("Mật khẩu cũ:");
@@ -317,7 +331,7 @@ public class FrmInfo extends javax.swing.JFrame {
                         .addComponent(btnLogOut)
                         .addGap(45, 45, 45)
                         .addComponent(lblThongTinCaNhan)))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -457,49 +471,68 @@ public class FrmInfo extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_cbHienMatKhauActionPerformed
-
-    private void btnChangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangePasswordActionPerformed
-        // TODO add your handling code here:
-        
-
-    }//GEN-LAST:event_btnChangePasswordActionPerformed
-
-    private void btnUpdateInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateInfoActionPerformed
-        // TODO add your handling code here:
-//        if(!inputCheck.CheckBrithday(dcBrithday.getDate()))
-//            return;
-//        if(!inputCheck.CheckSDT(txtPhone.getText()) == false)
-//            return;
-//        if(!inputCheck.CheckEmail(txtEmail.getText()))
-//            return;
-//        try{
-//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");;
-//            String birthday = sdf.format(dcBrithday.getDate());  
-//            Date brith = sdf.parse(birthday);
-//            Account update = new Account();
-//            update.setID_User(account.getID_User());
-//            update.setFrist_Name(txtFirstName.getText());
-//            update.setLast_Name(txtLastName.getText());
-//            update.setBrithday(brith);
-//            update.setGender(ChonGioiTinh());
-//            update.setPhone(txtPhone.getText());
-//            update.setAddress(txtAddress.getText());
-//            update.setEmail(txtEmail.getText());
-//            String query =  String.format("UPDATE user SET First_Name = '%s', Last_Name = '%s', Brithday = '%s', Gender = '%s', Phone = '%s', Address = '%', Email = '%s' WHERE ID_User = '%s'",
-//                            update.getFrist_Name(), update.getLast_Name(), update.getBrithday(), update.getGender(),update.getPhone(),update.getAddress(), update.getEmail());
-//            access.UpdateInfo(query);
-//        }
-//        catch(Exception ex){
-//            JOptionPane.showMessageDialog(null, ex);
-//        }
-    }//GEN-LAST:event_btnUpdateInfoActionPerformed
-
-    private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
-        // TODO add your handling code here:
+    
+    private void ReloadInfo(String account){
+        Account acc = access.getUser(account);
+        LoadInfo(acc);
+    }
+    
+    private void LogOut(){
         FrmLogin open = new FrmLogin();
         open.setVisible(true);
         this.dispose();
+    }
+    
+    private void btnChangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangePasswordActionPerformed
+        // TODO add your handling code here:        
+        String oldPass = new String(passfOldPassword.getPassword());
+        String newPass = new String(passfNewPassword.getPassword());
+        String reEnterPass = new String(passfRe_enterNewPassword.getPassword());
+        if(!inputCheck.CheckPassword(newPass, reEnterPass))
+            return;
+        try{
+            newPass =  BCrypt.withDefaults().hashToString(12, newPass.toCharArray());
+            String queryCheck = String.format("SELECT Password FROM user WHERE ID_User = '%s'" , account.getID_User());
+            String query = String.format("UPDATE user SET Password = '%s' WHERE ID_User = '%s'" , newPass, account.getID_User());
+            if(access.ChangePassword(queryCheck, query, oldPass)){
+                LogOut();
+            }
+        }
+        catch(Exception ex){
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }//GEN-LAST:event_btnChangePasswordActionPerformed
+
+    private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
+        // TODO add your handling code here:
+        LogOut();
     }//GEN-LAST:event_btnLogOutActionPerformed
+
+    private void btnUpdateInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateInfoActionPerformed
+        // TODO add your handling code here:
+        if(!inputCheck.CheckBrithday(dcBrithday.getDate()))
+            return;
+        if(!inputCheck.CheckSDT(txtPhone.getText()))
+            return;
+        if(!inputCheck.CheckEmail(txtEmail.getText()))
+            return;
+        try{
+            Date selectedDate = dcBrithday.getDate();
+            java.sql.Date birthday = new java.sql.Date(selectedDate.getTime());
+            String query = String.format("UPDATE user SET First_Name = '%s', Last_Name = '%s', Brithday = '%s', Gender = '%s', Phone = '%s', Address = '%s', Email = '%s' WHERE Account = '%s'",
+                            txtFirstName.getText(), txtLastName.getText(), birthday, ChonGioiTinh(), txtPhone.getText(), txtAddress.getText(), txtEmail.getText(), txtAccount.getText());
+            access.UpdateInfo(query);
+            ReloadInfo(txtAccount.getText());
+        }
+        catch(Exception ex){
+            JOptionPane.showMessageDialog(null, ex);            
+        }        
+    }//GEN-LAST:event_btnUpdateInfoActionPerformed
+
+    private void btnResetInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetInfoActionPerformed
+        // TODO add your handling code here:
+        ReloadInfo(txtAccount.getText());
+    }//GEN-LAST:event_btnResetInfoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -539,6 +572,7 @@ public class FrmInfo extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnChangePassword;
     private javax.swing.JButton btnLogOut;
+    private javax.swing.JButton btnResetInfo;
     private javax.swing.JButton btnUpdateInfo;
     private javax.swing.ButtonGroup btngRadioBox;
     private javax.swing.JCheckBox cbHienMatKhau;
