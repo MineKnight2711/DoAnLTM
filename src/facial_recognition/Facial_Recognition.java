@@ -4,6 +4,8 @@
  */
 package facial_recognition;
 
+import Form.FrmLogin;
+
 /**
  *
  * @author dell

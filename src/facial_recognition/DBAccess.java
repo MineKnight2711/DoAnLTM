@@ -33,7 +33,7 @@ public class DBAccess {
     }
     
     public boolean Login(String account, String password) {
-        String query = "SELECT Password FROM user WHERE Account = ?";
+    String query = "SELECT Password FROM user WHERE Account = ?";
         try (PreparedStatement statement = con.prepareStatement(query)) {
             statement.setString(1, account);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -44,7 +44,7 @@ public class DBAccess {
                         JOptionPane.showMessageDialog(null, "Đăng nhập thành công");
                         return true;
                     } else {
-                        JOptionPane.showMessageDialog(null, "Tài khoản hoặc mật khẩu không hợp lệ");
+                        JOptionPane.showMessageDialog(null, "Mật khẩu không hợp lệ");
                         return false;
                     }
                 } else {
@@ -58,6 +58,40 @@ public class DBAccess {
         }
     }
     
+    public boolean UpdateInfo(String query){
+        try{
+            stmt.executeUpdate(query);
+            JOptionPane.showMessageDialog(null, "Cập nhật thông tin thành công");
+            return true;
+        }catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+            return false;
+        }
+    }
+    
+    public boolean ChangePassword(String queryCheck, String query, String oldPass){
+        try{
+                String pass;
+                PreparedStatement statement = con.prepareStatement(queryCheck);
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()){
+                    pass = resultSet.getString("Password");
+                    BCrypt.Result result = BCrypt.verifyer().verify(oldPass.toCharArray(), pass);
+                    if(!result.verified){
+                        JOptionPane.showMessageDialog(null, "Mật khẩu cũ không hợp lệ");
+                        return false;
+                    }
+                }
+                stmt.executeUpdate(query);
+                JOptionPane.showMessageDialog(null, "Đổi mật khẩu thành công");
+                return true;
+            }
+            catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex);
+                return false;
+        }        
+    }
+    
     public Account getUser(String account) {
         String query = "SELECT * FROM user WHERE Account = ?";
         try (PreparedStatement statement = con.prepareStatement(query)) {
@@ -67,10 +101,9 @@ public class DBAccess {
                     Account user = new Account();
                     user.setID_User(resultSet.getString("ID_User"));
                     user.setAccount(resultSet.getString("Account"));
-                    user.setPassword(resultSet.getString("Password"));
-                    user.setFrist_Name(resultSet.getString("Frist_Name"));
+                    user.setFrist_Name(resultSet.getString("First_Name"));
                     user.setLast_Name(resultSet.getString("Last_Name"));
-                    user.setBrithday(resultSet.getString("Brithday"));
+                    user.setBrithday(resultSet.getDate("Brithday"));
                     user.setGender(resultSet.getString("Gender"));
                     user.setPhone(resultSet.getString("Phone"));
                     user.setAddress(resultSet.getString("Address"));
@@ -90,7 +123,7 @@ public class DBAccess {
             stmt.executeUpdate(str);
             JOptionPane.showMessageDialog(null, "Thêm người dùng mới thành công");
             return true;
-        }catch(Exception ex){
+        }catch(SQLException ex){
             JOptionPane.showMessageDialog(null,ex);
             System.out.println(ex.toString());
             return false;
@@ -101,7 +134,7 @@ public class DBAccess {
         try {
              int i=stmt.executeUpdate(str);
              return i;
-        }catch (Exception ex) {
+        }catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
             return -1;
         }
@@ -111,7 +144,7 @@ public class DBAccess {
          try{
              ResultSet rs=stmt.executeQuery(srt);
              return rs;
-         }catch (Exception ex) {
+         }catch (SQLException ex) {
              JOptionPane.showMessageDialog(null, ex);
             return null ;
         }
@@ -120,7 +153,7 @@ public class DBAccess {
         String query = "SELECT * FROM user";
         return Query(query);
     }
-    public void deleteStudent(int idUser) {
+    public void deleteUser(int idUser) {
         String query = "DELETE FROM user WHERE ID_User = ?";
 
         try (PreparedStatement statement = con.prepareStatement(query)) {
