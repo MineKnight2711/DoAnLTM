@@ -33,30 +33,57 @@ public class DBAccess {
     }
     
     public boolean Login(String account, String password) {
-    String query = "SELECT Password FROM user WHERE Account = ?";
-    try (PreparedStatement statement = con.prepareStatement(query)) {
-        statement.setString(1, account);
-        try (ResultSet resultSet = statement.executeQuery()) {
-            if (resultSet.next()) {
-                String hashedPassword = resultSet.getString("Password");
-                BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), hashedPassword);
-                if (result.verified) {
-                    JOptionPane.showMessageDialog(null, "Đăng nhập thành công");
-                    return true;
+        String query = "SELECT Password FROM user WHERE Account = ?";
+        try (PreparedStatement statement = con.prepareStatement(query)) {
+            statement.setString(1, account);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    String hashedPassword = resultSet.getString("Password");
+                    BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), hashedPassword);
+                    if (result.verified) {
+                        JOptionPane.showMessageDialog(null, "Đăng nhập thành công");
+                        return true;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Tài khoản hoặc mật khẩu không hợp lệ");
+                        return false;
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "Tài khoản hoặc mật khẩu không hợp lệ");
                     return false;
                 }
-            } else {
-                JOptionPane.showMessageDialog(null, "Tài khoản hoặc mật khẩu không hợp lệ");
-                return false;
             }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+            return false;
         }
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(null, ex);
-        return false;
     }
-}
+    
+    public Account getUser(String account) {
+        String query = "SELECT * FROM user WHERE Account = ?";
+        try (PreparedStatement statement = con.prepareStatement(query)) {
+            statement.setString(1, account);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    Account user = new Account();
+                    user.setID_User(resultSet.getString("ID_User"));
+                    user.setAccount(resultSet.getString("Account"));
+                    user.setPassword(resultSet.getString("Password"));
+                    user.setFrist_Name(resultSet.getString("Frist_Name"));
+                    user.setLast_Name(resultSet.getString("Last_Name"));
+                    user.setBrithday(resultSet.getString("Brithday"));
+                    user.setGender(resultSet.getString("Gender"));
+                    user.setPhone(resultSet.getString("Phone"));
+                    user.setAddress(resultSet.getString("Address"));
+                    user.setEmail(resultSet.getString("Email"));
+
+                    return user;
+                }
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+        return null; // Return null if the user doesn't exist or an error occurs
+    }
     
     public boolean Register(String str){
         try{

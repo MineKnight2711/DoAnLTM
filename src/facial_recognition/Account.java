@@ -4,8 +4,6 @@
  */
 package facial_recognition;
 
-import java.util.Date;
-
 /**
  *
  * @author dell

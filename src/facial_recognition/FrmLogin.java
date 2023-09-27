@@ -129,7 +129,12 @@ public class FrmLogin extends javax.swing.JFrame {
         //char[] password = passfMatKhau.getPassword();               
         String password = new String(passfMatKhau.getPassword());
         
-       access.Login(account, password);
+        if(access.Login(account, password))
+        {
+            Account loginAc=access.getUser(account);
+            frmHome home=new frmHome(loginAc);
+            home.setVisible(true);
+        }
     }//GEN-LAST:event_btnDangNhapActionPerformed
 
     private void TextChangeEvent(){
