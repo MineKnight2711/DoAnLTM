@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement; 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /*
@@ -138,6 +140,60 @@ public class DBAccess {
             JOptionPane.showMessageDialog(null, ex);
             return -1;
         }
+    }
+    
+    public byte[] testDislay(){
+        String query = "SELECT * FROM user_image WHERE ID_Image = 'I0000000004'";
+         byte[] imageData = null;
+         try (PreparedStatement statement = con.prepareStatement(query)){
+              try (ResultSet resultSet = statement.executeQuery()) {
+                  if (resultSet.next()){
+                      imageData = resultSet.getBytes("Image");
+                       return imageData;
+                  } 
+              }
+              catch(Exception e){
+                  JOptionPane.showMessageDialog(null,e);
+                  return null;
+              }
+         }catch(Exception ex ){
+             JOptionPane.showMessageDialog(null,ex);
+             return null;
+         }
+         return null;
+    }
+    
+    public boolean saveImage(String userID,byte[] images){
+        try{
+            String query = "INSERT INTO user_image VALUES('', ? , ?)";
+            try(PreparedStatement statement = con.prepareStatement(query)){                
+                statement.setString(1, userID);
+                statement.setBytes(2, images);
+                statement.executeUpdate();
+                return true;
+            }
+        }
+        catch(Exception ex ){
+            JOptionPane.showMessageDialog(null, ex);
+            return false;
+        }
+    }
+    
+      public List<byte[]> getAllImages() {
+        List<byte[]> imageList = new ArrayList<>();
+        String query = "SELECT Image FROM user_image";
+        ResultSet rs = Query(query);
+        try{
+            while (rs.next()){
+                byte[] imageData = rs.getBytes("Image");
+                imageList.add(imageData);
+            }
+            return imageList;
+        }
+        catch(Exception ex){
+            JOptionPane.showMessageDialog(null, ex);
+            return null ;
+        }        
     }
     
     public ResultSet Query(String srt){

@@ -71,6 +71,7 @@ public class FrmInfo extends javax.swing.JFrame {
         rbMale = new javax.swing.JRadioButton();
         btnUpdateInfo = new javax.swing.JButton();
         btnResetInfo = new javax.swing.JButton();
+        btnAddFace = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         lblMatKhauCu = new javax.swing.JLabel();
         lblMatKhau = new javax.swing.JLabel();
@@ -126,6 +127,13 @@ public class FrmInfo extends javax.swing.JFrame {
             }
         });
 
+        btnAddFace.setText("Thêm khuôn mặt");
+        btnAddFace.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddFaceActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -173,6 +181,10 @@ public class FrmInfo extends javax.swing.JFrame {
                                 .addComponent(btnUpdateInfo)))
                         .addGap(6, 6, 6)))
                 .addGap(42, 42, 42))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(83, 83, 83)
+                .addComponent(btnAddFace)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -215,7 +227,9 @@ public class FrmInfo extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnUpdateInfo)
                     .addComponent(btnResetInfo))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnAddFace)
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         lblMatKhauCu.setText("Mật khẩu cũ:");
@@ -320,18 +334,16 @@ public class FrmInfo extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(59, 59, 59)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnLogOut)
-                        .addGap(45, 45, 45)
-                        .addComponent(lblThongTinCaNhan)))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addGap(59, 59, 59)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnLogOut)
+                .addGap(45, 45, 45)
+                .addComponent(lblThongTinCaNhan))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(46, 46, 46)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -347,7 +359,7 @@ public class FrmInfo extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
 
         pack();
@@ -534,6 +546,13 @@ public class FrmInfo extends javax.swing.JFrame {
         ReloadInfo(txtAccount.getText());
     }//GEN-LAST:event_btnResetInfoActionPerformed
 
+    private void btnAddFaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddFaceActionPerformed
+        // TODO add your handling code here:
+        frmCameraAcess open = new frmCameraAcess(account);
+        open.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnAddFaceActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -570,6 +589,7 @@ public class FrmInfo extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddFace;
     private javax.swing.JButton btnChangePassword;
     private javax.swing.JButton btnLogOut;
     private javax.swing.JButton btnResetInfo;
