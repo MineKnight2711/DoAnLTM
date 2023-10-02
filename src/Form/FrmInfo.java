@@ -548,7 +548,7 @@ public class FrmInfo extends javax.swing.JFrame {
 
     private void btnAddFaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddFaceActionPerformed
         // TODO add your handling code here:
-        frmCameraAcess open = new frmCameraAcess(account);
+        frmCameraAcess open = new frmCameraAcess(account,"capNhat");
         open.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnAddFaceActionPerformed

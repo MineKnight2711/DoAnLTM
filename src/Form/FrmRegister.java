@@ -466,7 +466,12 @@ public class FrmRegister extends javax.swing.JFrame {
             String query = String.format("INSERT INTO user VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
                                     acc.getID_User(), acc.getAccount(), acc.getPassword(), acc.getFrist_Name(), acc.getLast_Name(),
                                     acc.getBrithday(), acc.getGender(), acc.getPhone(), acc.getAddress(), acc.getEmail());
-            access.Register(query);
+            if(access.Register(query)){
+                Account user = access.getUser(acc.getAccount());
+                frmCameraAcess open = new frmCameraAcess(user, "dangKy");
+                open.setVisible(true);
+                this.dispose();
+            }
             ClearAllText();
         }
         catch(Exception ex){
