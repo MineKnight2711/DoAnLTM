@@ -7,7 +7,6 @@ package Form;
 import facial_recognition.Account;
 import facial_recognition.DBAccess;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -130,17 +129,10 @@ public class frmCameraAcess extends javax.swing.JFrame {
                 // Crop the face region from the gray frame
                 Mat faceImage = new Mat(grayFrame, faceRect); // Crop from the grayscale frame
 
-                // Convert the face image to grayscale (if it's not already)
-                Mat grayFaceImage = new Mat();
-                if (faceImage.channels() > 1) {
-                    Imgproc.cvtColor(faceImage, grayFaceImage, Imgproc.COLOR_BGR2GRAY);
-                } else {
-                    grayFaceImage = faceImage;
-                }
-
+                
                 // Encode the face image to JPEG
                 MatOfByte faceImageData = new MatOfByte();
-                Imgcodecs.imencode(".jpg", grayFaceImage, faceImageData);
+                Imgcodecs.imencode(".jpg", faceImage, faceImageData);
                 imageData = faceImageData.toArray();
 
                 // Save the face image to the database

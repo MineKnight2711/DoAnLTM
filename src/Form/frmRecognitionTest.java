@@ -4,23 +4,27 @@
  */
 package Form;
 
-import facial_recognition.Account;
+
 import facial_recognition.DBAccess;
-import java.util.Arrays;
+import facial_recognition.UserImages;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.List;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
-import org.opencv.core.MatOfFloat;
-import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
+import org.opencv.objdetect.Objdetect;
 import org.opencv.videoio.VideoCapture;
 
 /**
@@ -28,7 +32,6 @@ import org.opencv.videoio.VideoCapture;
  * @author dell
  */
 public class frmRecognitionTest extends javax.swing.JFrame {
-    private static Account account;
     private VideoCapture videoCapture;
     private Mat frame;
     private MatOfByte matOfByte;
@@ -44,12 +47,13 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         initComponents();
         access = new DBAccess();
         check = false;
+        
     }
 
     
     private boolean facialRecognition(byte[] imageCapture) {
-        List<byte[]> allUserImages = access.getAllImages();
-        Mat frame = Imgcodecs.imdecode(new MatOfByte(imageCapture), Imgcodecs.IMREAD_COLOR);
+        // Convert the byte[] imageData to a Mat object
+        Mat frame = Imgcodecs.imdecode(new MatOfByte(imageData), Imgcodecs.IMREAD_COLOR);
 
         // Convert the frame to grayscale
         Mat grayFrame = new Mat();
@@ -57,68 +61,122 @@ public class frmRecognitionTest extends javax.swing.JFrame {
 
         // Load the face cascade classifier
         CascadeClassifier faceCascade = new CascadeClassifier("src\\PreTrainData\\haarcascade_frontalface_default.xml");
-
         // Detect faces in the grayscale frame
         MatOfRect faces = new MatOfRect();
-        faceCascade.detectMultiScale(grayFrame, faces);
-
+        faceCascade.detectMultiScale(grayFrame, faces);     
+        
+        MatOfByte faceImageData = new MatOfByte();
+        Imgcodecs.imencode(".jpg", grayFrame, faceImageData);
+        imageCapture = faceImageData.toArray();
         // Check if a face is detected
         if (faces.toArray().length > 0) {
-            Rect faceRect = faces.toArray()[0]; // Assuming only one face is detected
-
-            // Crop the face region from the frame
-            Mat faceImage = new Mat(frame, faceRect); // Crop from the original frame
+            List<UserImages> allUserImages = access.getAllUsers();
 
             // Encode the face image to JPEG
-            MatOfByte faceImageData = new MatOfByte();
+            Rect faceRect = faces.toArray()[0]; // Assuming only one face is detected
+
+            // Crop the face region from the gray frame
+            Mat faceImage = new Mat(grayFrame, faceRect); // Crop from the grayscale frame                
+            // Encode the face image to JPEG
             Imgcodecs.imencode(".jpg", faceImage, faceImageData);
             imageCapture = faceImageData.toArray();
-             // Compare the captured face with all user images
-            for (byte[] userImage : allUserImages) {
-                // Convert the user image to a matrix
-                Mat userMat = Imgcodecs.imdecode(new MatOfByte(userImage), Imgcodecs.IMREAD_GRAYSCALE);
 
+            // Compare the captured face with all user images
+            for (UserImages userImage : allUserImages) {
+                // Convert the user image to a matrix
+                byte[] image = userImage.getImages();
+                
+                Dispalay(imageCapture, image);
+                
                 // Compare the similarity of the captured face and user image
-                double similarity = compareImages(grayFrame, userMat);
+                double similarity = compareImages(imageCapture, image);
 
                 // Set a threshold value for similarity
-                double threshold = 0.8; // Adjust this value as needed
+                double threshold = 0.91; // Adjust this value as needed
 
                 // Check if the similarity is above the threshold
                 if (similarity >= threshold) {
-                    JOptionPane.showMessageDialog(null, "Có tồn tại");
-                    check = true;
+                    JOptionPane.showMessageDialog(null, "Có tồn tại: " + userImage.getID_User() + " threshhold: "+ similarity);
+                    check = false;
                     return true;
+                }
             }
         }
-       
-        }
-         return false;
+        return false;
     }
     
-    private double compareImages(Mat image1, Mat image2) {
-        // Calculate histograms for both images
-        Mat hist1 = new Mat();
-        Mat hist2 = new Mat();
+    private void Dispalay(byte[] image1, byte[] image2) {
+        try{           
+            InputStream inputStream = new ByteArrayInputStream(image1);
+            InputStream inputStream1 = new ByteArrayInputStream(image2);
+            BufferedImage imageBuffer1 = ImageIO.read(inputStream);
+            BufferedImage imageBuffer2 = ImageIO.read(inputStream1);
+            ImageIcon icon1 = new ImageIcon(imageBuffer1);
+            ImageIcon icon2 = new ImageIcon(imageBuffer2);
+            lbltest1.setIcon(icon1);
+            lbldata.setIcon(icon2);
+        }
+        catch(Exception ex){
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }
+    
+    private double compareImages(byte[] image1, byte[] image2) {
+        // Load OpenCV library
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-        // Set histogram parameters
-        int histSize = 256; // Number of bins
-        MatOfFloat histRange = new MatOfFloat(0f, 256f);
-        boolean accumulate = false;
+        // Convert image byte arrays to OpenCV Mat objects
+        Mat mat1 = Imgcodecs.imdecode(new MatOfByte(image1), Imgcodecs.IMREAD_GRAYSCALE);
+        Mat mat2 = Imgcodecs.imdecode(new MatOfByte(image2), Imgcodecs.IMREAD_GRAYSCALE);
 
-        // Compute histograms
-        Imgproc.calcHist(Arrays.asList(image1), new MatOfInt(0), new Mat(), hist1, new MatOfInt(histSize), histRange, accumulate);
-        Imgproc.calcHist(Arrays.asList(image2), new MatOfInt(0), new Mat(), hist2, new MatOfInt(histSize), histRange, accumulate);
+        // Load pre-trained face detection cascade classifier
+        CascadeClassifier faceCascade = new CascadeClassifier("src\\PreTrainData\\haarcascade_frontalface_default.xml");
+        // Detect faces in image 1
+        MatOfRect faces1 = new MatOfRect();
+        faceCascade.detectMultiScale(mat1, faces1);
 
-        // Normalize histograms
-        Core.normalize(hist1, hist1, 0, hist1.rows(), Core.NORM_MINMAX, -1, new Mat());
-        Core.normalize(hist2, hist2, 0, hist2.rows(), Core.NORM_MINMAX, -1, new Mat());
+        if (faces1.empty()) {
+           return 0;
+        }
 
-        // Apply histogram comparison method (e.g., correlation)
-        double similarity = Imgproc.compareHist(hist1, hist2, Imgproc.HISTCMP_CORREL);
+        // Detect faces in image 2
+        MatOfRect faces2 = new MatOfRect();
+        faceCascade.detectMultiScale(mat2, faces2);
+
+        if (faces2.empty()) {
+            return 0;
+        }
+
+        // Compare faces
+        Rect face1 = faces1.toArray()[0];
+        Rect face2 = faces2.toArray()[0];
+        double similarity = compareFaces(mat1, face1, mat2, face2);
 
         return similarity;
     }
+
+    private static double compareFaces(Mat mat1, Rect face1, Mat mat2, Rect face2) {
+        // Extract face regions from the images
+        Mat cropped1 = new Mat(mat1, face1);
+        Mat cropped2 = new Mat(mat2, face2);
+
+        // Resize the face regions to a common size for comparison
+        Size size = new Size(256, 256);
+        Mat resized1 = new Mat();
+        Mat resized2 = new Mat();
+        Imgproc.resize(cropped1, resized1, size);
+        Imgproc.resize(cropped2, resized2, size);
+
+        // Calculate the Mean Squared Error (MSE) as a similarity measure
+        double mse = Core.norm(resized1, resized2, Core.NORM_L2) / (resized1.rows() * resized1.cols());
+
+        // Convert the MSE to a similarity score (1 - MSE)
+        double similarity = 1.0 - mse;
+
+        return similarity;        
+    
+    }
+    
     
     private boolean initializeCamera() {        
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -136,9 +194,10 @@ public class frmRecognitionTest extends javax.swing.JFrame {
                     detectAndDrawFaces(frame);
                     // Optionally, perform image processing or face detection here
                     Imgcodecs.imencode(".jpg", frame, matOfByte);
-                    imageData = matOfByte.toArray();      
-                    if(!check)
+                    imageData = matOfByte.toArray();    
+                    
                         facialRecognition(imageData);
+                        check = false;
                     // Display the image on the JLabel
                     ImageIcon imageIcon = new ImageIcon(imageData);
                     lblDisplayCapture.setIcon(imageIcon);
@@ -167,14 +226,12 @@ public class frmRecognitionTest extends javax.swing.JFrame {
     private void detectAndDrawFaces(Mat frame) {
         Mat grayFrame = new Mat();
         Imgproc.cvtColor(frame, grayFrame, Imgproc.COLOR_BGR2GRAY);
-
-        CascadeClassifier faceCascade = new CascadeClassifier("src\\PreTrainData\\haarcascade_frontalface_default.xml");
         MatOfRect faces = new MatOfRect();
+        CascadeClassifier faceCascade = new CascadeClassifier("src\\PreTrainData\\haarcascade_frontalface_default.xml");
         faceCascade.detectMultiScale(grayFrame, faces);
 
         for (Rect rect : faces.toArray()) {
             Imgproc.rectangle(frame, rect.tl(), rect.br(), new Scalar(0, 255, 0), 2);
-            
         }
     }
     /**
@@ -189,6 +246,8 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         lblDisplayCapture = new javax.swing.JLabel();
         btnMoCamera = new javax.swing.JButton();
         btnNhanDIen = new javax.swing.JButton();
+        lbldata = new javax.swing.JLabel();
+        lbltest1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -213,30 +272,42 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(80, 80, 80)
-                        .addComponent(lblDisplayCapture, javax.swing.GroupLayout.PREFERRED_SIZE, 559, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblDisplayCapture, javax.swing.GroupLayout.PREFERRED_SIZE, 559, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(161, 161, 161)
                         .addComponent(btnMoCamera)
-                        .addGap(140, 140, 140)
-                        .addComponent(btnNhanDIen)))
-                .addContainerGap(96, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnNhanDIen)
+                        .addGap(127, 127, 127)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbldata, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbltest1, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(lblDisplayCapture, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnNhanDIen)
-                    .addComponent(btnMoCamera))
-                .addContainerGap(14, Short.MAX_VALUE))
+                    .addComponent(btnMoCamera)
+                    .addComponent(btnNhanDIen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbltest1, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lbldata, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnMoCameraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoCameraActionPerformed
@@ -258,6 +329,14 @@ public class frmRecognitionTest extends javax.swing.JFrame {
 
     private void btnNhanDIenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhanDIenActionPerformed
         // TODO add your handling code here:
+        if(check){
+            check = false;
+            initComponents();
+        }
+        else{
+            check = true;
+            initComponents();
+        }
     }//GEN-LAST:event_btnNhanDIenActionPerformed
 
     /**
@@ -299,5 +378,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
     private javax.swing.JButton btnMoCamera;
     private javax.swing.JButton btnNhanDIen;
     private javax.swing.JLabel lblDisplayCapture;
+    private javax.swing.JLabel lbldata;
+    private javax.swing.JLabel lbltest1;
     // End of variables declaration//GEN-END:variables
 }

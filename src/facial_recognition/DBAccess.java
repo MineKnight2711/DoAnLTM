@@ -1,6 +1,7 @@
 package facial_recognition;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import static java.lang.reflect.Array.getByte;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -143,7 +144,7 @@ public class DBAccess {
     }
     
     public byte[] testDislay(){
-        String query = "SELECT * FROM user_image WHERE ID_Image = 'I0000000025'";
+        String query = "SELECT * FROM user_image WHERE ID_Image = 'I0000000065'";
          byte[] imageData = null;
          try (PreparedStatement statement = con.prepareStatement(query)){
               try (ResultSet resultSet = statement.executeQuery()) {
@@ -195,6 +196,26 @@ public class DBAccess {
             return null ;
         }        
     }
+      
+      public List<UserImages> getAllUsers() {
+        List<UserImages> allUser = new ArrayList<>();
+        String query = "SELECT * FROM user_image";
+        ResultSet rs = Query(query);
+        try{
+            while (rs.next()){
+                UserImages user = new UserImages();
+                user.setID_Image(rs.getString("ID_Image"));
+                user.setID_User(rs.getString("ID_User"));
+                user.setImages(rs.getBytes("Image"));
+                allUser.add(user);
+            }
+            return allUser;
+        }
+        catch(Exception ex){
+            JOptionPane.showMessageDialog(null, ex);
+            return null ;
+        }    
+    }
     
     public ResultSet Query(String srt){
          try{
@@ -205,10 +226,7 @@ public class DBAccess {
             return null ;
         }
     }
-    public ResultSet getAllUsers() {
-        String query = "SELECT * FROM user";
-        return Query(query);
-    }
+    
     public void deleteUser(int idUser) {
         String query = "DELETE FROM user WHERE ID_User = ?";
 
