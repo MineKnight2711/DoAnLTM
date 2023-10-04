@@ -237,4 +237,24 @@ public class DBAccess {
             JOptionPane.showMessageDialog(null, ex);
         }
     }
+    
+    public List<UserImages> getUserImage(String userID) {
+        List<UserImages> userImages = new ArrayList<>();
+        String query = String.format("SELECT * FROM user_image WHERE ID_USER = '%s'", userID);
+        ResultSet rs = Query(query);
+        try{
+            while (rs.next()){
+                UserImages user = new UserImages();
+                user.setID_Image(rs.getString("ID_Image"));
+                user.setID_User(rs.getString("ID_User"));
+                user.setImages(rs.getBytes("Image"));
+                userImages.add(user);
+            }
+            return userImages;
+        }
+        catch(Exception ex){
+            JOptionPane.showMessageDialog(null, ex);
+            return null ;
+        }    
+    }
 }
