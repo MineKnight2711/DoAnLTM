@@ -199,7 +199,7 @@ public class DBAccess {
       
       public List<UserImages> getAllUsers() {
         List<UserImages> allUser = new ArrayList<>();
-        String query = "SELECT * FROM user_image";
+        String query = "SELECT * FROM user_image ORDER BY ID_User ASC";
         ResultSet rs = Query(query);
         try{
             while (rs.next()){

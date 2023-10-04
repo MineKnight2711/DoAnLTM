@@ -96,7 +96,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
 
                 // Check if the similarity is above the threshold
                 if (similarity >= threshold) {
-                    JOptionPane.showMessageDialog(null, "Có tồn tại: " + userImage.getID_User() + " threshhold: "+ similarity);
+                    JOptionPane.showMessageDialog(null, "Có tồn tại: " + userImage.getID_User());
                     check = false;
                     return true;
                 }
