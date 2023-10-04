@@ -138,7 +138,7 @@ public class frmCameraAcess extends javax.swing.JFrame {
                 // Save the face image to the database
                 access.saveImage(account.getID_User(), imageData);
                 countImages++;
-                if (countImages == 10) {
+                if (countImages == 50) {
                     JOptionPane.showMessageDialog(null, "Đã lưu khuôn mặt");
                 }
             } else {
@@ -262,7 +262,7 @@ public class frmCameraAcess extends javax.swing.JFrame {
     private void btnLuuKhuonMatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuKhuonMatActionPerformed
         // TODO add your handling code here:
         save = true;
-        while(countImages < 10){            
+        while(countImages < 50){            
             saveFace();              
         }
         countImages = 0;

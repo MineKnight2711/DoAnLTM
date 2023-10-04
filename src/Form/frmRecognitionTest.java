@@ -47,7 +47,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         initComponents();
         access = new DBAccess();
         check = false;
-        
+        txtTiLe.setEnabled(false);
     }
 
     
@@ -86,13 +86,13 @@ public class frmRecognitionTest extends javax.swing.JFrame {
                 // Convert the user image to a matrix
                 byte[] image = userImage.getImages();
                 
-                Dispalay(imageCapture, image);
+                
                 
                 // Compare the similarity of the captured face and user image
                 double similarity = compareImages(imageCapture, image);
-
+                Dispalay(imageCapture, image, similarity);
                 // Set a threshold value for similarity
-                double threshold = 0.91; // Adjust this value as needed
+                double threshold = 0.90; // Adjust this value as needed
 
                 // Check if the similarity is above the threshold
                 if (similarity >= threshold) {
@@ -105,7 +105,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         return false;
     }
     
-    private void Dispalay(byte[] image1, byte[] image2) {
+    private void Dispalay(byte[] image1, byte[] image2, double simularity) {
         try{           
             InputStream inputStream = new ByteArrayInputStream(image1);
             InputStream inputStream1 = new ByteArrayInputStream(image2);
@@ -115,6 +115,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
             ImageIcon icon2 = new ImageIcon(imageBuffer2);
             lbltest1.setIcon(icon1);
             lbldata.setIcon(icon2);
+            txtTiLe.setText( String.format("%.2f", simularity*100) + "%");
         }
         catch(Exception ex){
             JOptionPane.showMessageDialog(null, ex);
@@ -195,9 +196,8 @@ public class frmRecognitionTest extends javax.swing.JFrame {
                     // Optionally, perform image processing or face detection here
                     Imgcodecs.imencode(".jpg", frame, matOfByte);
                     imageData = matOfByte.toArray();    
-                    
-                        facialRecognition(imageData);
-                        check = false;
+                    facialRecognition(imageData);
+                    check = false;
                     // Display the image on the JLabel
                     ImageIcon imageIcon = new ImageIcon(imageData);
                     lblDisplayCapture.setIcon(imageIcon);
@@ -248,6 +248,8 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         btnNhanDIen = new javax.swing.JButton();
         lbldata = new javax.swing.JLabel();
         lbltest1 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        txtTiLe = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -267,6 +269,8 @@ public class frmRecognitionTest extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setText("Tỉ lệ giống: ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -283,9 +287,14 @@ public class frmRecognitionTest extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnNhanDIen)
                         .addGap(127, 127, 127)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbltest1, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbldata, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbltest1, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtTiLe, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(43, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -299,11 +308,15 @@ public class frmRecognitionTest extends javax.swing.JFrame {
                     .addComponent(btnNhanDIen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(7, Short.MAX_VALUE)
                 .addComponent(lbltest1, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtTiLe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
                 .addComponent(lbldata, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22))
+                .addGap(25, 25, 25))
         );
 
         pack();
@@ -377,8 +390,10 @@ public class frmRecognitionTest extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnMoCamera;
     private javax.swing.JButton btnNhanDIen;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblDisplayCapture;
     private javax.swing.JLabel lbldata;
     private javax.swing.JLabel lbltest1;
+    private javax.swing.JTextField txtTiLe;
     // End of variables declaration//GEN-END:variables
 }
