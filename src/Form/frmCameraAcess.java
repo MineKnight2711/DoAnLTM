@@ -4,14 +4,26 @@
  */
 package Form;
 
+import com.google.gson.Gson;
 import models.Account;
 import db_connection.DBAccess;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import models.OperationJson;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
@@ -31,6 +43,7 @@ public class frmCameraAcess extends javax.swing.JFrame {
     private static Account account;
     private VideoCapture videoCapture;
     private Mat frame;
+    private Gson gson;
     private MatOfByte matOfByte;
     private boolean isRecording;
     private Thread thread;
@@ -39,6 +52,8 @@ public class frmCameraAcess extends javax.swing.JFrame {
     private boolean save;
     private byte[] imageData;
     private static String frm;
+    private List<byte[]> imageList; 
+
     /**
      * Creates new form frmCameraAcess
      */
@@ -48,10 +63,10 @@ public class frmCameraAcess extends javax.swing.JFrame {
         this.account = account; 
         access = new DBAccess();
         save = false;
-        // Load the OpenCV native library        
+        imageList=new ArrayList<>();
+        gson=new Gson();
 
-        // Create JFrame and JLabel for displaying the camera feed
-       
+                    
     }   
     
     
@@ -114,41 +129,68 @@ public class frmCameraAcess extends javax.swing.JFrame {
     }
     
     private void saveFace(byte[] image) {
-        if (save) {
-            // Convert the byte[] imageData to a Mat object
-            Mat frame = Imgcodecs.imdecode(new MatOfByte(image), Imgcodecs.IMREAD_COLOR);
-
-            // Convert the frame to grayscale
-            Mat grayFrame = new Mat();
-            Imgproc.cvtColor(frame, grayFrame, Imgproc.COLOR_BGR2GRAY);
-
-            // Load the face cascade classifier
-            CascadeClassifier faceCascade = new CascadeClassifier("src\\PreTrainData\\haarcascade_frontalface_default.xml");
-
-            // Detect faces in the grayscale frame
-            MatOfRect faces = new MatOfRect();
-            faceCascade.detectMultiScale(grayFrame, faces);
-
-            // Check if a face is detected
-            if (faces.toArray().length > 0) {
-                Rect faceRect = faces.toArray()[0]; // Assuming only one face is detected
-
-                // Crop the face region from the gray frame
-                Mat faceImage = new Mat(grayFrame, faceRect); // Crop from the grayscale frame                
-                // Encode the face image to JPEG
-                MatOfByte faceImageData = new MatOfByte();
-                Imgcodecs.imencode(".jpg", faceImage, faceImageData);
-                image = faceImageData.toArray();
-                Dispalay(image);
-                // Save the face image to the database
-                access.saveImage(account.getID_User(), image);
-                countImages++;
-                if (countImages == 50) {
-                    countImages = 0;
-                    save = false;
-                    JOptionPane.showMessageDialog(null, "Đã lưu khuôn mặt");
+        try {
+            if (save) {
+                // Convert the byte[] imageData to a Mat object
+                Mat frame = Imgcodecs.imdecode(new MatOfByte(image), Imgcodecs.IMREAD_COLOR);
+                
+                // Convert the frame to grayscale
+                Mat grayFrame = new Mat();
+                Imgproc.cvtColor(frame, grayFrame, Imgproc.COLOR_BGR2GRAY);
+                
+                // Load the face cascade classifier
+                CascadeClassifier faceCascade = new CascadeClassifier("src\\PreTrainData\\haarcascade_frontalface_default.xml");
+                
+                // Detect faces in the grayscale frame
+                MatOfRect faces = new MatOfRect();
+                faceCascade.detectMultiScale(grayFrame, faces);
+                
+                // Check if a face is detected
+                if (faces.toArray().length > 0) {
+                    Rect faceRect = faces.toArray()[0]; // Assuming only one face is detected
+                    
+                    
+                    
+                    // Crop the face region from the gray frame
+                    Mat faceImage = new Mat(grayFrame, faceRect); // Crop from the grayscale frame
+                    // Encode the face image to JPEG
+                    MatOfByte faceImageData = new MatOfByte();
+                    Imgcodecs.imencode(".jpg", faceImage, faceImageData);
+                    image = faceImageData.toArray();
+                    Dispalay(image);
+                    Socket socket = new Socket("localhost", 6969);
+            
+            
+                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                    
+                    OperationJson operationJson=new OperationJson();
+                    operationJson.setOperation("save-image/"+account.getID_User());
+                    operationJson.setData(Base64.getEncoder().encodeToString(image));
+                    String sendJson=gson.toJson(operationJson);
+                    out.println(sendJson);
+                    
+                    countImages++;
+                    if (countImages == 50) {
+                        countImages = 0;
+                        save = false;
+//                        access.saveImage(account.getID_User(), image);
+                        String response = in.readLine();
+                        if (response.equals("Success")) 
+                        {
+                            JOptionPane.showMessageDialog(this, "Thêm ảnh thành công!");
+                            imageList.clear();
+                        } else 
+                        {
+                            JOptionPane.showMessageDialog(this, "Có lỗi xảy ra!"+response,"Lỗi",JOptionPane.ERROR_MESSAGE);
+                        }
+                        socket.close();
+                    }
+                    
                 }
             } 
+        } catch (IOException ex) {
+            Logger.getLogger(frmCameraAcess.class.getName()).log(Level.SEVERE, null, ex);
         }
    }
     
