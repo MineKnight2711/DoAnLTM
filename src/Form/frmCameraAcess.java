@@ -141,10 +141,11 @@ public class frmCameraAcess extends javax.swing.JFrame {
                 if (countImages == 50) {
                     JOptionPane.showMessageDialog(null, "Đã lưu khuôn mặt");
                 }
-            } else {
-                // No face detected, stop the function
-                return;
-            }
+            } 
+//            else {
+//                // No face detected, stop the function
+//                return;
+//            }
         }
     }
     

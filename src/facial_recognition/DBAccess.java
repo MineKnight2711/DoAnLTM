@@ -174,7 +174,7 @@ public class DBAccess {
                 return true;
             }
         }
-        catch(Exception ex ){
+        catch(SQLException ex ){
             JOptionPane.showMessageDialog(null, ex);
             return false;
         }
@@ -235,6 +235,17 @@ public class DBAccess {
             statement.executeUpdate();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
+        }
+    }
+    
+    public void deleteUserImage(String idImage){
+        String query = "DELETE FROM user_image WHERE ID_Image = ?";
+        try(PreparedStatement statement = con.prepareStatement(query)){
+            statement.setString(1, idImage);
+            statement.executeUpdate();
+        }
+        catch(SQLException ex){
+            JOptionPane.showConfirmDialog(null, ex);
         }
     }
     
