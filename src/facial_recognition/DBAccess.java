@@ -143,7 +143,7 @@ public class DBAccess {
     }
     
     public byte[] testDislay(){
-        String query = "SELECT * FROM user_image WHERE ID_Image = 'I0000000004'";
+        String query = "SELECT * FROM user_image WHERE ID_Image = 'I0000000060'";
          byte[] imageData = null;
          try (PreparedStatement statement = con.prepareStatement(query)){
               try (ResultSet resultSet = statement.executeQuery()) {
