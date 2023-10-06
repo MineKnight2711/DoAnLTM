@@ -4,8 +4,8 @@
  */
 package Form;
 
-import facial_recognition.Account;
-import facial_recognition.DBAccess;
+import models.Account;
+import db_connection.DBAccess;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -43,6 +43,7 @@ public class FrmLogin extends javax.swing.JFrame {
         cbShowPassword = new javax.swing.JCheckBox();
         passfPassword = new javax.swing.JPasswordField();
         btnResister = new javax.swing.JButton();
+        btnNhanDienTest = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -73,6 +74,13 @@ public class FrmLogin extends javax.swing.JFrame {
             }
         });
 
+        btnNhanDienTest.setText("Nhận diện (test)");
+        btnNhanDienTest.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNhanDienTestActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -81,7 +89,7 @@ public class FrmLogin extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(36, 36, 36)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel2)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
@@ -90,10 +98,16 @@ public class FrmLogin extends javax.swing.JFrame {
                                     .addComponent(passfPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
                                     .addComponent(txtAccount)))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(cbShowPassword)
-                                .addGap(54, 54, 54)
-                                .addComponent(btnLogin))
-                            .addComponent(btnResister)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbShowPassword)
+                                    .addComponent(btnResister))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(54, 54, 54)
+                                        .addComponent(btnLogin))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                                        .addComponent(btnNhanDienTest))))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(139, 139, 139)
                         .addComponent(lblDangNhap)))
@@ -116,9 +130,11 @@ public class FrmLogin extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbShowPassword)
                     .addComponent(btnLogin))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnResister)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnResister)
+                    .addComponent(btnNhanDienTest))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         pack();
@@ -182,6 +198,13 @@ public class FrmLogin extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnResisterActionPerformed
 
+    private void btnNhanDienTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhanDienTestActionPerformed
+        // TODO add your handling code here:
+        frmRecognitionTest open = new frmRecognitionTest();
+        open.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnNhanDienTestActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -219,6 +242,7 @@ public class FrmLogin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
+    private javax.swing.JButton btnNhanDienTest;
     private javax.swing.JButton btnResister;
     private javax.swing.JCheckBox cbShowPassword;
     private javax.swing.JLabel jLabel1;

@@ -4,15 +4,19 @@
  */
 package Form;
 
-import facial_recognition.Account;
-import facial_recognition.DBAccess;
-import facial_recognition.UserImages;
+import models.Account;
+import models.ButtonColumn;
+import db_connection.DBAccess;
+import models.UserImages;
 import java.awt.Component;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -26,6 +30,7 @@ public class frmLoadImageData extends javax.swing.JFrame {
     private static Account acc;
     private DBAccess access;
     private List<UserImages> userImages;
+    private ButtonColumn buttonColumn;
     /**
      * Creates new form frmLoadImageData
      */
@@ -34,6 +39,7 @@ public class frmLoadImageData extends javax.swing.JFrame {
         this.acc = acc;
         access = new DBAccess();
         LoadImage();
+        renderButtonDelete();
     }
 
     /**
@@ -53,17 +59,17 @@ public class frmLoadImageData extends javax.swing.JFrame {
 
         tbImage.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Mã người dùng", "Mã ảnh", "Ảnh"
+                "Mã người dùng", "Mã ảnh", "Ảnh", "Xoá"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -86,9 +92,9 @@ public class frmLoadImageData extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTroVe))
-                .addContainerGap(17, Short.MAX_VALUE))
+                    .addComponent(btnTroVe)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 779, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -126,8 +132,47 @@ public class frmLoadImageData extends javax.swing.JFrame {
         }
         // Set the custom cell renderer for the image column
         TableColumn imageColumn = tbImage.getColumnModel().getColumn(2);
-        imageColumn.setCellRenderer(new ImageRenderer());
+        imageColumn.setCellRenderer(new ImageRenderer());        
         tbImage.setRowHeight(100); 
+    }
+    
+    private void renderButtonDelete(){       
+        clickLastColumnCell();
+        Icon deleteIcon = new  ImageIcon("src\\icons\\delete.png");
+        buttonColumn = new ButtonColumn(tbImage, tbImage.getColumnCount() - 1,deleteIcon);
+    }
+    
+    private void clickLastColumnCell(){
+        
+        tbImage.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = tbImage.rowAtPoint(e.getPoint());
+                int column = tbImage.columnAtPoint(e.getPoint());
+                if (column == tbImage.getColumnCount() - 1) {
+                    
+                    int selectedRow = tbImage.convertRowIndexToModel(row);
+                    Object idImage = tbImage.getModel().getValueAt(selectedRow, 1);
+                    int result = JOptionPane.showConfirmDialog(
+                            null,
+                            "Bạn có chắc muốn xoá ảnh này này? ",
+                            "Xác nhận",
+                            JOptionPane.YES_NO_OPTION);
+
+                    if (result == JOptionPane.YES_OPTION)
+                    {
+                        if(access.deleteUserImage(idImage.toString())){
+                            JOptionPane.showMessageDialog(null, "Đã xoá ảnh");
+                            LoadImage();
+                        }  
+                    }
+                    else
+                        return;
+                
+                }
+
+            }
+        });
     }
 
     // Custom cell renderer to display the image

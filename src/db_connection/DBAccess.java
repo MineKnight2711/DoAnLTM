@@ -1,6 +1,8 @@
-package facial_recognition;
+package db_connection;
 
+import models.UserImages;
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import models.Account;
 import static java.lang.reflect.Array.getByte;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -133,18 +135,9 @@ public class DBAccess {
         }
     }
     
-    public int Update(String str){
-        try {
-             int i=stmt.executeUpdate(str);
-             return i;
-        }catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
-            return -1;
-        }
-    }
     
     public byte[] testDislay(){
-        String query = "SELECT * FROM user_image WHERE ID_Image = 'I0000000060'";
+        String query = "SELECT * FROM user_image WHERE ID_Image = 'I0000000075'";
          byte[] imageData = null;
          try (PreparedStatement statement = con.prepareStatement(query)){
               try (ResultSet resultSet = statement.executeQuery()) {
@@ -174,7 +167,7 @@ public class DBAccess {
                 return true;
             }
         }
-        catch(SQLException ex ){
+        catch(Exception ex ){
             JOptionPane.showMessageDialog(null, ex);
             return false;
         }
@@ -238,14 +231,16 @@ public class DBAccess {
         }
     }
     
-    public void deleteUserImage(String idImage){
+    public boolean deleteUserImage(String idImage){
         String query = "DELETE FROM user_image WHERE ID_Image = ?";
         try(PreparedStatement statement = con.prepareStatement(query)){
             statement.setString(1, idImage);
             statement.executeUpdate();
+            return true;
         }
         catch(SQLException ex){
             JOptionPane.showConfirmDialog(null, ex);
+            return false;
         }
     }
     

@@ -4,7 +4,7 @@
  */
 package Form;
 
-import facial_recognition.DBAccess;
+import db_connection.DBAccess;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
