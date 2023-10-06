@@ -4,7 +4,7 @@
  */
 package facial_recognition;
 
-import Form.FrmLogin;
+import Form.frmLogin;
 
 /**
  *
@@ -17,7 +17,7 @@ public class Facial_Recognition {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        FrmLogin open = new FrmLogin();
+        frmLogin open = new frmLogin();
         open.setVisible(true);
     }
     

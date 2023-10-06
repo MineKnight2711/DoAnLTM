@@ -112,7 +112,7 @@ public class frmLoadImageData extends javax.swing.JFrame {
 
     private void btnTroVeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTroVeActionPerformed
         // TODO add your handling code here:
-        FrmInfo open = new FrmInfo(acc);
+        frmInfo open = new frmInfo(acc);
         open.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnTroVeActionPerformed

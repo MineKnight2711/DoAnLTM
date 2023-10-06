@@ -328,11 +328,11 @@ public class frmCameraAcess extends javax.swing.JFrame {
         isRecording = false;
         initializeCamera();
         if(frm.equals("capNhat")){            
-            FrmInfo open = new FrmInfo(account);
+            frmInfo open = new frmInfo(account);
             open.setVisible(true);
         }
         else{
-            FrmLogin open = new FrmLogin();
+            frmLogin open = new frmLogin();
             open.setVisible(true);
         }
         this.dispose();
