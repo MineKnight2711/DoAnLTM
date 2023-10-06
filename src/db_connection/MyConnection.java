@@ -1,4 +1,4 @@
-package facial_recognition;
+package db_connection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,7 +23,7 @@ public class MyConnection {
             return con;
         }
         catch(Exception ex){
-            JOptionPane.showMessageDialog(null, ex.toString(),"Loi",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, ex.toString(),"Lỗi",JOptionPane.ERROR_MESSAGE);
             return null;
         }
     }

@@ -4,8 +4,12 @@
  */
 package Form;
 
-import facial_recognition.Account;
-import facial_recognition.DBAccess;
+import models.Account;
+import db_connection.DBAccess;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import org.opencv.core.Core;
@@ -67,7 +71,10 @@ public class frmCameraAcess extends javax.swing.JFrame {
                     detectAndDrawFaces(frame);
                     // Optionally, perform image processing or face detection here
                     Imgcodecs.imencode(".jpg", frame, matOfByte);
-                    imageData = matOfByte.toArray();                                                           
+                    imageData = matOfByte.toArray();   
+                    if(save && countImages < 50){                      
+                        saveFace(imageData);
+                    }
                     // Display the image on the JLabel
                     ImageIcon imageIcon = new ImageIcon(imageData);
                     lblCameraDisplay.setIcon(imageIcon);
@@ -106,10 +113,10 @@ public class frmCameraAcess extends javax.swing.JFrame {
         }
     }
     
-    private void saveFace() {
+    private void saveFace(byte[] image) {
         if (save) {
             // Convert the byte[] imageData to a Mat object
-            Mat frame = Imgcodecs.imdecode(new MatOfByte(imageData), Imgcodecs.IMREAD_COLOR);
+            Mat frame = Imgcodecs.imdecode(new MatOfByte(image), Imgcodecs.IMREAD_COLOR);
 
             // Convert the frame to grayscale
             Mat grayFrame = new Mat();
@@ -127,24 +134,34 @@ public class frmCameraAcess extends javax.swing.JFrame {
                 Rect faceRect = faces.toArray()[0]; // Assuming only one face is detected
 
                 // Crop the face region from the gray frame
-                Mat faceImage = new Mat(grayFrame, faceRect); // Crop from the grayscale frame
-
-                
+                Mat faceImage = new Mat(grayFrame, faceRect); // Crop from the grayscale frame                
                 // Encode the face image to JPEG
                 MatOfByte faceImageData = new MatOfByte();
                 Imgcodecs.imencode(".jpg", faceImage, faceImageData);
-                imageData = faceImageData.toArray();
-
+                image = faceImageData.toArray();
+                Dispalay(image);
                 // Save the face image to the database
-                access.saveImage(account.getID_User(), imageData);
+                access.saveImage(account.getID_User(), image);
                 countImages++;
                 if (countImages == 50) {
+                    countImages = 0;
+                    save = false;
                     JOptionPane.showMessageDialog(null, "Đã lưu khuôn mặt");
                 }
-            } else {
-                // No face detected, stop the function
-                return;
-            }
+            } 
+        }
+   }
+    
+    private void Dispalay(byte[] image1) {
+        try{           
+            InputStream inputStream = new ByteArrayInputStream(image1);
+            BufferedImage imageBuffer1 = ImageIO.read(inputStream);
+            ImageIcon icon1 = new ImageIcon(imageBuffer1);
+            lblAnhChup.setIcon(icon1);
+            lblSoAnh.setText(String.valueOf(countImages + 1));
+        }
+        catch(Exception ex){
+            JOptionPane.showMessageDialog(null, ex);
         }
     }
     
@@ -162,6 +179,9 @@ public class frmCameraAcess extends javax.swing.JFrame {
         btnMoCamera = new javax.swing.JButton();
         btnBack = new javax.swing.JButton();
         btnLuuKhuonMat = new javax.swing.JButton();
+        lblAnhChup = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        lblSoAnh = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -188,38 +208,55 @@ public class frmCameraAcess extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setText("/50");
+
+        lblSoAnh.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblSoAnh.setText("0");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(btnBack)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(30, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(lblCameraDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 652, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(27, 27, 27))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(131, 131, 131)
                         .addComponent(btnMoCamera, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(67, 67, 67)
-                        .addComponent(btnLuuKhuonMat, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(135, 135, 135))))
+                        .addComponent(btnLuuKhuonMat, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnBack)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblCameraDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 652, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblAnhChup, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(lblSoAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(115, 115, 115)))))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnBack)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                .addComponent(lblCameraDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(17, 17, 17)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblCameraDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblAnhChup, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(lblSoAnh))))
+                .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnMoCamera, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnLuuKhuonMat, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(btnLuuKhuonMat, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         pack();
@@ -262,11 +299,11 @@ public class frmCameraAcess extends javax.swing.JFrame {
     private void btnLuuKhuonMatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuKhuonMatActionPerformed
         // TODO add your handling code here:
         save = true;
-        while(countImages < 50){            
-            saveFace();              
+        if(!save){
+            save = true;
         }
-        countImages = 0;
-        save = false;
+        
+        
     }//GEN-LAST:event_btnLuuKhuonMatActionPerformed
 
     /**
@@ -308,6 +345,9 @@ public class frmCameraAcess extends javax.swing.JFrame {
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnLuuKhuonMat;
     private javax.swing.JButton btnMoCamera;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel lblAnhChup;
     private javax.swing.JLabel lblCameraDisplay;
+    private javax.swing.JLabel lblSoAnh;
     // End of variables declaration//GEN-END:variables
 }

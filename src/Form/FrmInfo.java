@@ -4,9 +4,11 @@
  */
 package Form;
 
+import untils.KeyPressCheck;
+import untils.CheckInput;
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import facial_recognition.Account;
-import facial_recognition.DBAccess;
+import models.Account;
+import db_connection.DBAccess;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;

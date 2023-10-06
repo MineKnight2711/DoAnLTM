@@ -4,8 +4,8 @@
  */
 package Form;
 
-import facial_recognition.Account;
-import facial_recognition.DBAccess;
+import models.Account;
+import db_connection.DBAccess;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
