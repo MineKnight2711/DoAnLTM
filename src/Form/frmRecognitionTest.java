@@ -50,10 +50,11 @@ public class frmRecognitionTest extends javax.swing.JFrame {
      * Creates new form frmRecognitionTest
      */
     public frmRecognitionTest() {
-        initComponents();
+        initComponents();       
         access = new DBAccess();
         check = false;
         txtTiLe.setEnabled(false);
+         runableThread();
     }
     
     private byte[] detctFace(byte[] imageCapture) {
@@ -183,6 +184,20 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         return similarity;
     }
     
+    private void runableThread(){
+        Runnable frameGrabber = () -> {
+                while (true) {
+                    initializeCamera();
+                    if(!isRecording && check && imageData != null){   
+                        facialRecognition(imageData);
+                    }
+                }
+            };
+            // Create a new thread for grabbing frames from the camera
+            thread = new Thread(frameGrabber); 
+            thread.setDaemon(true);  
+            thread.start();   
+    }
     
     private boolean initializeCamera() {        
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -194,36 +209,26 @@ public class frmRecognitionTest extends javax.swing.JFrame {
             return false;
         } 
         if (videoCapture.isOpened()) {
-            Runnable frameGrabber = () -> {
-                while (isRecording) {      
-                    videoCapture.read(frame);
-                    detectAndDrawFaces(frame);
-                    // Optionally, perform image processing or face detection here
-                    Imgcodecs.imencode(".jpg", frame, matOfByte);
-                    imageData = matOfByte.toArray(); 
-                    if(check)
-                        facialRecognition(imageData);
-                    check = false;
-                    // Display the image on the JLabel
-                    ImageIcon imageIcon = new ImageIcon(imageData);
-                    lblDisplayCapture.setIcon(imageIcon);
-                    lblDisplayCapture.repaint();
-                    // Record video if enabled
-                     if (!isRecording){
-                        videoCapture.release();
-                        lblDisplayCapture.setIcon(null);
-                        break;
-                    }                        
-                }
-            };
-            // Create a new thread for grabbing frames from the camera
-            thread = new Thread(frameGrabber);  
-            if(!isRecording){
-                thread.interrupt();
-                return true;
+            while (isRecording) {      
+                videoCapture.read(frame);
+                detectAndDrawFaces(frame);
+                // Optionally, perform image processing or face detection here
+                Imgcodecs.imencode(".jpg", frame, matOfByte);
+                imageData = matOfByte.toArray(); 
+                if(check)
+                    facialRecognition(imageData);
+                check = false;
+                // Display the image on the JLabel
+                ImageIcon imageIcon = new ImageIcon(imageData);
+                lblDisplayCapture.setIcon(imageIcon);
+                lblDisplayCapture.repaint();
+                // Record video if enabled
+                 if (!isRecording){
+                    videoCapture.release();
+                    lblDisplayCapture.setIcon(null);
+                    break;
+                }                        
             }
-            thread.setDaemon(true);  
-            thread.start();            
             return true;
         }
         return false;
@@ -252,7 +257,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         fcChooseImage = new javax.swing.JFileChooser();
         lblDisplayCapture = new javax.swing.JLabel();
         btnMoCamera = new javax.swing.JButton();
-        btnNhanDIen = new javax.swing.JButton();
+        btnNhanDien = new javax.swing.JButton();
         lblDataFace = new javax.swing.JLabel();
         lblFaceCapture = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -269,11 +274,11 @@ public class frmRecognitionTest extends javax.swing.JFrame {
             }
         });
 
-        btnNhanDIen.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnNhanDIen.setText("Nhận diện");
-        btnNhanDIen.addActionListener(new java.awt.event.ActionListener() {
+        btnNhanDien.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnNhanDien.setText("Nhận diện");
+        btnNhanDien.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNhanDIenActionPerformed(evt);
+                btnNhanDienActionPerformed(evt);
             }
         });
 
@@ -300,7 +305,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnMoCamera)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnNhanDIen)
+                        .addComponent(btnNhanDien)
                         .addGap(76, 76, 76)
                         .addComponent(btnChonAnh)
                         .addGap(78, 78, 78)))
@@ -322,7 +327,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnMoCamera)
-                    .addComponent(btnNhanDIen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnNhanDien, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnChonAnh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -346,37 +351,27 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         if (isRecording) {
             // Stop recording
             isRecording = false;
-            if(!initializeCamera())
-                return;
             btnMoCamera.setText("Record");
         } else {
             // Start recording
             isRecording = true;
-            if(!initializeCamera())
-                return;
             btnMoCamera.setText("Stop Recording");
         }
     }//GEN-LAST:event_btnMoCameraActionPerformed
 
-    private void btnNhanDIenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhanDIenActionPerformed
+    private void btnNhanDienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhanDienActionPerformed
         // TODO add your handling code here:
+        if(!isRecording && imageData == null){
+            JOptionPane.showMessageDialog(null, "Chưa chọn ảnh hoặc bật camera");
+            return;
+        }
         if(check){
             check = false;   
         }
         else{
             check = true;    
-            if (imageData != null ) {
-                Runnable imageChoose = () -> {
-                    while(check){
-                        facialRecognition(imageData);
-                    }
-                };
-                thread = new Thread(imageChoose);
-                thread.setDaemon(true);  
-                thread.start();
-            }
         }
-    }//GEN-LAST:event_btnNhanDIenActionPerformed
+    }//GEN-LAST:event_btnNhanDienActionPerformed
 
     private void btnChonAnhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChonAnhActionPerformed
         // TODO add your handling code here:
@@ -394,13 +389,13 @@ public class frmRecognitionTest extends javax.swing.JFrame {
                 Path imagePath = selectedFile.toPath();
                 byte[] imageBytes = Files.readAllBytes(imagePath);  
                 byte[] faceImage = detctFace(imageBytes);
-                if(faceImage != null){
-                    imageData = faceImage;      
-                    InputStream inputStream = new ByteArrayInputStream(imageData);
+                if(faceImage != null){                    
+                    isRecording = false;
+                    InputStream inputStream = new ByteArrayInputStream(faceImage );
                     BufferedImage imageBuffer1 = ImageIO.read(inputStream);
                     ImageIcon icon1 = new ImageIcon(imageBuffer1);
-                    lblFaceCapture.setIcon(icon1);
-                    
+                    lblFaceCapture.setIcon(icon1);    
+                    imageData = imageBytes;   
                 }
                 else{
                     JOptionPane.showMessageDialog(null, "Không tìm thấy khuôn mặt trong ảnh chọn");
@@ -449,7 +444,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnChonAnh;
     private javax.swing.JButton btnMoCamera;
-    private javax.swing.JButton btnNhanDIen;
+    private javax.swing.JButton btnNhanDien;
     private javax.swing.JFileChooser fcChooseImage;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblDataFace;

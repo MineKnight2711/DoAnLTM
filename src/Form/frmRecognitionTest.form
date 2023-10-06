@@ -37,7 +37,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="btnMoCamera" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="btnNhanDIen" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnNhanDien" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
                       <Component id="btnChonAnh" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="78" max="-2" attributes="0"/>
@@ -65,7 +65,7 @@
               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnMoCamera" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnNhanDIen" alignment="3" max="32767" attributes="0"/>
+                  <Component id="btnNhanDien" alignment="3" max="32767" attributes="0"/>
                   <Component id="btnChonAnh" alignment="3" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
@@ -99,7 +99,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMoCameraActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="btnNhanDIen">
+    <Component class="javax.swing.JButton" name="btnNhanDien">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="18" style="1"/>
@@ -107,7 +107,7 @@
         <Property name="text" type="java.lang.String" value="Nh&#x1ead;n di&#x1ec7;n"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNhanDIenActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNhanDienActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="lblDataFace">
