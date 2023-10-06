@@ -1,6 +1,6 @@
 package db_connection;
 
-import untils.UserImages;
+import models.UserImages;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import models.Account;
 import static java.lang.reflect.Array.getByte;
