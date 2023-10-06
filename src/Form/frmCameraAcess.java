@@ -7,13 +7,16 @@ package Form;
 import facial_recognition.Account;
 import facial_recognition.DBAccess;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
+import org.opencv.core.MatOfRect;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
 /**
@@ -31,11 +34,13 @@ public class frmCameraAcess extends javax.swing.JFrame {
     private int countImages;
     private boolean save;
     private byte[] imageData;
+    private static String frm;
     /**
      * Creates new form frmCameraAcess
      */
-    public frmCameraAcess(Account account) {
+    public frmCameraAcess(Account account, String frm) {
         initComponents();
+        this.frm = frm;
         this.account = account; 
         access = new DBAccess();
         save = false;
@@ -59,6 +64,7 @@ public class frmCameraAcess extends javax.swing.JFrame {
             Runnable frameGrabber = () -> {
                 while (isRecording) {      
                     videoCapture.read(frame);
+                    detectAndDrawFaces(frame);
                     // Optionally, perform image processing or face detection here
                     Imgcodecs.imencode(".jpg", frame, matOfByte);
                     imageData = matOfByte.toArray();                                                           
@@ -87,14 +93,59 @@ public class frmCameraAcess extends javax.swing.JFrame {
         return false;
     }
     
-    private void saveFace(){
-        if(save){
-             access.saveImage(account.getID_User(), imageData);
-             countImages++;
-             if(countImages == 10){
-                 JOptionPane.showMessageDialog(null, "Đã lưu khuôn mặt");                 
-             }                 
-        } 
+    private void detectAndDrawFaces(Mat frame) {
+        Mat grayFrame = new Mat();
+        Imgproc.cvtColor(frame, grayFrame, Imgproc.COLOR_BGR2GRAY);
+
+        CascadeClassifier faceCascade = new CascadeClassifier("src\\PreTrainData\\haarcascade_frontalface_default.xml");
+        MatOfRect faces = new MatOfRect();
+        faceCascade.detectMultiScale(grayFrame, faces);
+
+        for (Rect rect : faces.toArray()) {
+            Imgproc.rectangle(frame, rect.tl(), rect.br(), new Scalar(0, 255, 0), 2);
+        }
+    }
+    
+    private void saveFace() {
+        if (save) {
+            // Convert the byte[] imageData to a Mat object
+            Mat frame = Imgcodecs.imdecode(new MatOfByte(imageData), Imgcodecs.IMREAD_COLOR);
+
+            // Convert the frame to grayscale
+            Mat grayFrame = new Mat();
+            Imgproc.cvtColor(frame, grayFrame, Imgproc.COLOR_BGR2GRAY);
+
+            // Load the face cascade classifier
+            CascadeClassifier faceCascade = new CascadeClassifier("src\\PreTrainData\\haarcascade_frontalface_default.xml");
+
+            // Detect faces in the grayscale frame
+            MatOfRect faces = new MatOfRect();
+            faceCascade.detectMultiScale(grayFrame, faces);
+
+            // Check if a face is detected
+            if (faces.toArray().length > 0) {
+                Rect faceRect = faces.toArray()[0]; // Assuming only one face is detected
+
+                // Crop the face region from the gray frame
+                Mat faceImage = new Mat(grayFrame, faceRect); // Crop from the grayscale frame
+
+                
+                // Encode the face image to JPEG
+                MatOfByte faceImageData = new MatOfByte();
+                Imgcodecs.imencode(".jpg", faceImage, faceImageData);
+                imageData = faceImageData.toArray();
+
+                // Save the face image to the database
+                access.saveImage(account.getID_User(), imageData);
+                countImages++;
+                if (countImages == 50) {
+                    JOptionPane.showMessageDialog(null, "Đã lưu khuôn mặt");
+                }
+            } else {
+                // No face detected, stop the function
+                return;
+            }
+        }
     }
     
 
@@ -197,15 +248,21 @@ public class frmCameraAcess extends javax.swing.JFrame {
         // TODO add your handling code here:
         isRecording = false;
         initializeCamera();
-        FrmInfo open = new FrmInfo(account);
-        open.setVisible(true);
+        if(frm.equals("capNhat")){            
+            FrmInfo open = new FrmInfo(account);
+            open.setVisible(true);
+        }
+        else{
+            FrmLogin open = new FrmLogin();
+            open.setVisible(true);
+        }
         this.dispose();
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnLuuKhuonMatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuKhuonMatActionPerformed
         // TODO add your handling code here:
         save = true;
-        while(countImages < 10){            
+        while(countImages < 50){            
             saveFace();              
         }
         countImages = 0;
@@ -242,7 +299,7 @@ public class frmCameraAcess extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new frmCameraAcess(account).setVisible(true);
+                new frmCameraAcess(account, frm).setVisible(true);
             }
         });
     }
