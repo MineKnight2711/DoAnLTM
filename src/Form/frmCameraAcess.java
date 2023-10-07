@@ -30,6 +30,7 @@ import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
@@ -147,14 +148,13 @@ public class frmCameraAcess extends javax.swing.JFrame {
                 
                 // Check if a face is detected
                 if (faces.toArray().length > 0) {
-                    Rect faceRect = faces.toArray()[0]; // Assuming only one face is detected
-                    
-                    
-                    
+                    Rect faceRect = faces.toArray()[0]; // Assuming only one face is detected  
                     // Crop the face region from the gray frame
                     Mat faceImage = new Mat(grayFrame, faceRect); // Crop from the grayscale frame
-                    // Encode the face image to JPEG
                     MatOfByte faceImageData = new MatOfByte();
+                    Size resizedSize = new Size(256, 256); // Adjust the size as needed
+                    Imgproc.resize(faceImage, faceImage, resizedSize);
+                    // Encode the face image to JPEG
                     Imgcodecs.imencode(".jpg", faceImage, faceImageData);
                     image = faceImageData.toArray();
                     Dispalay(image);
@@ -164,12 +164,11 @@ public class frmCameraAcess extends javax.swing.JFrame {
                     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                     
-                    OperationJson operationJson=new OperationJson();
+                    OperationJson operationJson = new OperationJson();
                     operationJson.setOperation("save-image/"+account.getID_User());
                     operationJson.setData(Base64.getEncoder().encodeToString(image));
-                    String sendJson=gson.toJson(operationJson);
+                    String sendJson = gson.toJson(operationJson);
                     out.println(sendJson);
-                    
                     countImages++;
                     if (countImages == 50) {
                         countImages = 0;
@@ -183,6 +182,7 @@ public class frmCameraAcess extends javax.swing.JFrame {
                         } else 
                         {
                             JOptionPane.showMessageDialog(this, "Có lỗi xảy ra!"+response,"Lỗi",JOptionPane.ERROR_MESSAGE);
+                            countImages = 0;
                         }
                         socket.close();
                     }

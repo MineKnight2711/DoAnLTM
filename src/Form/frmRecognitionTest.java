@@ -84,11 +84,14 @@ public class frmRecognitionTest extends javax.swing.JFrame {
             Rect faceRect = faces.toArray()[0]; // Assuming only one face is detected
 
             // Crop the face region from the gray frame
-            Mat faceImage = new Mat(grayFrame, faceRect); // Crop from the grayscale frame                
+            Mat faceImage = new Mat(grayFrame, faceRect); // Crop from the grayscale frame   
+            Size resizedSize = new Size(256, 256); // Adjust the size as needed
+            Imgproc.resize(faceImage, faceImage, resizedSize);
             // Encode the face image to JPEG
             Imgcodecs.imencode(".jpg", faceImage, faceImageData);
             imageCapture = faceImageData.toArray();
             return imageCapture;
+           
         }
         return null;
     }
@@ -144,42 +147,11 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
         // Convert image byte arrays to OpenCV Mat objects
-        Mat mat1 = Imgcodecs.imdecode(new MatOfByte(image1), Imgcodecs.IMREAD_GRAYSCALE);
-        Mat mat2 = Imgcodecs.imdecode(new MatOfByte(image2), Imgcodecs.IMREAD_GRAYSCALE);
-
-        // Load pre-trained face detection cascade classifier
-        CascadeClassifier faceCascade = new CascadeClassifier("src\\PreTrainData\\haarcascade_frontalface_default.xml");
-        // Detect faces in image 1
-        MatOfRect faces1 = new MatOfRect();
-        faceCascade.detectMultiScale(mat1, faces1);
-
-        if (faces1.empty()) {
-            return 0;
-        }
-
-        // Detect faces in image 2
-        MatOfRect faces2 = new MatOfRect();
-        faceCascade.detectMultiScale(mat2, faces2);
-
-        if (faces2.empty()) {
-            return 0;
-        }
-
-        // Extract face regions from the images
-        Rect face1 = faces1.toArray()[0];
-        Rect face2 = faces2.toArray()[0];
-        Mat cropped1 = new Mat(mat1, face1);
-        Mat cropped2 = new Mat(mat2, face2);
-
-        // Resize the face regions to a common size for comparison
-        Size size = new Size(256, 256);
-        Mat resized1 = new Mat();
-        Mat resized2 = new Mat();
-        Imgproc.resize(cropped1, resized1, size);
-        Imgproc.resize(cropped2, resized2, size);
-
+        Mat mat1 = Imgcodecs.imdecode(new MatOfByte(image1), Imgcodecs.IMREAD_UNCHANGED);
+        Mat mat2 = Imgcodecs.imdecode(new MatOfByte(image2), Imgcodecs.IMREAD_UNCHANGED);
+       
         // Calculate the Mean Squared Error (MSE) as a similarity measure
-        double mse = Core.norm(resized1, resized2, Core.NORM_L2) / (resized1.rows() * resized1.cols());
+        double mse = Core.norm(mat1, mat2, Core.NORM_L2) / (mat1.rows() * mat1.cols());
 
         // Convert the MSE to a similarity score (1 - MSE)
         double similarity = 1.0 - mse;
