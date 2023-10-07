@@ -170,7 +170,7 @@ public class frmCameraAcess extends javax.swing.JFrame {
                     String sendJson = gson.toJson(operationJson);
                     out.println(sendJson);
                     countImages++;
-                    if (countImages == 50) {
+                    if (countImages == 10) {
                         countImages = 0;
                         save = false;
 //                        access.saveImage(account.getID_User(), image);
@@ -251,7 +251,7 @@ public class frmCameraAcess extends javax.swing.JFrame {
         });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setText("/50");
+        jLabel1.setText("/10");
 
         lblSoAnh.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblSoAnh.setText("0");
