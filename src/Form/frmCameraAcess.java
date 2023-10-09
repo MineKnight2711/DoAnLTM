@@ -10,11 +10,14 @@ import db_connection.DBAccess;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -22,7 +25,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import models.OperationJson;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -68,8 +73,7 @@ public class frmCameraAcess extends javax.swing.JFrame {
         gson=new Gson();
 
                     
-    }   
-    
+    }       
     
     private boolean initializeCamera() {        
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -129,36 +133,50 @@ public class frmCameraAcess extends javax.swing.JFrame {
         }
     }
     
+    private byte[] detctFace(byte[] imageCapture) {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        // Convert the byte[] imageData to a Mat object
+        Mat frame = Imgcodecs.imdecode(new MatOfByte(imageCapture), Imgcodecs.IMREAD_COLOR);
+
+        // Convert the frame to grayscale
+        Mat grayFrame = new Mat();
+        Imgproc.cvtColor(frame, grayFrame, Imgproc.COLOR_BGR2GRAY);
+
+        // Load the face cascade classifier
+        CascadeClassifier faceCascade = new CascadeClassifier("src\\PreTrainData\\haarcascade_frontalface_default.xml");
+        // Detect faces in the grayscale frame
+        MatOfRect faces = new MatOfRect();
+        faceCascade.detectMultiScale(grayFrame, faces);     
+        
+        MatOfByte faceImageData = new MatOfByte();
+        Imgcodecs.imencode(".jpg", grayFrame, faceImageData);
+        imageCapture = faceImageData.toArray();
+        // Check if a face is detected
+        if (faces.toArray().length > 0) {
+
+            // Encode the face image to JPEG
+            Rect faceRect = faces.toArray()[0]; // Assuming only one face is detected
+
+            // Crop the face region from the gray frame
+            Mat faceImage = new Mat(grayFrame, faceRect); // Crop from the grayscale frame   
+            Size resizedSize = new Size(256, 256); // Adjust the size as needed
+            Imgproc.resize(faceImage, faceImage, resizedSize);
+            // Encode the face image to JPEG
+            Imgcodecs.imencode(".jpg", faceImage, faceImageData);
+            imageCapture = faceImageData.toArray();
+            return imageCapture;
+           
+        }
+        return null;
+    }
+    
     private void saveFace(byte[] image) {
         try {
             if (save) {
-                // Convert the byte[] imageData to a Mat object
-                Mat frame = Imgcodecs.imdecode(new MatOfByte(image), Imgcodecs.IMREAD_COLOR);
-                
-                // Convert the frame to grayscale
-                Mat grayFrame = new Mat();
-                Imgproc.cvtColor(frame, grayFrame, Imgproc.COLOR_BGR2GRAY);
-                
-                // Load the face cascade classifier
-                CascadeClassifier faceCascade = new CascadeClassifier("src\\PreTrainData\\haarcascade_frontalface_default.xml");
-                
-                // Detect faces in the grayscale frame
-                MatOfRect faces = new MatOfRect();
-                faceCascade.detectMultiScale(grayFrame, faces);
-                
-                // Check if a face is detected
-                if (faces.toArray().length > 0) {
-                    Rect faceRect = faces.toArray()[0]; // Assuming only one face is detected  
-                    // Crop the face region from the gray frame
-                    Mat faceImage = new Mat(grayFrame, faceRect); // Crop from the grayscale frame
-                    MatOfByte faceImageData = new MatOfByte();
-                    Size resizedSize = new Size(256, 256); // Adjust the size as needed
-                    Imgproc.resize(faceImage, faceImage, resizedSize);
-                    // Encode the face image to JPEG
-                    Imgcodecs.imencode(".jpg", faceImage, faceImageData);
-                    image = faceImageData.toArray();
-                    Dispalay(image);
-                    Socket socket = new Socket("localhost", 6969);
+                    byte[] faceImage = detctFace(image);
+                    if(faceImage != null){
+                        Dispalay(faceImage);
+                    Socket socket = new Socket("26.196.143.193", 6969);
             
             
                     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -166,32 +184,32 @@ public class frmCameraAcess extends javax.swing.JFrame {
                     
                     OperationJson operationJson = new OperationJson();
                     operationJson.setOperation("save-image/"+account.getID_User());
-                    operationJson.setData(Base64.getEncoder().encodeToString(image));
+                    operationJson.setData(Base64.getEncoder().encodeToString(faceImage));
                     String sendJson = gson.toJson(operationJson);
                     out.println(sendJson);
                     countImages++;
                     if (countImages == 10) {
-                        countImages = 0;
-                        save = false;
-//                        access.saveImage(account.getID_User(), image);
-                        String response = in.readLine();
-                        if (response.equals("Success")) 
-                        {
-                            JOptionPane.showMessageDialog(this, "Thêm ảnh thành công!");
-                            imageList.clear();
-                        } else 
-                        {
-                            JOptionPane.showMessageDialog(this, "Có lỗi xảy ra!"+response,"Lỗi",JOptionPane.ERROR_MESSAGE);
                             countImages = 0;
+                            save = false;
+    //                        access.saveImage(account.getID_User(), image);
+                            String response = in.readLine();
+                            if (response.equals("Success")) 
+                            {
+                                JOptionPane.showMessageDialog(this, "Thêm ảnh thành công!");
+                                imageList.clear();
+                            } else 
+                            {
+                                JOptionPane.showMessageDialog(this, "Có lỗi xảy ra!"+response,"Lỗi",JOptionPane.ERROR_MESSAGE);
+                                countImages = 0;
+                            }
+                            socket.close();
                         }
-                        socket.close();
-                    }
-                    
+                    }           
                 }
-            } 
-        } catch (IOException ex) {
+            }
+         catch (IOException ex) {
             Logger.getLogger(frmCameraAcess.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }        
    }
     
     private void Dispalay(byte[] image1) {
@@ -217,6 +235,7 @@ public class frmCameraAcess extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        fcChooseImages = new javax.swing.JFileChooser();
         lblCameraDisplay = new javax.swing.JLabel();
         btnMoCamera = new javax.swing.JButton();
         btnBack = new javax.swing.JButton();
@@ -224,6 +243,7 @@ public class frmCameraAcess extends javax.swing.JFrame {
         lblAnhChup = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         lblSoAnh = new javax.swing.JLabel();
+        btnChonAnh = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -256,6 +276,14 @@ public class frmCameraAcess extends javax.swing.JFrame {
         lblSoAnh.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblSoAnh.setText("0");
 
+        btnChonAnh.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnChonAnh.setText("Chọn ảnh");
+        btnChonAnh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChonAnhActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -264,10 +292,12 @@ public class frmCameraAcess extends javax.swing.JFrame {
                 .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(131, 131, 131)
+                        .addGap(57, 57, 57)
                         .addComponent(btnMoCamera, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(67, 67, 67)
-                        .addComponent(btnLuuKhuonMat, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(30, 30, 30)
+                        .addComponent(btnLuuKhuonMat, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(50, 50, 50)
+                        .addComponent(btnChonAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnBack)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblCameraDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 652, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -295,10 +325,13 @@ public class frmCameraAcess extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(lblSoAnh))))
-                .addGap(23, 23, 23)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnMoCamera, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnLuuKhuonMat, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnLuuKhuonMat, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnMoCamera, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnChonAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(5, 5, 5))
         );
 
         pack();
@@ -348,6 +381,37 @@ public class frmCameraAcess extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnLuuKhuonMatActionPerformed
 
+    private void btnChonAnhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChonAnhActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fcChooseImage = new JFileChooser();
+        fcChooseImage.setVisible(true);
+        fcChooseImage.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        // Set file filter to allow only image files
+        FileNameExtensionFilter imageFilter = new FileNameExtensionFilter("Image files", "jpg", "jpeg", "png", "gif");
+        fcChooseImage.setFileFilter(imageFilter);
+
+        if (fcChooseImage.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            try {
+                int count = 0;
+                File[] selectedFiles = fcChooseImage.getSelectedFiles();
+                List<byte[]> imageList = new ArrayList<>();
+                for(File image : selectedFiles){
+                    Path imagePath = image.toPath();
+                    byte[] imageBytes = Files.readAllBytes(imagePath);
+                    byte[] faceImage = detctFace(imageBytes);
+                    if(faceImage != null){
+                        imageList.add(faceImage);
+                        count++;
+                    }
+                }
+                
+            } catch (Exception ex) {
+                JOptionPane.showConfirmDialog(null, ex);
+            }
+        } 
+    }//GEN-LAST:event_btnChonAnhActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -385,8 +449,10 @@ public class frmCameraAcess extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnChonAnh;
     private javax.swing.JButton btnLuuKhuonMat;
     private javax.swing.JButton btnMoCamera;
+    private javax.swing.JFileChooser fcChooseImages;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblAnhChup;
     private javax.swing.JLabel lblCameraDisplay;

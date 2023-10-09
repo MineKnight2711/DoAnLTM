@@ -73,7 +73,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         // Detect faces in the grayscale frame
         MatOfRect faces = new MatOfRect();
         faceCascade.detectMultiScale(grayFrame, faces);     
-        
+
         MatOfByte faceImageData = new MatOfByte();
         Imgcodecs.imencode(".jpg", grayFrame, faceImageData);
         imageCapture = faceImageData.toArray();
@@ -91,7 +91,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
             Imgcodecs.imencode(".jpg", faceImage, faceImageData);
             imageCapture = faceImageData.toArray();
             return imageCapture;
-           
+
         }
         return null;
     }
@@ -118,10 +118,10 @@ public class frmRecognitionTest extends javax.swing.JFrame {
                     check = false;
                     return true;
                 }
-            }            
+            }      
+            JOptionPane.showMessageDialog(null, "Không tìm thấy");
         }
         check = false;
-        JOptionPane.showMessageDialog(null, "Không tìm thấy");
         return false;
     }
     
@@ -414,6 +414,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         // TODO add your handling code here:
+        isRecording = false;
         frmRecognitionTest open = new frmRecognitionTest();
         open.setVisible(true );
         this.dispose();
