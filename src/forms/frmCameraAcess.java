@@ -404,10 +404,10 @@ public class frmCameraAcess extends javax.swing.JFrame {
                     }
                 }
                 if(count == 0){
-                    JOptionPane.showMessageDialog(null, String.format("Không nhận diện được khuôn mặt trong số ảnh đã chọn"));
+                    JOptionPane.showMessageDialog(null, String.format("Không nhận diện được khuôn mặt nào trong tổng số %d ảnh đã chọn", selectedFiles.length));
                     return;
                 }
-                JOptionPane.showMessageDialog(null, String.format("Nhận diện được %d khuôn mặt trong số ảnh đã chọn", count));
+                JOptionPane.showMessageDialog(null, String.format("Nhận diện được %d khuôn mặt trong tổng %d số ảnh đã chọn", count, selectedFiles.length));
                 frmDisplayChooseImage open = new frmDisplayChooseImage(imageList);
                 open.setVisible(true);
 
