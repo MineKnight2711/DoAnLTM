@@ -2,40 +2,51 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package Form;
+package forms;
 
-import untils.KeyPressCheck;
-import untils.CheckInput;
+import utils.KeyPressCheck;
+import utils.CheckInput;
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import com.google.gson.Gson;
 import models.Account;
 import db_connection.DBAccess;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Base64;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import models.OperationJson;
+import utils.BaseURL;
+import utils.EncodeDecode;
 
 /**
  *
  * @author dell
  */
-public class FrmInfo extends javax.swing.JFrame {
+public class frmInfo extends javax.swing.JFrame {
     private static Account account;
     private DocumentListener textChangeListener;
-    private DBAccess access; 
-    private CheckInput inputCheck;
-    private KeyPressCheck keyCheck;
+    private final DBAccess  access; 
+    private final CheckInput inputCheck;
+    private final KeyPressCheck keyCheck;
+    private final Gson gson;
     /**
      * Creates new form FrmInfo
+     * @param account
      */
-    public FrmInfo(Account account) {
+    public frmInfo(Account account) {
         initComponents();
         txtAccount.setEnabled(false);
         access = new DBAccess();
+        gson=new Gson();
         inputCheck = new CheckInput();
         keyCheck = new KeyPressCheck();
-        this.account = account;
+        frmInfo.account = account;
         GroupRadioBox();
         CheckKeyPress();
         TextChangeEvent();
@@ -377,7 +388,7 @@ public class FrmInfo extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    public void LoadInfo(Account acc){
+    private void LoadInfo(Account acc){
         try{
             Date brithday = acc.getBrithday();   
             txtLastName.setText(acc.getLast_Name());
@@ -463,7 +474,7 @@ public class FrmInfo extends javax.swing.JFrame {
             btnChangePassword.setEnabled(true);
     }
     
-    private String ChonGioiTinh(){
+    private String chonGioiTinh(){
         if(rbMale.isSelected())
             return "Nam";
         if(rbFemale.isSelected())
@@ -501,7 +512,7 @@ public class FrmInfo extends javax.swing.JFrame {
     }
     
     private void LogOut(){
-        FrmLogin open = new FrmLogin();
+        frmLogin open = new frmLogin();
         open.setVisible(true);
         this.dispose();
     }
@@ -540,14 +551,37 @@ public class FrmInfo extends javax.swing.JFrame {
         if(!inputCheck.CheckEmail(txtEmail.getText()))
             return;
         try{
-            Date selectedDate = dcBrithday.getDate();
-            java.sql.Date birthday = new java.sql.Date(selectedDate.getTime());
-            String query = String.format("UPDATE user SET First_Name = '%s', Last_Name = '%s', Brithday = '%s', Gender = '%s', Phone = '%s', Address = '%s', Email = '%s' WHERE Account = '%s'",
-                            txtFirstName.getText(), txtLastName.getText(), birthday, ChonGioiTinh(), txtPhone.getText(), txtAddress.getText(), txtEmail.getText(), txtAccount.getText());
-            access.UpdateInfo(query);
+            Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT); 
+
+            // Khởi tạo InputStream và output Stream để giao tiếp với server
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            account.setFrist_Name(txtFirstName.getText());
+            account.setLast_Name(txtLastName.getText());
+            account.setBrithday(dcBrithday.getDate());
+            account.setAddress(txtAddress.getText());
+            account.setEmail(txtEmail.getText());
+            account.setPhone(txtPhone.getText());
+            account.setGender(chonGioiTinh());
+            account.setAccount(txtAccount.getText());
+            OperationJson operationJson=new OperationJson();
+            operationJson.setOperation("update");
+            String accountToJson=gson.toJson(account);
+            operationJson.setData(EncodeDecode.encodeToBase64(accountToJson));
+            String sendJson=gson.toJson(operationJson);
+            out.println(sendJson);
+            String respone=EncodeDecode.decodeBase64FromJson(in.readLine());
+            if(respone.equals("Success"))
+            {
+                 JOptionPane.showMessageDialog(null, "Cập nhật thông tin thành công");
+            }
+            else
+            {
+                 JOptionPane.showMessageDialog(null, "Có lỗi xảy ra!\n"+"Lỗi :"+respone,"Lỗi",0);
+            }
             ReloadInfo(txtAccount.getText());
         }
-        catch(Exception ex){
+        catch(IOException ex){
             JOptionPane.showMessageDialog(null, ex);            
         }        
     }//GEN-LAST:event_btnUpdateInfoActionPerformed
@@ -588,20 +622,21 @@ public class FrmInfo extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmInfo(account).setVisible(true);
+                new frmInfo(account).setVisible(true);
             }
         });
     }

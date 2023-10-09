@@ -2,45 +2,49 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package Form;
+package forms;
 
-import untils.KeyPressCheck;
-import untils.CheckInput;
+import utils.KeyPressCheck;
+import utils.CheckInput;
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import com.google.gson.Gson;
 import models.Account;
 import db_connection.DBAccess;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.text.SimpleDateFormat;
+import java.awt.HeadlessException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import models.OperationJson;
+import utils.BaseURL;
 
 /**
  *
  * @author dell
  */
-public class FrmRegister extends javax.swing.JFrame {
+public class frmRegister extends javax.swing.JFrame {
     private Account acc;
     private DBAccess access; 
     private DocumentListener textChangeListener;
     private CheckInput inputCheck;
     private KeyPressCheck keyCheck;
+    private Gson gson;
     /**
      * Creates new form FrmRegister
      */
-    public FrmRegister() {        
+    public frmRegister() {        
         initComponents();
         CreateAccountFieldStatus(false);
         TextChangeEvent();
         SetDateNow();
         CheckKeyPress();
+        gson=new Gson();
         access = new DBAccess();
         inputCheck = new CheckInput();
         keyCheck = new KeyPressCheck();
@@ -115,6 +119,8 @@ public class FrmRegister extends javax.swing.JFrame {
         jLabel2.setText("Tên lót/Tên:");
 
         jLabel3.setText("Ngày sinh:");
+
+        dcBrithday.setDateFormatString("dd/MM/yyyy");
 
         rbFemale.setText("Nữ");
 
@@ -433,13 +439,12 @@ public class FrmRegister extends javax.swing.JFrame {
     
     private void btnTroVeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTroVeActionPerformed
         // TODO add your handling code here:
-        FrmLogin open = new FrmLogin();
+        frmLogin open = new frmLogin();
         open.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnTroVeActionPerformed
 
     private void btnCreateAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateAccountActionPerformed
-        // TODO add your handling code here:
         String password = new String(passfPassword.getPassword());
         String password1 = new String(passfRe_enterPassword.getPassword());
         if(!inputCheck.CheckBrithday(dcBrithday.getDate()))
@@ -451,34 +456,51 @@ public class FrmRegister extends javax.swing.JFrame {
         if(!inputCheck.CheckPassword(password, password1))
             return;
         try{ 
+            Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT); 
+
+            // Khởi tạo InputStream và output Stream để giao tiếp với server
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+
+            // Send a request to the server
             password =  BCrypt.withDefaults().hashToString(12, password.toCharArray());
             Date selectedDate = dcBrithday.getDate();
-            java.sql.Date birthday = new java.sql.Date(selectedDate.getTime());
             acc = new Account();
             acc.setID_User("");
             acc.setFrist_Name(txtFirstName.getText());
             acc.setLast_Name(txtLastName.getText());
-            acc.setBrithday(birthday);
+            acc.setBrithday(selectedDate);
             acc.setGender(ChonGioiTinh());
             acc.setPhone(txtPhone.getText());
             acc.setAddress(txtAddress.getText());
             acc.setEmail(txtEmail.getText());
             acc.setAccount(txtAccount.getText());
-            acc.setPassword(password);          
-            String query = String.format("INSERT INTO user VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
-                                    acc.getID_User(), acc.getAccount(), acc.getPassword(), acc.getFrist_Name(), acc.getLast_Name(),
-                                    acc.getBrithday(), acc.getGender(), acc.getPhone(), acc.getAddress(), acc.getEmail());
-            if(access.Register(query)){
-                Account user = access.getUser(acc.getAccount());
-                frmCameraAcess open = new frmCameraAcess(user, "dangKy");
-                open.setVisible(true);
-                this.dispose();
+            acc.setPassword(password);   
+            OperationJson operationJson=new OperationJson();
+            operationJson.setOperation("create");
+            operationJson.setData(gson.toJson(acc));
+            System.out.println(operationJson.toString());
+            String accountJson = gson.toJson(operationJson);
+            
+            //Gửi account lên server dưới dạng json
+            out.println(accountJson);
+
+            // Nhận kết quả từ server
+            String response = in.readLine();
+            if (response.equals("Success")) 
+            {
+                JOptionPane.showMessageDialog(this, "Đăng ký thành công!");
+                ClearAllText();
+            } else 
+            {
+                JOptionPane.showMessageDialog(this, "Có lỗi xảy ra!"+response,"Lỗi",JOptionPane.ERROR_MESSAGE);
             }
-            ClearAllText();
+            socket.close();
+            
         }
-        catch(Exception ex){
-            JOptionPane.showMessageDialog(rootPane, ex,"LOI",1);
-        }      
+        catch(HeadlessException | IOException ex){
+            JOptionPane.showMessageDialog(rootPane, ex,"Lỗi",JOptionPane.ERROR_MESSAGE);
+        }     
         
     }//GEN-LAST:event_btnCreateAccountActionPerformed
 
@@ -516,20 +538,21 @@ public class FrmRegister extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmRegister.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmRegister.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmRegister.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmRegister.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmRegister.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmRegister.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmRegister.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmRegister.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmRegister().setVisible(true);
+                new frmRegister().setVisible(true);
             }
         });
     }
