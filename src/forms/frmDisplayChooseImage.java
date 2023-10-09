@@ -4,22 +4,107 @@
  */
 package forms;
 
+import db_connection.DBAccess;
+import java.awt.Component;
+import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import models.ButtonColumn;
+import models.UserImages;
 
 /**
  *
  * @author dell
  */
+
 public class frmDisplayChooseImage extends javax.swing.JFrame {
     private static List<byte[]> listChooseImage;
-    /**
+    private DBAccess access;
+    private ButtonColumn buttonColumn;
+     /**
      * Creates new form frmDisplayChooseImage
      */
     public frmDisplayChooseImage(List<byte[]> listChooseImage) {
         initComponents();
         this.listChooseImage = listChooseImage;
+        access = new DBAccess();
+        LoadImage();
+        renderButtonDelete();
+    }
+    
+    private void LoadImage() {
+        DefaultTableModel model = (DefaultTableModel) tbImage.getModel();
+        model.setRowCount(0); 
+        for (byte[] image : listChooseImage) {                       
+            ImageIcon imageIcon = new ImageIcon(image);
+            Image scaledImage = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+            ImageIcon scaledImageIcon = new ImageIcon(scaledImage);
+            model.addRow(new Object[]{model.getRowCount() + 1, scaledImageIcon});         
+        }
+        // Set the custom cell renderer for the image column
+        TableColumn imageColumn = tbImage.getColumnModel().getColumn(1);
+        imageColumn.setCellRenderer(new frmDisplayChooseImage.ImageRenderer());        
+        tbImage.setRowHeight(100); 
+    }
+    
+    class ImageRenderer extends JLabel implements TableCellRenderer {
+        public ImageRenderer() {
+            setOpaque(true);
+        }
+
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            setIcon((Icon) value);
+            return this;
+        }
+    }
+    
+    private void clickLastColumnCell(){
+        
+        tbImage.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = tbImage.rowAtPoint(e.getPoint());
+                int column = tbImage.columnAtPoint(e.getPoint());
+                if (column == tbImage.getColumnCount() - 1) {
+                    
+                    int selectedRow = tbImage.convertRowIndexToModel(row);
+                    int indexImage = Integer.parseInt(tbImage.getModel().getValueAt(selectedRow, 0).toString());
+                    int result = JOptionPane.showConfirmDialog(
+                            null,
+                            "Bạn có chắc muốn xoá ảnh này này? ",
+                            "Xác nhận",
+                            JOptionPane.YES_NO_OPTION);
+
+                    if (result == JOptionPane.YES_OPTION)
+                    {
+                        listChooseImage.remove(indexImage - 1);
+                        JOptionPane.showMessageDialog(null, "Đã xoá ảnh");
+                        LoadImage();
+                        
+                    }
+                    else
+                        return;
+                
+                }
+
+            }
+        });
     }
 
+    private void renderButtonDelete(){       
+        clickLastColumnCell();
+        Icon deleteIcon = new  ImageIcon("src\\icons\\delete.png");
+        buttonColumn = new ButtonColumn(tbImage, tbImage.getColumnCount() - 1,deleteIcon);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -37,17 +122,17 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
 
         tbImage.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Ảnh", "Xoá"
+                "Số thứ tự", "Ảnh", "Xoá"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true
+                true, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

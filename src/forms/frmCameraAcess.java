@@ -383,9 +383,8 @@ public class frmCameraAcess extends javax.swing.JFrame {
     private void btnChonAnhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChonAnhActionPerformed
         // TODO add your handling code here:
         JFileChooser fcChooseImage = new JFileChooser();
-        fcChooseImage.setVisible(true);
+        fcChooseImage.setMultiSelectionEnabled(true);
         fcChooseImage.setFileSelectionMode(JFileChooser.FILES_ONLY);
-
         // Set file filter to allow only image files
         FileNameExtensionFilter imageFilter = new FileNameExtensionFilter("Image files", "jpg", "jpeg", "png", "gif");
         fcChooseImage.setFileFilter(imageFilter);
@@ -395,23 +394,23 @@ public class frmCameraAcess extends javax.swing.JFrame {
                 int count = 0;
                 File[] selectedFiles = fcChooseImage.getSelectedFiles();
                 List<byte[]> imageList = new ArrayList<>();
-                for(File image : selectedFiles){
+                for (File image : selectedFiles) {
                     Path imagePath = image.toPath();
                     byte[] imageBytes = Files.readAllBytes(imagePath);
                     byte[] faceImage = detctFace(imageBytes);
-                    if(faceImage != null){
+                    if (faceImage != null) {
                         imageList.add(faceImage);
                         count++;
                     }
                 }
-                JOptionPane.showMessageDialog(null, "Nhận diện được %d khuôn mặt trong số ảnh đã chọn" + count);
+                JOptionPane.showMessageDialog(null, String.format("Nhận diện được %d khuôn mặt trong số ảnh đã chọn", count));
                 frmDisplayChooseImage open = new frmDisplayChooseImage(imageList);
                 open.setVisible(true);
-                
+
             } catch (Exception ex) {
-                JOptionPane.showConfirmDialog(null, ex);
+                JOptionPane.showMessageDialog(null, ex);
             }
-        } 
+        }
     }//GEN-LAST:event_btnChonAnhActionPerformed
 
     /**
