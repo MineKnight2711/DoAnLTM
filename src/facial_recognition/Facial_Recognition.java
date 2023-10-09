@@ -4,6 +4,7 @@
  */
 package facial_recognition;
 
+import forms.frmChooseServer;
 import forms.frmLogin;
 
 /**
@@ -17,7 +18,7 @@ public class Facial_Recognition {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        frmLogin open = new frmLogin();
+        frmChooseServer open = new frmChooseServer();
         open.setVisible(true);
     }
     

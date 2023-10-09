@@ -35,7 +35,7 @@ public class frmChooseServer extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         txtPort = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnKetNoi = new javax.swing.JButton();
         txtIP_Adress1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
 
@@ -46,10 +46,10 @@ public class frmChooseServer extends javax.swing.JFrame {
 
         txtPort.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
-        jButton1.setText("Kết nối");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnKetNoi.setText("Kết nối");
+        btnKetNoi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnKetNoiActionPerformed(evt);
             }
         });
 
@@ -77,7 +77,7 @@ public class frmChooseServer extends javax.swing.JFrame {
                 .addContainerGap(37, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btnKetNoi)
                 .addGap(122, 122, 122))
         );
         layout.setVerticalGroup(
@@ -92,7 +92,7 @@ public class frmChooseServer extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(txtPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
+                .addComponent(btnKetNoi)
                 .addContainerGap(17, Short.MAX_VALUE))
         );
 
@@ -100,7 +100,7 @@ public class frmChooseServer extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnKetNoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKetNoiActionPerformed
         // TODO add your handling code here:
         String ipAddress = txtIP_Adress1.getText(); // IP address
         int port = Integer.parseInt(txtPort.getText()); // Port number
@@ -111,11 +111,14 @@ public class frmChooseServer extends javax.swing.JFrame {
             socket.close();
             BaseURL.PORT = port;
             BaseURL.SERVER_ADDRESS = ipAddress;
+            frmLogin open = new frmLogin();
+            open.setVisible(true);
+            this.dispose();
             
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Kết nối thất bại");
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnKetNoiActionPerformed
 
     /**
      * @param args the command line arguments
@@ -153,7 +156,7 @@ public class frmChooseServer extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnKetNoi;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JTextField txtIP_Adress1;
