@@ -5,6 +5,7 @@
 package forms;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import models.Account;
 import db_connection.DBAccess;
 import java.io.BufferedReader;
@@ -27,18 +28,16 @@ import utils.EncodeDecode;
  * @author dell
  */
 public class frmLogin extends javax.swing.JFrame {
-    private DBAccess access; 
     private DocumentListener textChangeListener;
-    private Gson gson;
+    private final Gson gson;
     /**
      * Creates new form FrmLogin
      */
     public frmLogin() {
         initComponents();        
         TextChangeEvent();
-        access = new DBAccess();
         btnLogin.setEnabled(false);     
-        gson=new Gson();
+        gson=new GsonBuilder().setDateFormat("MMM d, yyyy").create();
     }
 
     /**
@@ -184,11 +183,13 @@ public class frmLogin extends javax.swing.JFrame {
             String sendJson=gson.toJson(operationJson);
             //Gửi dữ liệu lên server
             out.println(sendJson);
-            String response = EncodeDecode.decodeBase64FromJson(in.readLine());
-            switch (response) {
+           
+            OperationJson receivedJson=gson.fromJson(in.readLine(), OperationJson.class);
+            switch (receivedJson.getOperation()) {
                 case "Success":
                     JOptionPane.showMessageDialog(this, "Đăng nhập thành công!");
-                    Account acc = access.getUser(account);
+                    String receivedAccountJson=EncodeDecode.decodeBase64FromJson(receivedJson.getData().toString());                  
+                    Account acc = gson.fromJson(receivedAccountJson, Account.class);
                     frmInfo open = new frmInfo(acc);
                     open.setVisible(true);
                     this.dispose();
