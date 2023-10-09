@@ -191,7 +191,6 @@ public class frmCameraAcess extends javax.swing.JFrame {
                     if (countImages == 10) {
                             countImages = 0;
                             save = false;
-    //                        access.saveImage(account.getID_User(), image);
                             String response = in.readLine();
                             if (response.equals("Success")) 
                             {
