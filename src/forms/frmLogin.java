@@ -2,28 +2,43 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package Form;
+package forms;
 
+import com.google.gson.Gson;
 import models.Account;
 import db_connection.DBAccess;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Base64;
+
+import javax.swing.JOptionPane;
+
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import models.OperationJson;
+import utils.BaseURL;
+import utils.EncodeDecode;
 
 /**
  *
  * @author dell
  */
-public class FrmLogin extends javax.swing.JFrame {
+public class frmLogin extends javax.swing.JFrame {
     private DBAccess access; 
     private DocumentListener textChangeListener;
+    private Gson gson;
     /**
      * Creates new form FrmLogin
      */
-    public FrmLogin() {
+    public frmLogin() {
         initComponents();        
         TextChangeEvent();
         access = new DBAccess();
-        btnLogin.setEnabled(false);        
+        btnLogin.setEnabled(false);     
+        gson=new Gson();
     }
 
     /**
@@ -131,9 +146,9 @@ public class FrmLogin extends javax.swing.JFrame {
                     .addComponent(cbShowPassword)
                     .addComponent(btnLogin))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnResister)
-                    .addComponent(btnNhanDienTest))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnNhanDienTest)
+                    .addComponent(btnResister))
                 .addContainerGap(17, Short.MAX_VALUE))
         );
 
@@ -142,19 +157,57 @@ public class FrmLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        // TODO add your handling code here:
-        String account = txtAccount.getText();
-        //char[] password = passfMatKhau.getPassword();               
-        String password = new String(passfPassword.getPassword());
-        if(access.Login(account, password)){
-            Account acc = access.getUser(account);
-            FrmInfo open = new FrmInfo(acc);
-            open.setVisible(true);
-            this.dispose();
-        }
-        return;
+//        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+//            @Override
+//            protected Void doInBackground() throws Exception {
+//                login();
+//                return null;
+//            }
+//        };
+//        worker.execute();
+        login();
     }//GEN-LAST:event_btnLoginActionPerformed
-
+    private void login(){
+        try {
+            // TODO add your handling code here:
+            String account = txtAccount.getText();
+            //char[] password = passfMatKhau.getPassword();
+            String password = new String(passfPassword.getPassword());
+            Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT);
+            
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            
+            OperationJson operationJson=new OperationJson();
+            operationJson.setOperation("login/"+account);
+            operationJson.setData(EncodeDecode.encodeToBase64(password));
+            String sendJson=gson.toJson(operationJson);
+            //Gửi dữ liệu lên server
+            out.println(sendJson);
+            String response = EncodeDecode.decodeBase64FromJson(in.readLine());
+            switch (response) {
+                case "Success":
+                    JOptionPane.showMessageDialog(this, "Đăng nhập thành công!");
+                    Account acc = access.getUser(account);
+                    frmInfo open = new frmInfo(acc);
+                    open.setVisible(true);
+                    this.dispose();
+                    break;
+                case "WrongPass":
+                    JOptionPane.showMessageDialog(this, "Sai mật khẩu !","Lỗi",0);
+                    break;
+                case "AccountNotFound":
+                    JOptionPane.showMessageDialog(this, "Không tìm thấy tài khoản!","Lỗi",0);
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(this, "Lỗi chưa xác định!","Lỗi",0);
+                    break;
+            }
+            socket.close();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Có lỗi xảy ra!"+ex.toString(),"Lỗi",JOptionPane.ERROR_MESSAGE);
+        }
+    }
     private void TextChangeEvent(){
         textChangeListener = new DocumentListener(){
             @Override
@@ -193,7 +246,7 @@ public class FrmLogin extends javax.swing.JFrame {
 
     private void btnResisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResisterActionPerformed
         // TODO add your handling code here:
-        FrmRegister open = new FrmRegister();
+        frmRegister open = new frmRegister();
         open.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnResisterActionPerformed
@@ -222,20 +275,21 @@ public class FrmLogin extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmLogin().setVisible(true);
+                new frmLogin().setVisible(true);
             }
         });
     }

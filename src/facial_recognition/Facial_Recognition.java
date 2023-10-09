@@ -4,7 +4,7 @@
  */
 package facial_recognition;
 
-import Form.frmLogin;
+import forms.frmLogin;
 
 /**
  *
