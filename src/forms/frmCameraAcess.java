@@ -404,6 +404,9 @@ public class frmCameraAcess extends javax.swing.JFrame {
                         count++;
                     }
                 }
+                JOptionPane.showMessageDialog(null, "Nhận diện được %d khuôn mặt trong số ảnh đã chọn" + count);
+                frmDisplayChooseImage open = new frmDisplayChooseImage(imageList);
+                open.setVisible(true);
                 
             } catch (Exception ex) {
                 JOptionPane.showConfirmDialog(null, ex);

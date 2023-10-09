@@ -9,6 +9,6 @@ package utils;
  * @author WitherDragon
  */
 public class BaseURL {
-    public static String SERVER_ADDRESS="localhost";
-    public static int PORT = 6969;  
+    public static String SERVER_ADDRESS;
+    public static int PORT;  
 }
