@@ -40,6 +40,7 @@ import org.opencv.videoio.VideoCapture;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
+import utils.BaseURL;
 
 /**
  *
@@ -176,7 +177,7 @@ public class frmCameraAcess extends javax.swing.JFrame {
                     byte[] faceImage = detctFace(image);
                     if(faceImage != null){
                         Dispalay(faceImage);
-                    Socket socket = new Socket("26.196.143.193", 6969);
+                    Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT);
             
             
                     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
