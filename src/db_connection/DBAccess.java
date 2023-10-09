@@ -63,16 +63,7 @@ public class DBAccess {
         }
     }
     
-    public boolean UpdateInfo(String query){
-        try{
-            stmt.executeUpdate(query);
-            JOptionPane.showMessageDialog(null, "Cập nhật thông tin thành công");
-            return true;
-        }catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex);
-            return false;
-        }
-    }
+    
     
     public boolean ChangePassword(String queryCheck, String query, String oldPass){
         try{
