@@ -119,6 +119,7 @@ public class frmInfo extends javax.swing.JFrame {
 
         jLabel3.setText("Ngày sinh:");
 
+        dcBrithday.setDateFormatString("dd/MM/yyyy");
         dcBrithday.setMaxSelectableDate(new java.util.Date(253370743280000L));
 
         rbFemale.setText("Nữ");
