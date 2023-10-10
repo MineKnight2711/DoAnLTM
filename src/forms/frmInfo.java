@@ -31,7 +31,7 @@ import utils.EncodeDecode;
 public class frmInfo extends javax.swing.JFrame {
     private static Account account;
     private DocumentListener textChangeListener;
-    private final DBAccess  access; 
+    private final DBAccess access; 
     private final CheckInput inputCheck;
     private final KeyPressCheck keyCheck;
     private final Gson gson;
