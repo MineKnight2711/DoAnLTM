@@ -31,7 +31,6 @@ import utils.EncodeDecode;
 public class frmInfo extends javax.swing.JFrame {
     private static Account account;
     private DocumentListener textChangeListener;
-    private final DBAccess  access; 
     private final CheckInput inputCheck;
     private final KeyPressCheck keyCheck;
     private final Gson gson;
@@ -42,7 +41,6 @@ public class frmInfo extends javax.swing.JFrame {
     public frmInfo(Account account) {
         initComponents();
         txtAccount.setEnabled(false);
-        access = new DBAccess();
         gson=new Gson();
         inputCheck = new CheckInput();
         keyCheck = new KeyPressCheck();
@@ -51,7 +49,7 @@ public class frmInfo extends javax.swing.JFrame {
         CheckKeyPress();
         TextChangeEvent();
         btnChangePassword.setEnabled(false);
-        LoadInfo(account);
+        loadInfo(account);
     }
 
     /**
@@ -389,7 +387,7 @@ public class frmInfo extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void LoadInfo(Account acc){
+    private void loadInfo(Account acc){
         try{
             Date brithday = acc.getBrithday();   
             txtLastName.setText(acc.getLast_Name());
@@ -507,10 +505,6 @@ public class frmInfo extends javax.swing.JFrame {
 
     }//GEN-LAST:event_cbHienMatKhauActionPerformed
     
-    private void ReloadInfo(String account){
-        Account acc = access.getUser(account);
-        LoadInfo(acc);
-    }
     
     private void LogOut(){
         frmLogin open = new frmLogin();
@@ -550,7 +544,7 @@ public class frmInfo extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Lỗi chưa chưa xác định!"+result,"Cảnh báo",0);
                     break;
                 default:
-                    if(result.equals("Account not found")){
+                    if(result.equals("AccountNotFound")){
                         JOptionPane.showMessageDialog(this, "Không tìm thấy tài khoản !","Cảnh báo",0);
                     }
                     else if(result.equals("WrongOldOrNewPass")||result.equals("WrongPass")){
@@ -560,6 +554,7 @@ public class frmInfo extends javax.swing.JFrame {
                     }
                     break;
             }
+            socket.close();
         }
         catch(IOException ex) {
             JOptionPane.showMessageDialog(this, "Lỗi!"+ex.toString(),"Cảnh báo",0);
@@ -608,7 +603,8 @@ public class frmInfo extends javax.swing.JFrame {
             {
                  JOptionPane.showMessageDialog(null, "Có lỗi xảy ra!\n"+"Lỗi :"+respone,"Lỗi",0);
             }
-            ReloadInfo(txtAccount.getText());
+            loadInfo(account);
+            socket.close();
         }
         catch(IOException ex){
             JOptionPane.showMessageDialog(null, ex);            
@@ -617,7 +613,7 @@ public class frmInfo extends javax.swing.JFrame {
 
     private void btnResetInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetInfoActionPerformed
         // TODO add your handling code here:
-        ReloadInfo(txtAccount.getText());
+        loadInfo(account);
     }//GEN-LAST:event_btnResetInfoActionPerformed
 
     private void btnAddFaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddFaceActionPerformed

@@ -13,8 +13,7 @@ import java.util.Base64;
  */
 public class EncodeDecode {
     public static String decodeBase64FromJson(String json){
-        String base64EncodedData = json;
-        byte[] decodedData = Base64.getDecoder().decode(base64EncodedData);
+        byte[] decodedData = Base64.getDecoder().decode(json);
         return new String(decodedData, StandardCharsets.UTF_8);
     }
     public static String encodeToBase64(String data){
