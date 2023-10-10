@@ -242,6 +242,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
 
     private void btnMoCamera1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoCamera1ActionPerformed
         // TODO add your handling code here:
+        face.setIsRecording(false);
         frmLogin open = new frmLogin();
         open.setVisible(true);
         this.dispose();

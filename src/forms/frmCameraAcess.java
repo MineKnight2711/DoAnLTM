@@ -178,7 +178,8 @@ public class frmCameraAcess extends javax.swing.JFrame {
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        if(frm.equals("capNhat")){            
+        face.setIsRecording(false);
+        if(frm.equals("capNhat")){     
             frmInfo open = new frmInfo(account);
             face.setIsRecording(false);
             thread.interrupt();            
