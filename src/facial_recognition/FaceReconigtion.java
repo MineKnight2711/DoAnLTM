@@ -7,7 +7,6 @@ package facial_recognition;
 import com.google.gson.Gson;
 import db_connection.DBAccess;
 import forms.frmCameraAcess;
-import java.awt.Label;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -16,7 +15,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.text.Normalizer.Form;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
@@ -32,6 +31,8 @@ import models.UserImages;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
+import org.opencv.core.MatOfFloat;
+import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
@@ -295,7 +296,7 @@ public class FaceReconigtion {
                 double similarity = compareImages(faces, image);
                 DispalayDetect(faces, image, similarity);
                 // Set a threshold value for similarity
-                double threshold = 0.88; // Adjust this value as needed
+                double threshold = 0.90; // Adjust this value as needed
                 if(min == 0)
                     min = similarity;
                 else if( max == 0)
@@ -339,6 +340,41 @@ public class FaceReconigtion {
         double similarity = 1.0 - mse;
 
         return similarity;
+        
+//        MatOfFloat range = new MatOfFloat(0f, 255f);
+//        MatOfInt histSize = new MatOfInt(256);
+//        List<Mat> histImages1 = new ArrayList<>();
+//        List<Mat> histImages2 = new ArrayList<>();
+//        histImages1.add(mat1);
+//        histImages2.add(mat2);
+//        Mat hist1 = new Mat();
+//        Mat hist2 = new Mat();
+//        Imgproc.calcHist(histImages1, new MatOfInt(0), new Mat(), hist1, histSize, range);
+//        Imgproc.calcHist(histImages2, new MatOfInt(0), new Mat(), hist2, histSize, range);
+//        Core.normalize(hist1, hist1, 0, 1, Core.NORM_MINMAX, -1, new Mat());
+//        Core.normalize(hist2, hist2, 0, 1, Core.NORM_MINMAX, -1, new Mat());
+//        double ssim = Imgproc.compareHist(hist1, hist2, Imgproc.CV_COMP_CORREL);
+//        return ssim;
+
+//        // Create the LBPH face recognizer
+//        FaceRecognizer recognizer = LBPHFaceRecognizer.create();
+//
+//        // Train the recognizer with the first face
+//        MatOfInt labels = new MatOfInt(1); // Label for the first face
+//        MatVector images = new MatVector();
+//        images.push_back(gray1);
+//        recognizer.train(images, labels);
+//
+//        // Recognize the second face
+//        IntPointer predictedLabel = new IntPointer(1);
+//        DoublePointer confidence = new DoublePointer(1);
+//        recognizer.predict(gray2, predictedLabel, confidence);
+//
+//        // Get the predicted label and confidence
+//        int predicted = predictedLabel.get(0);
+//        double similarity = 100 - confidence.get(0); // Inverse confidence as similarity
+//
+//        return similarity;
     }
     
     public void DispalaySave(byte[] image1, int countImages) {
