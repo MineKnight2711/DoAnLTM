@@ -4,62 +4,25 @@
  */
 package forms;
 
-import com.google.gson.Gson;
 import models.Account;
-import db_connection.DBAccess;
-import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
+import facial_recognition.FaceReconigtion;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import models.OperationJson;
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.core.MatOfRect;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
-import org.opencv.videoio.VideoCapture;
-import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;
-import org.opencv.objdetect.CascadeClassifier;
-import utils.BaseURL;
-
 /**
  *
  * @author dell
  */
 public class frmCameraAcess extends javax.swing.JFrame {
     private static Account account;
-    private VideoCapture videoCapture;
-    private Mat frame;
-    private Gson gson;
-    private MatOfByte matOfByte;
-    private boolean isRecording;
     private Thread thread;
-    private DBAccess access; 
-    private int countImages;
-    private boolean save;
-    private byte[] imageData;
     private static String frm;
-    private List<byte[]> imageList; 
+    private FaceReconigtion face;
 
     /**
      * Creates new form frmCameraAcess
@@ -68,161 +31,23 @@ public class frmCameraAcess extends javax.swing.JFrame {
         initComponents();
         this.frm = frm;
         this.account = account; 
-        access = new DBAccess();
-        save = false;
-        imageList=new ArrayList<>();
-        gson=new Gson();
-
+        face = new FaceReconigtion();
+        face.getDisplaySaveValue(lblAnhChup,lblSoAnh, account);
+        face.setMode(true);
+        runableThread();
                     
     }       
     
-    private boolean initializeCamera() {        
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        videoCapture = new VideoCapture(0); // Use the default camera (0) or choose the appropriate camera index        
-        frame = new Mat();
-        matOfByte = new MatOfByte();
-        if (!videoCapture.isOpened()){
-            JOptionPane.showMessageDialog(null,"Can not access camera" );
-            return false;
-        } 
-        if (videoCapture.isOpened()) {
-            Runnable frameGrabber = () -> {
-                while (isRecording) {      
-                    videoCapture.read(frame);
-                    detectAndDrawFaces(frame);
-                    // Optionally, perform image processing or face detection here
-                    Imgcodecs.imencode(".jpg", frame, matOfByte);
-                    imageData = matOfByte.toArray();   
-                    if(save && countImages < 50){                      
-                        saveFace(imageData);
-                    }
-                    // Display the image on the JLabel
-                    ImageIcon imageIcon = new ImageIcon(imageData);
-                    lblCameraDisplay.setIcon(imageIcon);
-                    lblCameraDisplay.repaint();
-                    // Record video if enabled
-                     if (!isRecording){
-                        videoCapture.release();
-                        lblCameraDisplay.setIcon(null);
-                        break;
-                    }                        
+    private void runableThread(){
+        Runnable frameGrabber = () -> {
+                while (true) {
+                    face.initializeCamera("Lưu", lblCameraDisplay);
                 }
             };
             // Create a new thread for grabbing frames from the camera
-            thread = new Thread(frameGrabber);  
-            if(!isRecording){
-                thread.interrupt();
-                return true;
-            }
+            thread = new Thread(frameGrabber); 
             thread.setDaemon(true);  
-            thread.start();            
-            return true;
-        }
-        return false;
-    }
-    
-    private void detectAndDrawFaces(Mat frame) {
-        Mat grayFrame = new Mat();
-        Imgproc.cvtColor(frame, grayFrame, Imgproc.COLOR_BGR2GRAY);
-
-        CascadeClassifier faceCascade = new CascadeClassifier("src\\PreTrainData\\haarcascade_frontalface_default.xml");
-        MatOfRect faces = new MatOfRect();
-        faceCascade.detectMultiScale(grayFrame, faces);
-
-        for (Rect rect : faces.toArray()) {
-            Imgproc.rectangle(frame, rect.tl(), rect.br(), new Scalar(0, 255, 0), 2);
-        }
-    }
-    
-    private byte[] detctFace(byte[] imageCapture) {
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        // Convert the byte[] imageData to a Mat object
-        Mat frame = Imgcodecs.imdecode(new MatOfByte(imageCapture), Imgcodecs.IMREAD_COLOR);
-
-        // Convert the frame to grayscale
-        Mat grayFrame = new Mat();
-        Imgproc.cvtColor(frame, grayFrame, Imgproc.COLOR_BGR2GRAY);
-
-        // Load the face cascade classifier
-        CascadeClassifier faceCascade = new CascadeClassifier("src\\PreTrainData\\haarcascade_frontalface_default.xml");
-        // Detect faces in the grayscale frame
-        MatOfRect faces = new MatOfRect();
-        faceCascade.detectMultiScale(grayFrame, faces);     
-        
-        MatOfByte faceImageData = new MatOfByte();
-        Imgcodecs.imencode(".jpg", grayFrame, faceImageData);
-        imageCapture = faceImageData.toArray();
-        // Check if a face is detected
-        if (faces.toArray().length > 0) {
-
-            // Encode the face image to JPEG
-            Rect faceRect = faces.toArray()[0]; // Assuming only one face is detected
-
-            // Crop the face region from the gray frame
-            Mat faceImage = new Mat(grayFrame, faceRect); // Crop from the grayscale frame   
-            Size resizedSize = new Size(256, 256); // Adjust the size as needed
-            Imgproc.resize(faceImage, faceImage, resizedSize);
-            // Encode the face image to JPEG
-            Imgcodecs.imencode(".jpg", faceImage, faceImageData);
-            imageCapture = faceImageData.toArray();
-            return imageCapture;
-           
-        }
-        return null;
-    }
-    
-    private void saveFace(byte[] image) {
-        try {
-            if (save) {
-                    byte[] faceImage = detctFace(image);
-                    if(faceImage != null){
-                        Dispalay(faceImage);
-                    Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT);
-            
-            
-                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                    
-                    OperationJson operationJson = new OperationJson();
-                    operationJson.setOperation("save-image/"+account.getID_User());
-                    operationJson.setData(Base64.getEncoder().encodeToString(faceImage));
-                    String sendJson = gson.toJson(operationJson);
-                    out.println(sendJson);
-                    countImages++;
-                    if (countImages == 10) {
-                            countImages = 0;
-                            save = false;
-                            String response = in.readLine();
-                            if (response.equals("Success")) 
-                            {
-                                JOptionPane.showMessageDialog(this, "Thêm ảnh thành công!");
-                                imageList.clear();
-                            } else 
-                            {
-                                JOptionPane.showMessageDialog(this, "Có lỗi xảy ra!"+response,"Lỗi",JOptionPane.ERROR_MESSAGE);
-                                countImages = 0;
-                            }
-                            socket.close();
-                        }
-                    }           
-                }
-            }
-         catch (IOException ex) {
-            Logger.getLogger(frmCameraAcess.class.getName()).log(Level.SEVERE, null, ex);
-        }        
-   }
-    
-    private void Dispalay(byte[] image1) {
-        try{           
-            InputStream inputStream = new ByteArrayInputStream(image1);
-            BufferedImage imageBuffer1 = ImageIO.read(inputStream);
-            ImageIcon icon1 = new ImageIcon(imageBuffer1);
-            lblAnhChup.setIcon(icon1);
-            lblSoAnh.setText(String.valueOf(countImages + 1));
-        }
-        catch(Exception ex){
-            JOptionPane.showMessageDialog(null, ex);
-        }
+            thread.start(); 
     }
     
 
@@ -340,28 +165,23 @@ public class frmCameraAcess extends javax.swing.JFrame {
 
     private void btnMoCameraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoCameraActionPerformed
         // TODO add your handling code here:
-         if (isRecording) {
+        if (face.isIsRecording()) {
             // Stop recording
-            countImages = 0;
-            isRecording = false;
-            if(!initializeCamera())
-                return;
+            face.setIsRecording(false);
             btnMoCamera.setText("Record");
         } else {
             // Start recording
-            isRecording = true;
-            if(!initializeCamera())
-                return;
+            face.setIsRecording(true);
             btnMoCamera.setText("Stop Recording");
         }
     }//GEN-LAST:event_btnMoCameraActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        isRecording = false;
-        initializeCamera();
         if(frm.equals("capNhat")){            
             frmInfo open = new frmInfo(account);
+            face.setIsRecording(false);
+            thread.interrupt();            
             open.setVisible(true);
         }
         else{
@@ -373,9 +193,12 @@ public class frmCameraAcess extends javax.swing.JFrame {
 
     private void btnLuuKhuonMatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuKhuonMatActionPerformed
         // TODO add your handling code here:
-        save = true;
-        if(!save){
-            save = true;
+        if(!face.isIsRecording()){
+            JOptionPane.showMessageDialog(null, "Chưa bật camera");
+            return;
+        }
+        if(!face.isCheck()){            
+            face.setCheck(true);
         }
         
         
@@ -398,7 +221,7 @@ public class frmCameraAcess extends javax.swing.JFrame {
                 for (File image : selectedFiles) {
                     Path imagePath = image.toPath();
                     byte[] imageBytes = Files.readAllBytes(imagePath);
-                    byte[] faceImage = detctFace(imageBytes);
+                    byte[] faceImage = face.detctFace(imageBytes);
                     if (faceImage != null) {
                         imageList.add(faceImage);
                         count++;
@@ -409,7 +232,7 @@ public class frmCameraAcess extends javax.swing.JFrame {
                     return;
                 }
                 JOptionPane.showMessageDialog(null, String.format("Nhận diện được %d khuôn mặt trong tổng %d số ảnh đã chọn", count, selectedFiles.length));
-                frmDisplayChooseImage open = new frmDisplayChooseImage(imageList);
+                frmDisplayChooseImage open = new frmDisplayChooseImage(imageList, account);
                 open.setVisible(true);
 
             } catch (Exception ex) {

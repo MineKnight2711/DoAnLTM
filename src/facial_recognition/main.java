@@ -11,7 +11,7 @@ import forms.frmLogin;
  *
  * @author dell
  */
-public class Facial_Recognition {
+public class main {
 
     /**
      * @param args the command line arguments

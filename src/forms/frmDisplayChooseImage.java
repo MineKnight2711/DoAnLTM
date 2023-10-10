@@ -5,6 +5,7 @@
 package forms;
 
 import db_connection.DBAccess;
+import facial_recognition.FaceReconigtion;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
@@ -18,6 +19,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import models.Account;
 import models.ButtonColumn;
 import models.UserImages;
 
@@ -28,15 +30,17 @@ import models.UserImages;
 
 public class frmDisplayChooseImage extends javax.swing.JFrame {
     private static List<byte[]> listChooseImage;
-    private DBAccess access;
     private ButtonColumn buttonColumn;
+    private FaceReconigtion face;
+    private static Account account;
      /**
      * Creates new form frmDisplayChooseImage
      */
-    public frmDisplayChooseImage(List<byte[]> listChooseImage) {
+    public frmDisplayChooseImage(List<byte[]> listChooseImage, Account account) {
         initComponents();
         this.listChooseImage = listChooseImage;
-        access = new DBAccess();
+        this.account = account;
+        face = new FaceReconigtion();
         LoadImage();
         renderButtonDelete();
     }
@@ -179,6 +183,16 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         // TODO add your handling code here:
+        try{
+            for(byte[] image : listChooseImage){
+                face.saveFaceChoose(image, account);
+            }
+            JOptionPane.showMessageDialog(null, "Lưu ảnh thành công");
+            this.dispose();
+        }
+        catch(Exception ex){
+            JOptionPane.showMessageDialog(null, ex);
+        }
     }//GEN-LAST:event_btnSaveActionPerformed
 
     /**
@@ -211,7 +225,7 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new frmDisplayChooseImage(listChooseImage).setVisible(true);
+                new frmDisplayChooseImage(listChooseImage, account).setVisible(true);
             }
         });
     }

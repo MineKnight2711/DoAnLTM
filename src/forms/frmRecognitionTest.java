@@ -6,221 +6,51 @@ package forms;
 
 
 import db_connection.DBAccess;
-import models.UserImages;
+import facial_recognition.FaceReconigtion;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.core.MatOfRect;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
-import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;
-import org.opencv.objdetect.CascadeClassifier;
-import org.opencv.objdetect.Objdetect;
-import org.opencv.videoio.VideoCapture;
+
 
 /**
  *
  * @author dell
  */
 public class frmRecognitionTest extends javax.swing.JFrame {
-    private VideoCapture videoCapture;
-    private Mat frame;
-    private MatOfByte matOfByte;
-    private boolean isRecording;
+
     private Thread thread;
-    private byte[] imageData;
     private byte[] imageChoose;
-    private DBAccess access; 
-    private boolean check;
-    /**
+    private FaceReconigtion face;
+        /**
      * Creates new form frmRecognitionTest
      */
     public frmRecognitionTest() {
-        
         initComponents();       
-        access = new DBAccess();
-        check = false;
         txtTiLe.setEnabled(false);
+        face = new FaceReconigtion();
+        face.getDisplayDetectValue(lblFaceCapture, lblDataFace, txtTiLe);
+        face.setMode(false);
         runableThread();
-    }
-    
-    private byte[] detctFace(byte[] imageCapture) {
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        // Convert the byte[] imageData to a Mat object
-        Mat frame = Imgcodecs.imdecode(new MatOfByte(imageCapture), Imgcodecs.IMREAD_COLOR);
-
-        // Convert the frame to grayscale
-        Mat grayFrame = new Mat();
-        Imgproc.cvtColor(frame, grayFrame, Imgproc.COLOR_BGR2GRAY);
-
-        // Load the face cascade classifier
-        CascadeClassifier faceCascade = new CascadeClassifier("src\\PreTrainData\\haarcascade_frontalface_default.xml");
-        // Detect faces in the grayscale frame
-        MatOfRect faces = new MatOfRect();
-        faceCascade.detectMultiScale(grayFrame, faces);     
-
-        MatOfByte faceImageData = new MatOfByte();
-        Imgcodecs.imencode(".jpg", grayFrame, faceImageData);
-        imageCapture = faceImageData.toArray();
-        // Check if a face is detected
-        if (faces.toArray().length > 0) {
-
-            // Encode the face image to JPEG
-            Rect faceRect = faces.toArray()[0]; // Assuming only one face is detected
-
-            // Crop the face region from the gray frame
-            Mat faceImage = new Mat(grayFrame, faceRect); // Crop from the grayscale frame   
-            Size resizedSize = new Size(256, 256); // Adjust the size as needed
-            Imgproc.resize(faceImage, faceImage, resizedSize);
-            // Encode the face image to JPEG
-            Imgcodecs.imencode(".jpg", faceImage, faceImageData);
-            imageCapture = faceImageData.toArray();
-            return imageCapture;
-
-        }
-        return null;
-    }
-    
-    private boolean facialRecognition(byte[] imageCapture) {
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        byte[] faces = detctFace(imageCapture);
-        // Check if a face is detected
-        if (faces != null) {
-            List<UserImages> allUserImages = access.getAllUsers();
-            // Compare the captured face with all user images
-            for (UserImages userImage : allUserImages) {
-                // Convert the user image to a matrix
-                byte[] image = userImage.getImages();
-                // Compare the similarity of the captured face and user image
-                double similarity = compareImages(faces, image);
-                Dispalay(faces, image, similarity);
-                // Set a threshold value for similarity
-                double threshold = 0.90; // Adjust this value as needed
-
-                // Check if the similarity is above the threshold
-                if (similarity >= threshold) {
-                    JOptionPane.showMessageDialog(null, "Có tồn tại: " + userImage.getID_User());
-                    check = false;
-                    return true;
-                }
-            }      
-            JOptionPane.showMessageDialog(null, "Không tìm thấy");
-        }
-        check = false;
-        return false;
-    }
-    
-    private void Dispalay(byte[] image1, byte[] image2, double simularity) {
-        try{           
-            InputStream inputStream = new ByteArrayInputStream(image1);
-            InputStream inputStream1 = new ByteArrayInputStream(image2);
-            BufferedImage imageBuffer1 = ImageIO.read(inputStream);
-            BufferedImage imageBuffer2 = ImageIO.read(inputStream1);
-            ImageIcon icon1 = new ImageIcon(imageBuffer1);
-            ImageIcon icon2 = new ImageIcon(imageBuffer2);
-            lblFaceCapture.setIcon(icon1);
-            lblDataFace.setIcon(icon2);
-            txtTiLe.setText( String.format("%.2f", simularity*100) + "%");
-        }
-        catch(Exception ex){
-            JOptionPane.showMessageDialog(null, ex);
-        }
-    }
-    
-    private double compareImages(byte[] image1, byte[] image2) {
-        // Load OpenCV library
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-
-        // Convert image byte arrays to OpenCV Mat objects
-        Mat mat1 = Imgcodecs.imdecode(new MatOfByte(image1), Imgcodecs.IMREAD_UNCHANGED);
-        Mat mat2 = Imgcodecs.imdecode(new MatOfByte(image2), Imgcodecs.IMREAD_UNCHANGED);
-       
-        // Calculate the Mean Squared Error (MSE) as a similarity measure
-        double mse = Core.norm(mat1, mat2, Core.NORM_L2) / (mat1.rows() * mat1.cols());
-
-        // Convert the MSE to a similarity score (1 - MSE)
-        double similarity = 1.0 - mse;
-
-        return similarity;
     }
     
     private void runableThread(){
         Runnable frameGrabber = () -> {
                 while (true) {
-                        initializeCamera();
-                    if(!isRecording){  
-                        videoCapture.release();
-                        if(check && imageChoose != null)
-                            facialRecognition(imageChoose);
-                    }
+                    face.initializeCamera("Nhận diện", lblDisplayCapture);
                 }
             };
             // Create a new thread for grabbing frames from the camera
             thread = new Thread(frameGrabber); 
             thread.setDaemon(true);  
             thread.start();   
-    }
-    
-    private boolean initializeCamera() {        
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        videoCapture = new VideoCapture(0); // Use the default camera (0) or choose the appropriate camera index        
-        frame = new Mat();
-        matOfByte = new MatOfByte();
-        if (!videoCapture.isOpened()){
-            JOptionPane.showMessageDialog(null,"Can not access camera" );
-            return false;
-        } 
-        if (videoCapture.isOpened()) {
-            while (isRecording) {      
-                videoCapture.read(frame);
-                detectAndDrawFaces(frame);
-                // Optionally, perform image processing or face detection here
-                Imgcodecs.imencode(".jpg", frame, matOfByte);
-                imageData = matOfByte.toArray(); 
-                if(check)
-                    facialRecognition(imageData);
-                check = false;
-                // Display the image on the JLabel
-                ImageIcon imageIcon = new ImageIcon(imageData);
-                lblDisplayCapture.setIcon(imageIcon);
-                lblDisplayCapture.repaint();
-                // Record video if enabled
-                 if (!isRecording){
-                    videoCapture.release();
-                    lblDisplayCapture.setIcon(null);
-                    break;
-                }                        
-            }
-            return true;
-        }
-        return false;
-    }
-    
-    private void detectAndDrawFaces(Mat frame) {
-        Mat grayFrame = new Mat();
-        Imgproc.cvtColor(frame, grayFrame, Imgproc.COLOR_BGR2GRAY);
-        MatOfRect faces = new MatOfRect();
-        CascadeClassifier faceCascade = new CascadeClassifier("src\\PreTrainData\\haarcascade_frontalface_default.xml");
-        faceCascade.detectMultiScale(grayFrame, faces);
-
-        for (Rect rect : faces.toArray()) {
-            Imgproc.rectangle(frame, rect.tl(), rect.br(), new Scalar(0, 255, 0), 2);
-        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -347,28 +177,34 @@ public class frmRecognitionTest extends javax.swing.JFrame {
 
     private void btnMoCameraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoCameraActionPerformed
         // TODO add your handling code here:
-        if (isRecording) {
+        if (face.isIsRecording()) {
             // Stop recording
-            isRecording = false;
+            face.setIsRecording(false);
             btnMoCamera.setText("Record");
         } else {
             // Start recording
-            isRecording = true;
+            face.setIsRecording(true);
             btnMoCamera.setText("Stop Recording");
         }
     }//GEN-LAST:event_btnMoCameraActionPerformed
 
     private void btnNhanDienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhanDienActionPerformed
         // TODO add your handling code here:
-        if(!isRecording && imageChoose == null){
+        if(!face.isIsRecording() && imageChoose == null){
             JOptionPane.showMessageDialog(null, "Chưa chọn ảnh hoặc bật camera");
             return;
         }
-        if(check){
-            check = false;   
+        if(!face.isCheck()){
+            if(imageChoose != null){
+                face.setImageChoose(imageChoose);   
+                face.setCheck(true);
+                imageChoose = null;
+            }                
+            face.setCheck(true);   
+            return;
         }
-        else{
-            check = true;    
+        else if(face.isCheck()){
+            
         }
     }//GEN-LAST:event_btnNhanDienActionPerformed
 
@@ -387,9 +223,8 @@ public class frmRecognitionTest extends javax.swing.JFrame {
                 File selectedFile = fcChooseImage.getSelectedFile();
                 Path imagePath = selectedFile.toPath();
                 byte[] imageBytes = Files.readAllBytes(imagePath);  
-                byte[] faceImage = detctFace(imageBytes);
-                if(faceImage != null){                    
-                    isRecording = false;
+                byte[] faceImage = face.detctFace(imageBytes);
+                if(faceImage != null){           
                     InputStream inputStream = new ByteArrayInputStream(faceImage );
                     BufferedImage imageBuffer1 = ImageIO.read(inputStream);
                     ImageIcon icon1 = new ImageIcon(imageBuffer1);
@@ -414,7 +249,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         // TODO add your handling code here:
-        isRecording = false;
+        face.setCheck(false);
         frmRecognitionTest open = new frmRecognitionTest();
         open.setVisible(true );
         this.dispose();
