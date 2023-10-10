@@ -63,31 +63,6 @@ public class DBAccess {
         }
     }
     
-    
-    
-    public boolean ChangePassword(String queryCheck, String query, String oldPass){
-        try{
-                String pass;
-                PreparedStatement statement = con.prepareStatement(queryCheck);
-                ResultSet resultSet = statement.executeQuery();
-                if (resultSet.next()){
-                    pass = resultSet.getString("Password");
-                    BCrypt.Result result = BCrypt.verifyer().verify(oldPass.toCharArray(), pass);
-                    if(!result.verified){
-                        JOptionPane.showMessageDialog(null, "Mật khẩu cũ không hợp lệ");
-                        return false;
-                    }
-                }
-                stmt.executeUpdate(query);
-                JOptionPane.showMessageDialog(null, "Đổi mật khẩu thành công");
-                return true;
-            }
-            catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, ex);
-                return false;
-        }        
-    }
-    
     public Account getUser(String account) {
         String query = "SELECT * FROM user WHERE Account = ?";
         try (PreparedStatement statement = con.prepareStatement(query)) {
