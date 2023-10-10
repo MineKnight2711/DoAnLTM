@@ -283,8 +283,10 @@ public class FaceReconigtion {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         byte[] faces = detctFace(imageCapture);
         // Check if a face is detected
-        if (faces != null) {
-            List<UserImages> allUserImages = access.getAllUsers();
+        if (faces != null) {  
+            double min = 0;
+            double max = 0;
+            List<UserImages> allUserImages = access.getAllUsers();            
             // Compare the captured face with all user images
             for (UserImages userImage : allUserImages) {
                 // Convert the user image to a matrix
@@ -293,17 +295,27 @@ public class FaceReconigtion {
                 double similarity = compareImages(faces, image);
                 DispalayDetect(faces, image, similarity);
                 // Set a threshold value for similarity
-                double threshold = 0.90; // Adjust this value as needed
-
+                double threshold = 0.88; // Adjust this value as needed
+                if(min == 0)
+                    min = similarity;
+                else if( max == 0)
+                    max = similarity;
+                else if(similarity < min){
+                    max = min;
+                    min = similarity;
+                }
+                else if(similarity > max){
+                    max = similarity;
+                }
                 // Check if the similarity is above the threshold
                 if (similarity >= threshold) {
-                    JOptionPane.showMessageDialog(null, "Có tồn tại: " + userImage.getID_User());
+                    JOptionPane.showMessageDialog(null, "Có tồn tại: " + userImage.getID_User() + "\n" + min + " - " + max);
                     check = false;
                     imageChoose = null;
                     return true;
                 }
             }      
-            JOptionPane.showMessageDialog(null, "Không tìm thấy");
+            JOptionPane.showMessageDialog(null, "Không tìm thấy" + "\n" + min + " - " + max);
             imageChoose = null;
             check = false;
         }
