@@ -519,22 +519,50 @@ public class frmInfo extends javax.swing.JFrame {
     }
     
     private void btnChangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangePasswordActionPerformed
-        // TODO add your handling code here:        
         String oldPass = new String(passfOldPassword.getPassword());
         String newPass = new String(passfNewPassword.getPassword());
         String reEnterPass = new String(passfRe_enterNewPassword.getPassword());
+        OperationJson sendJson=new OperationJson();
+        sendJson.setOperation("change-password/"+account.getID_User());
         if(!inputCheck.CheckPassword(newPass, reEnterPass))
             return;
         try{
+            Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT); 
+
+            // Khởi tạo InputStream và output Stream để giao tiếp với server
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             newPass =  BCrypt.withDefaults().hashToString(12, newPass.toCharArray());
-            String queryCheck = String.format("SELECT Password FROM user WHERE ID_User = '%s'" , account.getID_User());
-            String query = String.format("UPDATE user SET Password = '%s' WHERE ID_User = '%s'" , newPass, account.getID_User());
-            if(access.ChangePassword(queryCheck, query, oldPass)){
-                LogOut();
+            String passwordValidate=oldPass+"-"+newPass;
+            String encodedPasswordValidate=EncodeDecode.encodeToBase64(passwordValidate);
+            sendJson.setData(encodedPasswordValidate);
+            out.println(gson.toJson(sendJson));
+            String result=EncodeDecode.decodeBase64FromJson(in.readLine());
+            switch (result) {
+                case "Success":
+                    JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công!");
+                    frmLogin login=new frmLogin();
+                    login.setVisible(true);
+                    account=null;
+                    this.dispose();
+                    break;
+                case "Unknown":
+                    JOptionPane.showMessageDialog(this, "Lỗi chưa chưa xác định!"+result,"Cảnh báo",0);
+                    break;
+                default:
+                    if(result.equals("Account not found")){
+                        JOptionPane.showMessageDialog(this, "Không tìm thấy tài khoản !","Cảnh báo",0);
+                    }
+                    else if(result.equals("WrongOldOrNewPass")||result.equals("WrongPass")){
+                        JOptionPane.showMessageDialog(this, "Bạn nhập sai mật khẩu cũ hoặc mật khẩu mới!","Cảnh báo",0);
+                    }else{
+                        JOptionPane.showMessageDialog(this, "Lỗi chưa  xác định!"+result,"Cảnh báo",0);
+                    }
+                    break;
             }
         }
-        catch(Exception ex) {
-            JOptionPane.showMessageDialog(null, ex);
+        catch(IOException ex) {
+            JOptionPane.showMessageDialog(this, "Lỗi!"+ex.toString(),"Cảnh báo",0);
         }
     }//GEN-LAST:event_btnChangePasswordActionPerformed
 
