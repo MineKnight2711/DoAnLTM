@@ -3,7 +3,6 @@ package db_connection;
 import models.UserImages;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import models.Account;
-import static java.lang.reflect.Array.getByte;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -31,7 +31,6 @@ import utils.EncodeDecode;
 public class frmInfo extends javax.swing.JFrame {
     private static Account account;
     private DocumentListener textChangeListener;
-    private final DBAccess access; 
     private final CheckInput inputCheck;
     private final KeyPressCheck keyCheck;
     private final Gson gson;
@@ -42,7 +41,6 @@ public class frmInfo extends javax.swing.JFrame {
     public frmInfo(Account account) {
         initComponents();
         txtAccount.setEnabled(false);
-        access = new DBAccess();
         gson=new Gson();
         inputCheck = new CheckInput();
         keyCheck = new KeyPressCheck();
@@ -546,7 +544,7 @@ public class frmInfo extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Lỗi chưa chưa xác định!"+result,"Cảnh báo",0);
                     break;
                 default:
-                    if(result.equals("Account not found")){
+                    if(result.equals("AccountNotFound")){
                         JOptionPane.showMessageDialog(this, "Không tìm thấy tài khoản !","Cảnh báo",0);
                     }
                     else if(result.equals("WrongOldOrNewPass")||result.equals("WrongPass")){
