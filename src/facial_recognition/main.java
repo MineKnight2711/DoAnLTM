@@ -4,20 +4,21 @@
  */
 package facial_recognition;
 
+import forms.frmChooseServer;
 import forms.frmLogin;
 
 /**
  *
  * @author dell
  */
-public class Facial_Recognition {
+public class main {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        frmLogin open = new frmLogin();
+        frmChooseServer open = new frmChooseServer();
         open.setVisible(true);
     }
     
