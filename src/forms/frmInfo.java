@@ -9,15 +9,16 @@ import utils.CheckInput;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.gson.Gson;
 import models.Account;
-import db_connection.DBAccess;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Base64;
 import java.util.Date;
+import java.util.concurrent.CompletableFuture;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import models.OperationJson;
@@ -44,6 +45,7 @@ public class frmInfo extends javax.swing.JFrame {
         gson=new Gson();
         inputCheck = new CheckInput();
         keyCheck = new KeyPressCheck();
+        setDefaultProgress();
         frmInfo.account = account;
         GroupRadioBox();
         CheckKeyPress();
@@ -51,7 +53,10 @@ public class frmInfo extends javax.swing.JFrame {
         btnChangePassword.setEnabled(false);
         loadInfo(account);
     }
-
+    private void setDefaultProgress(){
+        progressLoadImage.setVisible(false);
+        progressChangePass.setVisible(false);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -84,6 +89,7 @@ public class frmInfo extends javax.swing.JFrame {
         btnResetInfo = new javax.swing.JButton();
         btnAddFace = new javax.swing.JButton();
         btnXemKhuonMat = new javax.swing.JButton();
+        progressLoadImage = new spinner_progress.SpinnerProgress();
         jPanel2 = new javax.swing.JPanel();
         lblMatKhauCu = new javax.swing.JLabel();
         lblMatKhau = new javax.swing.JLabel();
@@ -96,6 +102,7 @@ public class frmInfo extends javax.swing.JFrame {
         lblDoiMatKhau = new javax.swing.JLabel();
         lblTaiKhoan = new javax.swing.JLabel();
         txtAccount = new javax.swing.JTextField();
+        progressChangePass = new spinner_progress.SpinnerProgress();
         btnLogOut = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -154,34 +161,19 @@ public class frmInfo extends javax.swing.JFrame {
             }
         });
 
+        progressLoadImage.setForeground(new java.awt.Color(255, 153, 51));
+        progressLoadImage.setToolTipText("");
+        progressLoadImage.setValue(50);
+        progressLoadImage.setIndeterminate(true);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(lblHo)
-                            .addComponent(jLabel3)
-                            .addComponent(lblGioiTinh))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtLastName)
-                                .addComponent(txtFirstName)
-                                .addComponent(dcBrithday, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(rbMale)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(rbFemale)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-                                .addComponent(rbOther))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(10, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(lblSoDienThoai)
@@ -203,7 +195,28 @@ public class frmInfo extends javax.swing.JFrame {
                                 .addComponent(btnResetInfo)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnUpdateInfo)))
-                        .addGap(6, 6, 6)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(progressLoadImage, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(lblHo)
+                            .addComponent(jLabel3)
+                            .addComponent(lblGioiTinh))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtLastName)
+                                .addComponent(txtFirstName)
+                                .addComponent(dcBrithday, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(rbMale)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(rbFemale)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                                .addComponent(rbOther)))))
                 .addGap(42, 42, 42))
         );
         jPanel1Layout.setVerticalGroup(
@@ -248,9 +261,12 @@ public class frmInfo extends javax.swing.JFrame {
                     .addComponent(btnUpdateInfo)
                     .addComponent(btnResetInfo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnXemKhuonMat)
-                    .addComponent(btnAddFace)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(progressLoadImage, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnXemKhuonMat)
+                        .addComponent(btnAddFace)))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         lblMatKhauCu.setText("Mật khẩu cũ:");
@@ -278,18 +294,24 @@ public class frmInfo extends javax.swing.JFrame {
 
         lblTaiKhoan.setText("Tài khoản:");
 
+        progressChangePass.setForeground(new java.awt.Color(255, 153, 51));
+        progressChangePass.setToolTipText("");
+        progressChangePass.setValue(50);
+        progressChangePass.setIndeterminate(true);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(16, Short.MAX_VALUE)
+                .addContainerGap(40, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(cbHienMatKhau)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
                         .addComponent(btnChangePassword)
-                        .addGap(33, 33, 33))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(progressChangePass, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -306,7 +328,8 @@ public class frmInfo extends javax.swing.JFrame {
                             .addComponent(passfRe_enterNewPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
                             .addComponent(passfOldPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
                             .addComponent(passfNewPassword))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(70, 70, 70)
                 .addComponent(lblDoiMatKhau)
@@ -317,7 +340,7 @@ public class frmInfo extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblDoiMatKhau)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTaiKhoan)
                     .addComponent(txtAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -336,11 +359,13 @@ public class frmInfo extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(cbHienMatKhau)
-                        .addContainerGap())
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(cbHienMatKhau))
+                    .addComponent(progressChangePass, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(btnChangePassword)
-                        .addGap(14, 14, 14))))
+                        .addComponent(btnChangePassword, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         btnLogOut.setText("Đăng xuất");
@@ -380,7 +405,7 @@ public class frmInfo extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
@@ -513,54 +538,75 @@ public class frmInfo extends javax.swing.JFrame {
     }
     
     private void btnChangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangePasswordActionPerformed
-        String oldPass = new String(passfOldPassword.getPassword());
-        String newPass = new String(passfNewPassword.getPassword());
-        String reEnterPass = new String(passfRe_enterNewPassword.getPassword());
-        OperationJson sendJson=new OperationJson();
-        sendJson.setOperation("change-password/"+account.getID_User());
-        if(!inputCheck.CheckPassword(newPass, reEnterPass))
-            return;
-        try{
-            Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT); 
-
-            // Khởi tạo InputStream và output Stream để giao tiếp với server
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            newPass =  BCrypt.withDefaults().hashToString(12, newPass.toCharArray());
-            String passwordValidate=oldPass+"-"+newPass;
-            String encodedPasswordValidate=EncodeDecode.encodeToBase64(passwordValidate);
-            sendJson.setData(encodedPasswordValidate);
-            out.println(gson.toJson(sendJson));
-            String result=EncodeDecode.decodeBase64FromJson(in.readLine());
-            switch (result) {
-                case "Success":
-                    JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công!");
-                    frmLogin login=new frmLogin();
-                    login.setVisible(true);
-                    account=null;
-                    this.dispose();
-                    break;
-                case "Unknown":
-                    JOptionPane.showMessageDialog(this, "Lỗi chưa chưa xác định!"+result,"Cảnh báo",0);
-                    break;
-                default:
-                    if(result.equals("AccountNotFound")){
-                        JOptionPane.showMessageDialog(this, "Không tìm thấy tài khoản !","Cảnh báo",0);
-                    }
-                    else if(result.equals("WrongOldOrNewPass")||result.equals("WrongPass")){
-                        JOptionPane.showMessageDialog(this, "Bạn nhập sai mật khẩu cũ hoặc mật khẩu mới!","Cảnh báo",0);
-                    }else{
-                        JOptionPane.showMessageDialog(this, "Lỗi chưa  xác định!"+result,"Cảnh báo",0);
-                    }
-                    break;
+        progressChangePass.setVisible(true);
+        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                changePassword();
+                return null;
             }
-            socket.close();
-        }
-        catch(IOException ex) {
-            JOptionPane.showMessageDialog(this, "Lỗi!"+ex.toString(),"Cảnh báo",0);
-        }
+        };
+        worker.execute();
     }//GEN-LAST:event_btnChangePasswordActionPerformed
+    private void changePassword() {
+        CompletableFuture.runAsync(()->{
+            String oldPass = new String(passfOldPassword.getPassword());
+            String newPass = new String(passfNewPassword.getPassword());
+            String reEnterPass = new String(passfRe_enterNewPassword.getPassword());
+            OperationJson sendJson=new OperationJson();
+            sendJson.setOperation("change-password/"+account.getID_User());
+            if(!inputCheck.CheckPassword(newPass, reEnterPass))
+                return;
+            try{
+                Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT); 
 
+                // Khởi tạo InputStream và output Stream để giao tiếp với server
+                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                newPass =  BCrypt.withDefaults().hashToString(12, newPass.toCharArray());
+                String passwordValidate=oldPass+"-"+newPass;
+                String encodedPasswordValidate=EncodeDecode.encodeToBase64(passwordValidate);
+                sendJson.setData(encodedPasswordValidate);
+                out.println(gson.toJson(sendJson));
+                String result=EncodeDecode.decodeBase64FromJson(in.readLine());
+                switch (result) {
+                    case "Success":
+                        JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công!");
+                        frmLogin login=new frmLogin();
+                        login.setVisible(true);
+                        account=null;
+                        this.dispose();
+                        break;
+                    case "Unknown":
+                        JOptionPane.showMessageDialog(this, "Lỗi chưa chưa xác định!"+result,"Cảnh báo",0);
+                        break;
+                    default:
+                        if(result.equals("AccountNotFound")){
+                            JOptionPane.showMessageDialog(this, "Không tìm thấy tài khoản !","Cảnh báo",0);
+                        }
+                        else if(result.equals("WrongOldOrNewPass")||result.equals("WrongPass")){
+                            JOptionPane.showMessageDialog(this, "Bạn nhập sai mật khẩu cũ hoặc mật khẩu mới!","Cảnh báo",0);
+                        }else{
+                            JOptionPane.showMessageDialog(this, "Lỗi chưa  xác định!"+result,"Cảnh báo",0);
+                        }
+                        break;
+                }
+
+                socket.close();
+            }
+            catch(IOException ex) {
+                JOptionPane.showMessageDialog(this, "Lỗi!"+ex.toString(),"Cảnh báo",0);
+            }
+        }).whenComplete((result, exception) -> {
+            if (exception == null) {
+                setDefaultProgress();
+            } else {
+                SwingUtilities.invokeLater(() -> {
+                    JOptionPane.showMessageDialog(this, "Lỗi: " + exception.getMessage(), "Cảnh báo", JOptionPane.ERROR_MESSAGE);
+                });
+            }
+        });
+    }
     private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
         // TODO add your handling code here:
         LogOut();
@@ -625,9 +671,17 @@ public class frmInfo extends javax.swing.JFrame {
 
     private void btnXemKhuonMatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXemKhuonMatActionPerformed
         // TODO add your handling code here:f
-        frmLoadImageData open = new frmLoadImageData(account);
-        open.setVisible(true);
-        this.dispose();
+        progressLoadImage.setVisible(true);
+        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                frmLoadImageData open = new frmLoadImageData(account);
+                open.setVisible(true);
+                frmInfo.this.dispose();
+                return null;
+            }
+        };
+        worker.execute();
     }//GEN-LAST:event_btnXemKhuonMatActionPerformed
 
     /**
@@ -694,6 +748,8 @@ public class frmInfo extends javax.swing.JFrame {
     private javax.swing.JPasswordField passfNewPassword;
     private javax.swing.JPasswordField passfOldPassword;
     private javax.swing.JPasswordField passfRe_enterNewPassword;
+    private spinner_progress.SpinnerProgress progressChangePass;
+    private spinner_progress.SpinnerProgress progressLoadImage;
     private javax.swing.JRadioButton rbFemale;
     private javax.swing.JRadioButton rbMale;
     private javax.swing.JRadioButton rbOther;
