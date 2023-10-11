@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.text.Normalizer.Form;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
@@ -41,6 +42,7 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.videoio.VideoCapture;
 import utils.BaseURL;
+import utils.EncodeDecode;
 
 /**
  *
@@ -64,7 +66,17 @@ public class FaceReconigtion {
     private boolean check;
     private boolean isRecording;
     private int countImages;
-
+    private List<byte[]> listImages;
+    public FaceReconigtion(){
+        gson = new Gson();
+        access = new DBAccess();  
+        account = new Account();
+        check = false;
+        isRecording = false;
+        listImages=new ArrayList<>();
+    }
+    
+    
     public boolean isIsRecording() {
         return isRecording;
     }
@@ -95,13 +107,6 @@ public class FaceReconigtion {
     
     
     
-    public FaceReconigtion(){
-        gson = new Gson();
-        access = new DBAccess();  
-        account = new Account();
-        check = false;
-        isRecording = false;
-    }
     
     public boolean initializeCamera(String form, JLabel cameraDisplay) {        
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -136,10 +141,10 @@ public class FaceReconigtion {
                     else{
                         if(check){
                             if(imageChoose != null){                           
-                                facialRecognition(imageChoose, faceCapture, faceData, tiLe);
+                                facialRecognition(imageChoose);
                             }
                             else{
-                                facialRecognition(imageData, faceCapture, faceData, tiLe);
+                                facialRecognition(imageData);
                             }
                         }
                     }
@@ -192,7 +197,7 @@ public class FaceReconigtion {
         }
         return null;
     }
-    
+    //Phát hiện và vẽ lại khuôn mật thành trắng đen
     public void detectAndDrawFaces(Mat frame) {
         Mat grayFrame = new Mat();
         Imgproc.cvtColor(frame, grayFrame, Imgproc.COLOR_BGR2GRAY);
@@ -205,53 +210,58 @@ public class FaceReconigtion {
             Imgproc.rectangle(frame, rect.tl(), rect.br(), new Scalar(0, 255, 0), 2);
         }
     }
-    
-    public boolean saveFace(byte[] image, boolean save, Account account){
-        try {            
-            byte[] faceImage = detctFace(image);
-            if(faceImage != null){
-                DispalaySave(faceImage, countImages);
+    private String sendRequestToServer(String operation,String data){
+        try {
             Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT);
-
-
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-
+            
             OperationJson operationJson = new OperationJson();
-            operationJson.setOperation("save-image/"+account.getID_User());
-            operationJson.setData(Base64.getEncoder().encodeToString(faceImage));
+            operationJson.setOperation(operation);
+            operationJson.setData(data);
             String sendJson = gson.toJson(operationJson);
             out.println(sendJson);
+            String result=EncodeDecode.decodeBase64FromJson(in.readLine());
+            System.out.println("Kết quả trả về :"+result);
+            socket.close();
+            return result;
+        } catch (IOException ex) {
+            System.out.println("Lỗi"+ex.toString());
+            check = false;
+            return "Fail";
+        }
+    }
+    public boolean saveFace(byte[] image, boolean save, Account account){       
+        byte[] faceImage = detctFace(image);
+        if(faceImage != null)
+        {
+            DispalaySave(faceImage, countImages);
+            listImages.add(faceImage);
             countImages++;
             if (countImages == 10) {
+                countImages = 0;
+                check = false;
+                String encodeListImagesToJson=gson.toJson(listImages);
+                String response=sendRequestToServer("save-image/"+account.getID_User(),encodeListImagesToJson);
+                if (response.equals("Success")) 
+                {
+                    JOptionPane.showMessageDialog(null, "Thêm ảnh thành công!");
+                    check = false;
                     countImages = 0;
-                    String response = in.readLine();
-                    if (response.equals("Success")) 
-                    {
-                        JOptionPane.showMessageDialog(null, "Thêm ảnh thành công!");
-                        check = false;
-                        countImages = 0;
-                        return true;
-                    } 
-                    else 
-                    {
-                        JOptionPane.showMessageDialog(null, "Có lỗi xảy ra!"+response,"Lỗi",JOptionPane.ERROR_MESSAGE);
-                        countImages = 0;
-                        check = false;
-                        return false;
-                    }
+                    return true;
+                } 
+                else 
+                {
+                    JOptionPane.showMessageDialog(null, "Có lỗi xảy ra! "+response,"Lỗi",JOptionPane.ERROR_MESSAGE);
+                    countImages = 0;
+                    check = false;
+                    return false;
                 }
-                socket.close();
-            } 
-            return true;
-        }
-        catch (IOException ex) {
-            Logger.getLogger(frmCameraAcess.class.getName()).log(Level.SEVERE, null, ex);
-            check = false;
-            return false;
-        }   
-   }
-    
+            }
+        } 
+        return true;
+    }
+
     public boolean saveFaceChoose(byte[] image, Account account){
         try {            
             byte[] faceImage = detctFace(image);
@@ -279,49 +289,85 @@ public class FaceReconigtion {
         }   
    }
     
-    public boolean facialRecognition(byte[] imageCapture, JLabel faceCapture, JLabel faceData, JTextField tiLe) {
+    public String facialRecognition(byte[] imageCapture) {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         byte[] faces = detctFace(imageCapture);
-        // Check if a face is detected
-        if (faces != null) {  
-            double min = 0;
-            double max = 0;
-            List<UserImages> allUserImages = access.getAllUsers();            
-            // Compare the captured face with all user images
-            for (UserImages userImage : allUserImages) {
-                // Convert the user image to a matrix
-                byte[] image = userImage.getImages();
-                // Compare the similarity of the captured face and user image
-                double similarity = compareImages(faces, image);
-                DispalayDetect(faces, image, similarity);
-                // Set a threshold value for similarity
-                double threshold = 0.88; // Adjust this value as needed
-                if(min == 0)
-                    min = similarity;
-                else if( max == 0)
-                    max = similarity;
-                else if(similarity < min){
-                    max = min;
-                    min = similarity;
-                }
-                else if(similarity > max){
-                    max = similarity;
-                }
-                // Check if the similarity is above the threshold
-                if (similarity >= threshold) {
-                    JOptionPane.showMessageDialog(null, "Có tồn tại: " + userImage.getID_User() + "\n" + min + " - " + max);
-                    check = false;
-                    imageChoose = null;
-                    return true;
-                }
-            }      
-            JOptionPane.showMessageDialog(null, "Không tìm thấy" + "\n" + min + " - " + max);
-            imageChoose = null;
-            check = false;
+        
+        String respone=sendRequestToServer("regconition", gson.toJson(faces));
+        OperationJson resultJson=gson.fromJson(respone, OperationJson.class);
+        
+        if (resultJson.getOperation().equals("Detected")) { 
+            String[] imagesReceived= resultJson.getData().toString().split("@");
+            if(imagesReceived.length==3){
+                byte[] image1=gson.fromJson(imagesReceived[0], byte[].class);
+                byte[] image2=gson.fromJson(imagesReceived[1], byte[].class);
+                double similarity = gson.fromJson(imagesReceived[2], double.class);
+                displayDetectedImage(image1,image2,similarity);
+                check = false;
+                imageChoose = null;
+                return "Detected";
+            }
+            else{
+                //Xử lý gói dữ liệu bị mất
+                imageChoose = null;
+                check = false;
+                return "NotDetected";
+            }
+//            double min = 0;
+//            double max = 0;
+//            List<UserImages> allUserImages = access.getAllUsers();            
+//            // Compare the captured face with all user images
+//            for (UserImages userImage : allUserImages) {
+//                // Convert the user image to a matrix
+//                byte[] image = userImage.getImages();
+//                // Compare the similarity of the captured face and user image
+//                double similarity = compareImages(faces, image);
+//                DispalayDetect(faces, image, similarity);
+//                // Set a threshold value for similarity
+//                double threshold = 0.88; // Adjust this value as needed
+//                if(min == 0)
+//                    min = similarity;
+//                else if( max == 0)
+//                    max = similarity;
+//                else if(similarity < min){
+//                    max = min;
+//                    min = similarity;
+//                }
+//                else if(similarity > max){
+//                    max = similarity;
+//                }
+//                // Check if the similarity is above the threshold
+//                if (similarity >= threshold) {
+//                    JOptionPane.showMessageDialog(null, "Có tồn tại: " + userImage.getID_User() + "\n" + min + " - " + max);
+//                    
+//                }
+//            }      
+//            JOptionPane.showMessageDialog(null, "Không tìm thấy" + "\n" + min + " - " + max);
+//            imageChoose = null;
+//            check = false;
+            
+        }else if(resultJson.getOperation().equals("NoFace")){
+            JOptionPane.showMessageDialog(null, "Không tìm thấy khuôn mặt","Thông báo",2);
+        } else {
+            String[] imagesReceived= resultJson.getData().toString().split("@");
+            if(imagesReceived.length == 3) {
+                byte[] image1=gson.fromJson(imagesReceived[0], byte[].class);
+                byte[] image2=gson.fromJson(imagesReceived[1], byte[].class);
+                double similarity = gson.fromJson(imagesReceived[2], double.class);
+                displayDetectedImage(image1,image2,similarity);
+                check = false;
+                imageChoose = null;
+                JOptionPane.showMessageDialog(null, "Khuôn mặt chưa khớp","Thông báo",2);
+                return resultJson.getOperation();
+            }
+            else{
+                //Xử lý gói dữ liệu bị mất
+            }
         }
+        
         imageChoose = null;
         check = false;
-        return false;
+        return resultJson.getOperation();
     }
     
     public double compareImages(byte[] image1, byte[] image2) {
@@ -349,12 +395,12 @@ public class FaceReconigtion {
             displayCapture.setIcon(icon1);
             pictureNumber.setText(String.valueOf(countImages + 1));
         }
-        catch(Exception ex){
+        catch(IOException ex){
             JOptionPane.showMessageDialog(null, ex);
         }
     }
     
-    public void DispalayDetect(byte[] image1, byte[] image2, double simularity) {
+    public void displayDetectedImage(byte[] image1, byte[] image2, double simularity) {
         try{           
             InputStream inputStream = new ByteArrayInputStream(image1);
             InputStream inputStream1 = new ByteArrayInputStream(image2);
@@ -366,7 +412,7 @@ public class FaceReconigtion {
             faceData.setIcon(icon2);
             tiLe.setText( String.format("%.2f", simularity*100) + "%");
         }
-        catch(Exception ex){
+        catch(IOException ex){
             JOptionPane.showMessageDialog(null, ex);
         }
     }
