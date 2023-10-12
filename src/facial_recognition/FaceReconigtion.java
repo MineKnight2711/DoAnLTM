@@ -5,6 +5,7 @@
 package facial_recognition;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import forms.frmCameraAcess;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -14,6 +15,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -55,19 +57,52 @@ public class FaceReconigtion {
     private JLabel pictureNumber;
     private JLabel faceCapture;
     private JLabel faceData;
+    private JLabel lbName,lbAddress,lbPhone,lbEmail,lbGender,lbBirthDay;
     private JTextField tiLe;
     private boolean mode;
     private Account account;
+    public  boolean isDetected;
     private boolean check;
     private boolean isRecording;
     private int countImages;
     private List<byte[]> listImages;
     public FaceReconigtion(){
-        gson = new Gson(); 
+        gson =  new GsonBuilder().setDateFormat("MMM d, yyyy").create(); 
         account = new Account();
         check = false;
         isRecording = false;
         listImages=new ArrayList<>();
+        isDetected=false;
+    }
+    public void getAccountInfoLabel(JLabel lbName, JLabel lbBirthDay, JLabel lbAddress,JLabel lbPhone, JLabel lbGender, JLabel lbEmail){
+        this.lbName=lbName;
+        this.lbBirthDay=lbBirthDay;
+        this.lbAddress=lbAddress;
+        this.lbEmail=lbEmail;
+        this.lbGender=lbGender;
+        this.lbPhone=lbPhone;
+    }
+    private void loadAccount(Account acc)
+    {
+        lbName.setText(acc.getFrist_Name()+" "+acc.getLast_Name());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String formattedBirthday = sdf.format(acc.getBrithday());
+        lbBirthDay.setText(formattedBirthday);
+        lbAddress.setText(acc.getAddress());
+        lbPhone.setText(acc.getPhone());
+        lbEmail.setText(acc.getEmail());
+        lbGender.setText(acc.getGender());
+    }
+    public boolean isIsDetected() {
+        return isDetected;
+    }
+    
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
     
     
@@ -291,22 +326,48 @@ public class FaceReconigtion {
         
         if (resultJson.getOperation().equals("Detected")) { 
             String[] imagesReceived= resultJson.getData().toString().split("@");
-            if(imagesReceived.length==3){
-                byte[] image1=gson.fromJson(imagesReceived[0], byte[].class);
-                byte[] image2=gson.fromJson(imagesReceived[1], byte[].class);
-                double similarity = gson.fromJson(imagesReceived[2], double.class);
-                displayDetectedImage(image1,image2,similarity);
-                check = false;
-                imageChoose = null;
-                JOptionPane.showMessageDialog(null, "Tìm thấy khuôn mặt","Thông báo",1);
-                return "Detected";
+            switch (imagesReceived.length) {
+                case 4 -> {
+                    byte[] image1=gson.fromJson(imagesReceived[0], byte[].class);
+                    byte[] image2=gson.fromJson(imagesReceived[1], byte[].class);
+                    double similarity = gson.fromJson(imagesReceived[2], double.class);
+                    String idUser=imagesReceived[3];
+                    displayDetectedImage(image1,image2,similarity);
+                    check = false;
+                    imageChoose = null;
+                    String responeAccount=sendRequestToServer("get-account",idUser);
+                    OperationJson responeJson=gson.fromJson(responeAccount, OperationJson.class);
+                    if(responeJson.getOperation().equals("Success")){
+                        System.out.println("Account nhận ::"+responeJson.getData().toString());
+                        String decodeAccount=EncodeDecode.decodeBase64FromJson(responeJson.getData().toString());
+                        loadAccount(gson.fromJson(decodeAccount, Account.class));
+                        
+                        JOptionPane.showMessageDialog(null, "Tìm thấy khuôn mặt","Thông báo",1);
+                        isDetected=true;
+                        return "Detected";
+                    }
+                    JOptionPane.showMessageDialog(null, "Không tìm thấy khuôn mặt","Thông báo",2);
+                    return "NotDetected";
+                }
+                case 3 -> {
+                        byte[] image1=gson.fromJson(imagesReceived[0], byte[].class);
+                        byte[] image2=gson.fromJson(imagesReceived[1], byte[].class);
+                        
+                        double similarity = gson.fromJson(imagesReceived[2], double.class);
+                        displayDetectedImage(image1,image2,similarity);
+                        check = false;
+                        imageChoose = null;
+                        isDetected=false;
+                        return "NotDetected";
+                }
+                default -> {
+                    //Xử lý không nhận diện được không mặt
+                    imageChoose = null;
+                    check = false;
+                    isDetected=false;
+                    return "NotDetected";
+                }
             }
-            else{
-                //Xử lý gói dữ liệu bị mất
-                imageChoose = null;
-                check = false;
-                return "NotDetected";
-            }            
         } else if(resultJson.getOperation().equals("NotDetected")) {
             String[] imagesReceived= resultJson.getData().toString().split("@");
             if(imagesReceived.length == 3) {
@@ -316,18 +377,22 @@ public class FaceReconigtion {
                 displayDetectedImage(image1,image2,similarity);
                 check = false;
                 imageChoose = null;
-                JOptionPane.showMessageDialog(null, "Khuôn mặt chưa khớp","Thông báo",2);
+                isDetected=false;
+                JOptionPane.showMessageDialog(null, "Không tìm thấy khuôn mặt","Thông báo",2);
                 return resultJson.getOperation();
             }
             else if(resultJson.getOperation().equals("NoFace")){
+                JOptionPane.showMessageDialog(null, "Vui lòng nhìn thẳng vào","Thông báo",2);
                 imageChoose = null;
                 check = false;
+                isDetected=false;
                 return resultJson.getOperation();
             }
         }
         
         imageChoose = null;
         check = false;
+        isDetected=false;
         return resultJson.getOperation();
     }
     
@@ -360,7 +425,6 @@ public class FaceReconigtion {
             JOptionPane.showMessageDialog(null, ex);
         }
     }
-    
     public void getDisplayDetectValue(JLabel faceCapture, JLabel faceData, JTextField tiLe){
         this.faceCapture = faceCapture;
         this.faceData = faceData;
