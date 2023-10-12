@@ -4,8 +4,6 @@
  */
 package forms;
 
-
-import db_connection.DBAccess;
 import facial_recognition.FaceReconigtion;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -194,17 +192,15 @@ public class frmRecognitionTest extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Chưa chọn ảnh hoặc bật camera");
             return;
         }
-        if(!face.isCheck()){
-            if(imageChoose != null){
-                face.setImageChoose(imageChoose);   
-                face.setCheck(true);
-                imageChoose = null;
-            }                
+        if(imageChoose != null){
+            face.setImageChoose(imageChoose);   
+            if(!face.isIsRecording())
+                face.facialRecognition(imageChoose);
+            imageChoose = null;
+        }     
+        if(!face.isCheck()){                       
             face.setCheck(true);   
             return;
-        }
-        else if(face.isCheck()){
-            
         }
     }//GEN-LAST:event_btnNhanDienActionPerformed
 

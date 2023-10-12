@@ -26,11 +26,13 @@ public class frmCameraAcess extends javax.swing.JFrame {
 
     /**
      * Creates new form frmCameraAcess
+     * @param account
+     * @param frm
      */
     public frmCameraAcess(Account account, String frm) {
         initComponents();
-        this.frm = frm;
-        this.account = account; 
+        frmCameraAcess.frm = frm;
+        frmCameraAcess.account = account; 
         face = new FaceReconigtion();
         face.getDisplaySaveValue(lblAnhChup,lblSoAnh, account);
         face.setMode(true);
@@ -69,6 +71,7 @@ public class frmCameraAcess extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         lblSoAnh = new javax.swing.JLabel();
         btnChonAnh = new javax.swing.JButton();
+        progressSaveImage = new spinner_progress.SpinnerProgress();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -109,6 +112,10 @@ public class frmCameraAcess extends javax.swing.JFrame {
             }
         });
 
+        progressSaveImage.setForeground(new java.awt.Color(255, 153, 51));
+        progressSaveImage.setValue(50);
+        progressSaveImage.setIndeterminate(true);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -117,11 +124,13 @@ public class frmCameraAcess extends javax.swing.JFrame {
                 .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(57, 57, 57)
+                        .addGap(16, 16, 16)
                         .addComponent(btnMoCamera, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
+                        .addGap(62, 62, 62)
                         .addComponent(btnLuuKhuonMat, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(50, 50, 50)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(progressSaveImage, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24)
                         .addComponent(btnChonAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnBack)
                     .addGroup(layout.createSequentialGroup()
@@ -138,7 +147,7 @@ public class frmCameraAcess extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnBack)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -152,11 +161,11 @@ public class frmCameraAcess extends javax.swing.JFrame {
                             .addComponent(lblSoAnh))))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnMoCamera, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnChonAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnLuuKhuonMat, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnMoCamera, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnChonAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(5, 5, 5))
+                    .addComponent(progressSaveImage, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(8, 8, 8))
         );
 
         pack();
@@ -193,7 +202,6 @@ public class frmCameraAcess extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnLuuKhuonMatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuKhuonMatActionPerformed
-        // TODO add your handling code here:
         if(!face.isIsRecording()){
             JOptionPane.showMessageDialog(null, "Chưa bật camera");
             return;
@@ -201,8 +209,6 @@ public class frmCameraAcess extends javax.swing.JFrame {
         if(!face.isCheck()){            
             face.setCheck(true);
         }
-        
-        
     }//GEN-LAST:event_btnLuuKhuonMatActionPerformed
 
     private void btnChonAnhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChonAnhActionPerformed
@@ -287,5 +293,6 @@ public class frmCameraAcess extends javax.swing.JFrame {
     private javax.swing.JLabel lblAnhChup;
     private javax.swing.JLabel lblCameraDisplay;
     private javax.swing.JLabel lblSoAnh;
+    private spinner_progress.SpinnerProgress progressSaveImage;
     // End of variables declaration//GEN-END:variables
 }

@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import models.Account;
 import models.ButtonColumn;
-import db_connection.DBAccess;
 import models.UserImages;
 import java.awt.Component;
 import java.awt.Image;
@@ -197,14 +196,27 @@ public class frmLoadImageData extends javax.swing.JFrame {
 
                     if (result == JOptionPane.YES_OPTION)
                     {
-//                        if(access.deleteUserImage(idImage.toString())){
-//                            JOptionPane.showMessageDialog(null, "Đã xoá ảnh");
-//                            loadImage();
-//                        }  
+                        try {
+                            Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT);
+                            // Khởi tạo InputStream và output Stream để giao tiếp với server
+                            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                            OperationJson sendJson=new OperationJson();
+                            sendJson.setOperation("delete-image/"+idImage.toString());
+                            out.println(gson.toJson(sendJson));
+                            String resultFromServer=EncodeDecode.decodeBase64FromJson(in.readLine());
+                            if(resultFromServer.equals("Success")){
+                                JOptionPane.showMessageDialog(frmLoadImageData.this, "Đã xoá ảnh!");
+                                loadImage();
+                            }
+                            else{
+                                 JOptionPane.showMessageDialog(frmLoadImageData.this, "Có lỗi xảy ra!"+resultFromServer,"Lỗi",0);
+                            }
+                            socket.close();
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(frmLoadImageData.this, "Có lỗi xảy ra!"+ex.toString(),"Lỗi",0);
+                        }
                     }
-                    else
-                        return;
-                
                 }
 
             }

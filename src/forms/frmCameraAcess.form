@@ -31,11 +31,13 @@
               <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                       <Component id="btnMoCamera" min="-2" pref="173" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
                       <Component id="btnLuuKhuonMat" min="-2" pref="173" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="progressSaveImage" min="-2" pref="38" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                       <Component id="btnChonAnh" min="-2" pref="121" max="-2" attributes="0"/>
                   </Group>
                   <Component id="btnBack" min="-2" max="-2" attributes="0"/>
@@ -59,7 +61,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="btnBack" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
@@ -76,13 +78,12 @@
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="btnMoCamera" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                  <Component id="btnChonAnh" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
                   <Component id="btnLuuKhuonMat" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="btnMoCamera" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
-                      <Component id="btnChonAnh" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="progressSaveImage" alignment="0" min="-2" pref="38" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -148,6 +149,15 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnChonAnhActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="spinner_progress.SpinnerProgress" name="progressSaveImage">
+      <Properties>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="33" green="99" red="ff" type="rgb"/>
+        </Property>
+        <Property name="value" type="int" value="50"/>
+        <Property name="indeterminate" type="boolean" value="true"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>
