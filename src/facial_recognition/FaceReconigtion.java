@@ -307,9 +307,7 @@ public class FaceReconigtion {
                 check = false;
                 return "NotDetected";
             }            
-        }else if(resultJson.getOperation().equals("NoFace")){
-            JOptionPane.showMessageDialog(null, "Không tìm thấy khuôn mặt","Thông báo",2);
-        } else {
+        } else if(resultJson.getOperation().equals("NotDetected")) {
             String[] imagesReceived= resultJson.getData().toString().split("@");
             if(imagesReceived.length == 3) {
                 byte[] image1=gson.fromJson(imagesReceived[0], byte[].class);
@@ -321,8 +319,10 @@ public class FaceReconigtion {
                 JOptionPane.showMessageDialog(null, "Khuôn mặt chưa khớp","Thông báo",2);
                 return resultJson.getOperation();
             }
-            else{
-                //Xử lý gói dữ liệu bị mất
+            else if(resultJson.getOperation().equals("NoFace")){
+                imageChoose = null;
+                check = false;
+                return resultJson.getOperation();
             }
         }
         
