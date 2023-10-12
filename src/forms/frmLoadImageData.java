@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import models.Account;
 import models.ButtonColumn;
-import db_connection.DBAccess;
 import models.UserImages;
 import java.awt.Component;
 import java.awt.Image;

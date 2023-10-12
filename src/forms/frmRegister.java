@@ -9,7 +9,6 @@ import utils.CheckInput;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.gson.Gson;
 import models.Account;
-import db_connection.DBAccess;
 import java.awt.HeadlessException;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,7 +29,6 @@ import utils.BaseURL;
  */
 public class frmRegister extends javax.swing.JFrame {
     private Account acc;
-    private DBAccess access; 
     private DocumentListener textChangeListener;
     private CheckInput inputCheck;
     private KeyPressCheck keyCheck;
@@ -45,7 +43,6 @@ public class frmRegister extends javax.swing.JFrame {
         SetDateNow();
         CheckKeyPress();
         gson=new Gson();
-        access = new DBAccess();
         inputCheck = new CheckInput();
         keyCheck = new KeyPressCheck();
         GroupRadioBox();

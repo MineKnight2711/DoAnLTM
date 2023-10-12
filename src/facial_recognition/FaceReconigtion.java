@@ -5,7 +5,6 @@
 package facial_recognition;
 
 import com.google.gson.Gson;
-import db_connection.DBAccess;
 import forms.frmCameraAcess;
 import java.awt.Label;
 import java.awt.image.BufferedImage;
@@ -50,7 +49,6 @@ import utils.EncodeDecode;
  */
 public class FaceReconigtion { 
     private Gson gson;
-    private DBAccess access;
     private VideoCapture videoCapture;
     private Mat frame;
     private MatOfByte matOfByte;
@@ -68,8 +66,7 @@ public class FaceReconigtion {
     private int countImages;
     private List<byte[]> listImages;
     public FaceReconigtion(){
-        gson = new Gson();
-        access = new DBAccess();  
+        gson = new Gson(); 
         account = new Account();
         check = false;
         isRecording = false;
