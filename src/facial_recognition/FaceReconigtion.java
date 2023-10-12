@@ -331,58 +331,6 @@ public class FaceReconigtion {
         return resultJson.getOperation();
     }
     
-    public double compareImages(byte[] image1, byte[] image2) {
-        // Load OpenCV library
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-
-        // Convert image byte arrays to OpenCV Mat objects
-        Mat mat1 = Imgcodecs.imdecode(new MatOfByte(image1), Imgcodecs.IMREAD_UNCHANGED);
-        Mat mat2 = Imgcodecs.imdecode(new MatOfByte(image2), Imgcodecs.IMREAD_UNCHANGED);
-       
-        // Calculate the Mean Squared Error (MSE) as a similarity measure
-        double mse = Core.norm(mat1, mat2, Core.NORM_L2) / (mat1.rows() * mat1.cols());
-
-        // Convert the MSE to a similarity score (1 - MSE)
-        double similarity = 1.0 - mse;
-
-        return similarity;
-        
-//        MatOfFloat range = new MatOfFloat(0f, 255f);
-//        MatOfInt histSize = new MatOfInt(256);
-//        List<Mat> histImages1 = new ArrayList<>();
-//        List<Mat> histImages2 = new ArrayList<>();
-//        histImages1.add(mat1);
-//        histImages2.add(mat2);
-//        Mat hist1 = new Mat();
-//        Mat hist2 = new Mat();
-//        Imgproc.calcHist(histImages1, new MatOfInt(0), new Mat(), hist1, histSize, range);
-//        Imgproc.calcHist(histImages2, new MatOfInt(0), new Mat(), hist2, histSize, range);
-//        Core.normalize(hist1, hist1, 0, 1, Core.NORM_MINMAX, -1, new Mat());
-//        Core.normalize(hist2, hist2, 0, 1, Core.NORM_MINMAX, -1, new Mat());
-//        double ssim = Imgproc.compareHist(hist1, hist2, Imgproc.CV_COMP_CORREL);
-//        return ssim;
-
-//        // Create the LBPH face recognizer
-//        FaceRecognizer recognizer = LBPHFaceRecognizer.create();
-//
-//        // Train the recognizer with the first face
-//        MatOfInt labels = new MatOfInt(1); // Label for the first face
-//        MatVector images = new MatVector();
-//        images.push_back(gray1);
-//        recognizer.train(images, labels);
-//
-//        // Recognize the second face
-//        IntPointer predictedLabel = new IntPointer(1);
-//        DoublePointer confidence = new DoublePointer(1);
-//        recognizer.predict(gray2, predictedLabel, confidence);
-//
-//        // Get the predicted label and confidence
-//        int predicted = predictedLabel.get(0);
-//        double similarity = 100 - confidence.get(0); // Inverse confidence as similarity
-//
-//        return similarity;
-    }
-    
     public void DispalaySave(byte[] image1, int countImages) {
         try{           
             InputStream inputStream = new ByteArrayInputStream(image1);

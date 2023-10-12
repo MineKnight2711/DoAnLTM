@@ -247,6 +247,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         // TODO add your handling code here:
         face.setCheck(false);
+        face.setIsRecording(false);
         frmRecognitionTest open = new frmRecognitionTest();
         open.setVisible(true );
         this.dispose();
