@@ -8,6 +8,7 @@ import utils.KeyPressCheck;
 import utils.CheckInput;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import models.Account;
 import java.awt.HeadlessException;
 import java.io.BufferedReader;
@@ -22,6 +23,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import models.OperationJson;
 import utils.BaseURL;
+import utils.EncodeDecode;
 
 /**
  *
@@ -42,7 +44,7 @@ public class frmRegister extends javax.swing.JFrame {
         TextChangeEvent();
         SetDateNow();
         CheckKeyPress();
-        gson=new Gson();
+        gson=new GsonBuilder().setDateFormat("MMM d, yyyy").create();
         inputCheck = new CheckInput();
         keyCheck = new KeyPressCheck();
         GroupRadioBox();
@@ -475,7 +477,7 @@ public class frmRegister extends javax.swing.JFrame {
             acc.setPassword(password);   
             OperationJson operationJson=new OperationJson();
             operationJson.setOperation("create");
-            operationJson.setData(gson.toJson(acc));
+            operationJson.setData(EncodeDecode.encodeToBase64(gson.toJson(acc)));
             System.out.println(operationJson.toString());
             String accountJson = gson.toJson(operationJson);
             
@@ -483,10 +485,15 @@ public class frmRegister extends javax.swing.JFrame {
             out.println(accountJson);
 
             // Nhận kết quả từ server
-            String response = in.readLine();
-            if (response.equals("Success")) 
+            String decodeRespone=EncodeDecode.decodeBase64FromJson(in.readLine());
+            OperationJson response = gson.fromJson(decodeRespone, OperationJson.class);
+            if (response.getOperation().equals("Success")) 
             {
                 JOptionPane.showMessageDialog(this, "Đăng ký thành công!");
+                Account accountRespone = gson.fromJson(response.getData().toString(), Account.class);
+                frmCameraAcess open = new frmCameraAcess(accountRespone, "dangKy");
+                open.setVisible(true);
+                this.dispose();
                 ClearAllText();
             } else 
             {

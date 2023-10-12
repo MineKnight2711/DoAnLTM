@@ -6,11 +6,13 @@ package forms;
 
 import models.Account;
 import facial_recognition.FaceReconigtion;
+import java.awt.Color;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -37,7 +39,7 @@ public class frmCameraAcess extends javax.swing.JFrame {
         face.getDisplaySaveValue(lblAnhChup,lblSoAnh, account);
         face.setMode(true);
         runableThread();
-                    
+        getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.cyan));           
     }       
     
     private void runableThread(){

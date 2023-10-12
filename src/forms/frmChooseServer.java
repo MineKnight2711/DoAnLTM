@@ -4,9 +4,10 @@
  */
 package forms;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.URL;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import utils.BaseURL;
 
@@ -22,6 +23,7 @@ public class frmChooseServer extends javax.swing.JFrame {
     public frmChooseServer() {
         initComponents();
         BaseURL url = new BaseURL();
+        getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.cyan)); 
     }
 
     /**
