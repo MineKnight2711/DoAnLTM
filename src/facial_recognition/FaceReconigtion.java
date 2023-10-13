@@ -85,7 +85,6 @@ public class FaceReconigtion {
     private void extendForm(boolean extend) {
 //        int currentWidth = getWidth();
         int panelWidth = pnAccountInfo.getWidth();
-
         if (extend) {
             int newWidth = originalWidth + panelWidth;
             frmRegconition.setSize(newWidth, frmRegconition.getHeight());
@@ -344,6 +343,10 @@ public class FaceReconigtion {
         byte[] faces = detctFace(imageCapture);
         String respone=sendRequestToServer("regconition", gson.toJson(faces));
         OperationJson resultJson=gson.fromJson(respone, OperationJson.class);
+        if(isExtended){
+            isExtended = !isExtended;
+            extendForm(isExtended);
+        }       
         
         if (resultJson.getOperation().equals("Detected")) { 
             String[] imagesReceived= resultJson.getData().toString().split("@");
@@ -363,7 +366,7 @@ public class FaceReconigtion {
                         String decodeAccount=EncodeDecode.decodeBase64FromJson(responeJson.getData().toString());
                         loadAccount(gson.fromJson(decodeAccount, Account.class));
                         isExtended = !isExtended;
-        extendForm(isExtended);
+                        extendForm(isExtended);
                         JOptionPane.showMessageDialog(null, "Tìm thấy khuôn mặt","Thông báo",1);
                         return "Detected";
                     }
