@@ -35,7 +35,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
     private Thread thread;
     private byte[] imageChoose;
     private FaceReconigtion face;
-    private boolean isExtended=false;
+    
     private int originalWidth; // Variable to store the original frame width
 
 // Call this method when initializing the frame to store the original width
@@ -47,10 +47,10 @@ public class frmRecognitionTest extends javax.swing.JFrame {
     public frmRecognitionTest() {
         initComponents(); 
 //        extendForm(isExtended);
-        storeOriginalWidth();
         txtTiLe.setEnabled(false);
         face = new FaceReconigtion();
-        face.getAccountInfoLabel(lbName, lbBirthDay, lbAddress, lbPhone, lbGender, lbEmail);
+        face.getAccountInfoLabel(frmRecognitionTest.this,lbName, lbBirthDay, lbAddress, lbPhone, lbGender, lbEmail,pnAccountInfo);
+        face.storeOriginalWidth();
         face.getDisplayDetectValue(lblFaceCapture, lblDataFace, txtTiLe);
         pnAccountInfo.setVisible(false);
         face.setMode(false);
@@ -382,17 +382,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_btnNhanDienActionPerformed
-    private void loadAccount(Account acc)
-    {
-        lbName.setText(acc.getFrist_Name()+" "+acc.getLast_Name());
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        String formattedBirthday = sdf.format(acc.getBrithday());
-        lbBirthDay.setText(formattedBirthday);
-        lbAddress.setText(acc.getAddress());
-        lbPhone.setText(acc.getPhone());
-        lbEmail.setText(acc.getEmail());
-        lbGender.setText(acc.getGender());
-    }
+
     private void btnChonAnhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChonAnhActionPerformed
         // TODO add your handling code here:
         JFileChooser fcChooseImage = new JFileChooser();
@@ -445,8 +435,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void btnExtendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExtendActionPerformed
-        isExtended = !isExtended;
-        extendForm(isExtended);
+        
     }//GEN-LAST:event_btnExtendActionPerformed
 
     /**

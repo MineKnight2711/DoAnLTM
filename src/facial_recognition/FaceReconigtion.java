@@ -7,6 +7,7 @@ package facial_recognition;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import forms.frmCameraAcess;
+import forms.frmRecognitionTest;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -23,8 +24,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import models.Account;
 import models.OperationJson;
@@ -59,28 +62,51 @@ public class FaceReconigtion {
     private JLabel faceData;
     private JLabel lbName,lbAddress,lbPhone,lbEmail,lbGender,lbBirthDay;
     private JTextField tiLe;
-    private boolean mode;
+    private boolean mode,check,isRecording,isExtended=false;
     private Account account;
-    public  boolean isDetected;
-    private boolean check;
-    private boolean isRecording;
     private int countImages;
+     private int originalWidth;
+    private JFrame frmRegconition;
+    private JPanel pnAccountInfo;
     private List<byte[]> listImages;
     public FaceReconigtion(){
         gson =  new GsonBuilder().setDateFormat("MMM d, yyyy").create(); 
         account = new Account();
-        check = false;
-        isRecording = false;
         listImages=new ArrayList<>();
-        isDetected=false;
     }
-    public void getAccountInfoLabel(JLabel lbName, JLabel lbBirthDay, JLabel lbAddress,JLabel lbPhone, JLabel lbGender, JLabel lbEmail){
+    public void storeOriginalWidth() {
+        originalWidth = frmRegconition.getWidth();
+        int newWidth = originalWidth - pnAccountInfo.getWidth();
+        frmRegconition.setSize(newWidth, frmRegconition.getHeight());
+        pnAccountInfo.setVisible(false);
+        frmRegconition.setLocationRelativeTo(null);
+    }
+    private void extendForm(boolean extend) {
+//        int currentWidth = getWidth();
+        int panelWidth = pnAccountInfo.getWidth();
+
+        if (extend) {
+            int newWidth = originalWidth + panelWidth;
+            frmRegconition.setSize(newWidth, frmRegconition.getHeight());
+            pnAccountInfo.setVisible(true);
+        } else {
+            int newWidth = originalWidth - panelWidth;
+            frmRegconition.setSize(newWidth, frmRegconition.getHeight());
+            pnAccountInfo.setVisible(false);
+        }
+
+        frmRegconition.setLocationRelativeTo(null);
+    }
+    
+    public void getAccountInfoLabel(JFrame frmReg,JLabel lbName, JLabel lbBirthDay, JLabel lbAddress,JLabel lbPhone, JLabel lbGender, JLabel lbEmail,JPanel pnAccountInfo){
         this.lbName=lbName;
         this.lbBirthDay=lbBirthDay;
         this.lbAddress=lbAddress;
         this.lbEmail=lbEmail;
         this.lbGender=lbGender;
         this.lbPhone=lbPhone;
+        this.frmRegconition=frmReg;
+        this.pnAccountInfo=pnAccountInfo;
     }
     private void loadAccount(Account acc)
     {
@@ -93,13 +119,7 @@ public class FaceReconigtion {
         lbEmail.setText(acc.getEmail());
         lbGender.setText(acc.getGender());
     }
-    public boolean isIsDetected() {
-        return isDetected;
-    }
-    
-    public Account getAccount() {
-        return account;
-    }
+
 
     public void setAccount(Account account) {
         this.account = account;
@@ -341,9 +361,9 @@ public class FaceReconigtion {
                         System.out.println("Account nhận ::"+responeJson.getData().toString());
                         String decodeAccount=EncodeDecode.decodeBase64FromJson(responeJson.getData().toString());
                         loadAccount(gson.fromJson(decodeAccount, Account.class));
-                        
+                        isExtended = !isExtended;
+        extendForm(isExtended);
                         JOptionPane.showMessageDialog(null, "Tìm thấy khuôn mặt","Thông báo",1);
-                        isDetected=true;
                         return "Detected";
                     }
                     JOptionPane.showMessageDialog(null, "Không tìm thấy khuôn mặt","Thông báo",2);
@@ -357,14 +377,12 @@ public class FaceReconigtion {
                         displayDetectedImage(image1,image2,similarity);
                         check = false;
                         imageChoose = null;
-                        isDetected=false;
                         return "NotDetected";
                 }
                 default -> {
                     //Xử lý không nhận diện được không mặt
                     imageChoose = null;
                     check = false;
-                    isDetected=false;
                     return "NotDetected";
                 }
             }
@@ -377,7 +395,6 @@ public class FaceReconigtion {
                 displayDetectedImage(image1,image2,similarity);
                 check = false;
                 imageChoose = null;
-                isDetected=false;
                 JOptionPane.showMessageDialog(null, "Không tìm thấy khuôn mặt","Thông báo",2);
                 return resultJson.getOperation();
             }
@@ -385,14 +402,12 @@ public class FaceReconigtion {
                 JOptionPane.showMessageDialog(null, "Vui lòng nhìn thẳng vào","Thông báo",2);
                 imageChoose = null;
                 check = false;
-                isDetected=false;
                 return resultJson.getOperation();
             }
         }
         
         imageChoose = null;
         check = false;
-        isDetected=false;
         return resultJson.getOperation();
     }
     
