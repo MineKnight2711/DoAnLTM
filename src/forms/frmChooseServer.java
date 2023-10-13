@@ -116,6 +116,7 @@ public class frmChooseServer extends javax.swing.JFrame {
             frmLogin open = new frmLogin();
             open.setVisible(true);
             this.dispose();
+           
             
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Kết nối thất bại");

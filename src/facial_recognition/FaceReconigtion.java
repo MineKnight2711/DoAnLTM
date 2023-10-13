@@ -62,7 +62,8 @@ public class FaceReconigtion {
     private JLabel faceData;
     private JLabel lbName,lbAddress,lbPhone,lbEmail,lbGender,lbBirthDay;
     private JTextField tiLe;
-    private boolean mode,check,isRecording,isExtended=false;
+    private boolean mode,check,isRecording=false;
+    private boolean isExtended=false;
     private Account account;
     private int countImages;
      private int originalWidth;

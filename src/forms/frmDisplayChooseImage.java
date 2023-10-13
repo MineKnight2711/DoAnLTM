@@ -7,6 +7,7 @@ package forms;
 
 import facial_recognition.FaceReconigtion;
 import java.awt.Component;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -35,11 +36,13 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
     private static Account account;
      /**
      * Creates new form frmDisplayChooseImage
+     * @param listChooseImage
+     * @param account
      */
     public frmDisplayChooseImage(List<byte[]> listChooseImage, Account account) {
         initComponents();
-        this.listChooseImage = listChooseImage;
-        this.account = account;
+        frmDisplayChooseImage.listChooseImage = listChooseImage;
+        frmDisplayChooseImage.account = account;
         face = new FaceReconigtion();
         LoadImage();
         renderButtonDelete();
@@ -95,9 +98,6 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
                         LoadImage();
                         
                     }
-                    else
-                        return;
-                
                 }
 
             }
@@ -190,7 +190,7 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Lưu ảnh thành công");
             this.dispose();
         }
-        catch(Exception ex){
+        catch(HeadlessException ex){
             JOptionPane.showMessageDialog(null, ex);
         }
     }//GEN-LAST:event_btnSaveActionPerformed

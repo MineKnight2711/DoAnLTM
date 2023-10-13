@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import models.OperationJson;
+import routes.FormRoute;
 import utils.BaseURL;
 import utils.EncodeDecode;
 
@@ -35,8 +36,6 @@ public class frmLogin extends javax.swing.JFrame {
         TextChangeEvent();
         btnLogin.setEnabled(false);     
         gson=new GsonBuilder().setDateFormat("MMM d, yyyy").create();
-        ImageIcon backgroundIcon = new ImageIcon("src\\images\\login_banner.jpg");
-        lbLoginBanner.setIcon(backgroundIcon);
     }
     
     /**
@@ -89,6 +88,7 @@ public class frmLogin extends javax.swing.JFrame {
         });
 
         btnResister.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
+        btnResister.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/register.png"))); // NOI18N
         btnResister.setText("Đăng ký");
         btnResister.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         btnResister.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
@@ -110,6 +110,7 @@ public class frmLogin extends javax.swing.JFrame {
         });
 
         btnChangeServer.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
+        btnChangeServer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/server.png"))); // NOI18N
         btnChangeServer.setText("Đổi server");
         btnChangeServer.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         btnChangeServer.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
@@ -119,6 +120,8 @@ public class frmLogin extends javax.swing.JFrame {
             }
         });
 
+        lbLoginBanner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/login_banner.jpg"))); // NOI18N
+
         jLabel3.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
         jLabel3.setText("Đăng nhập");
 
@@ -127,46 +130,48 @@ public class frmLogin extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(lbLoginBanner, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lbLoginBanner)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(txtAccount)
-                                .addComponent(passfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(cbShowPassword))
-                        .addGap(27, 27, 27))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(125, 125, 125)
                         .addComponent(jLabel3)
-                        .addGap(133, 133, 133))
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnChangeServer, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnNhanDienTest)
-                                .addGap(1, 1, 1))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(txtAccount, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(btnChangeServer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(btnResister, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGap(25, 25, 25)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(btnLogin, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(btnNhanDienTest)
+                                                .addGap(1, 1, 1))))
+                                    .addComponent(passfPassword))
+                                .addGap(21, 21, 21))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnResister, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnLogin)))
-                        .addContainerGap())))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel1)
+                                    .addComponent(cbShowPassword))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(33, 33, 33)
+                .addGap(30, 30, 30)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
+                .addComponent(txtAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
                 .addComponent(passfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -200,13 +205,11 @@ public class frmLogin extends javax.swing.JFrame {
         login();
     }//GEN-LAST:event_btnLoginActionPerformed
     private void login(){
-        try {
+        try (Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT)){
             // TODO add your handling code here:
             String account = txtAccount.getText();
             //char[] password = passfMatKhau.getPassword();
             String password = new String(passfPassword.getPassword());
-            Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT);
-            
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             
@@ -223,8 +226,7 @@ public class frmLogin extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Đăng nhập thành công!");
                     String receivedAccountJson=EncodeDecode.decodeBase64FromJson(receivedJson.getData().toString());                  
                     Account acc = gson.fromJson(receivedAccountJson, Account.class);
-                    frmInfo open = new frmInfo(acc);
-                    open.setVisible(true);
+                    FormRoute.openFormInfo(this, acc);
                     this.dispose();
                     break;
                 case "WrongPass":
@@ -279,24 +281,16 @@ public class frmLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_cbShowPasswordActionPerformed
 
     private void btnResisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResisterActionPerformed
-        // TODO add your handling code here:
-        frmRegister open = new frmRegister();
-        open.setVisible(true);
-        this.dispose();
+        FormRoute.openFormRegister(this);
     }//GEN-LAST:event_btnResisterActionPerformed
 
     private void btnNhanDienTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhanDienTestActionPerformed
-        // TODO add your handling code here:
-        frmRecognitionTest open = new frmRecognitionTest();
-        open.setVisible(true);
-        this.dispose();
+        FormRoute.openFormRecognitionTest(this);
     }//GEN-LAST:event_btnNhanDienTestActionPerformed
 
     private void btnChangeServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeServerActionPerformed
         // TODO add your handling code here:
-        frmChooseServer open = new frmChooseServer();
-        open.setVisible(true);
-        this.dispose();
+        FormRoute.opFormChoseServer(this);
     }//GEN-LAST:event_btnChangeServerActionPerformed
 
     /**

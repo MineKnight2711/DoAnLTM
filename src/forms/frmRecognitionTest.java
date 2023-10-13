@@ -3,27 +3,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package forms;
-import com.google.gson.Gson;
-import facial_recognition.FaceReconigtion;
-import java.awt.image.BufferedImage;
 
+import facial_recognition.FaceReconigtion;
+import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-
+import java.io.IOException;
 import java.io.InputStream;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.SimpleDateFormat;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-
 import javax.swing.JOptionPane;
-
 import javax.swing.filechooser.FileNameExtensionFilter;
-import models.Account;
 
 
 /**
@@ -36,16 +31,20 @@ public class frmRecognitionTest extends javax.swing.JFrame {
     private byte[] imageChoose;
     private FaceReconigtion face;
     
-    private int originalWidth; // Variable to store the original frame width
+    private int originalWidth; 
 
-// Call this method when initializing the frame to store the original width
 
 
         /**
      * Creates new form frmRecognitionTest
      */
     public frmRecognitionTest() {
-        initComponents(); 
+        
+       
+        
+        // Calculate the new image dimensions to fit the frame
+         initComponents(); 
+
 //        extendForm(isExtended);
         txtTiLe.setEnabled(false);
         face = new FaceReconigtion();
@@ -54,31 +53,32 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         face.getDisplayDetectValue(lblFaceCapture, lblDataFace, txtTiLe);
         pnAccountInfo.setVisible(false);
         face.setMode(false);
+        
         runableThread();
     }
-    private void storeOriginalWidth() {
-        originalWidth = getWidth();
-        int newWidth = originalWidth - pnAccountInfo.getWidth();
-        setSize(newWidth, getHeight());
-        pnAccountInfo.setVisible(false);
-        setLocationRelativeTo(null);
-    }
-    private void extendForm(boolean extend) {
-//        int currentWidth = getWidth();
-        int panelWidth = pnAccountInfo.getWidth();
-
-        if (extend) {
-            int newWidth = originalWidth + panelWidth;
-            setSize(newWidth, getHeight());
-            pnAccountInfo.setVisible(true);
-        } else {
-            int newWidth = originalWidth - panelWidth;
-            setSize(newWidth, getHeight());
-            pnAccountInfo.setVisible(false);
-        }
-
-        setLocationRelativeTo(null);
-    }
+//    private void storeOriginalWidth() {
+//        originalWidth = getWidth();
+//        int newWidth = originalWidth - pnAccountInfo.getWidth();
+//        setSize(newWidth, getHeight());
+//        pnAccountInfo.setVisible(false);
+//        setLocationRelativeTo(null);
+//    }
+//    private void extendForm(boolean extend) {
+////        int currentWidth = getWidth();
+//        int panelWidth = pnAccountInfo.getWidth();
+//
+//        if (extend) {
+//            int newWidth = originalWidth + panelWidth;
+//            setSize(newWidth, getHeight());
+//            pnAccountInfo.setVisible(true);
+//        } else {
+//            int newWidth = originalWidth - panelWidth;
+//            setSize(newWidth, getHeight());
+//            pnAccountInfo.setVisible(false);
+//        }
+//
+//        setLocationRelativeTo(null);
+//    }
     private void runableThread(){
         Runnable frameGrabber = () -> {
                 while (true) {
@@ -103,10 +103,10 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         lblDisplayCapture = new javax.swing.JLabel();
         btnMoCamera = new javax.swing.JButton();
         btnNhanDien = new javax.swing.JButton();
+        txtTiLe = new javax.swing.JTextField();
         lblDataFace = new javax.swing.JLabel();
         lblFaceCapture = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        txtTiLe = new javax.swing.JTextField();
         btnChonAnh = new javax.swing.JButton();
         btnMoCamera1 = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
@@ -124,8 +124,13 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         lbAddress = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        lbPanelBackGround = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().add(lblDisplayCapture, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 26, 559, 424));
 
         btnMoCamera.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnMoCamera.setText("Mở camera");
@@ -134,6 +139,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
                 btnMoCameraActionPerformed(evt);
             }
         });
+        getContentPane().add(btnMoCamera, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 470, -1, 47));
 
         btnNhanDien.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnNhanDien.setText("Nhận diện");
@@ -142,8 +148,13 @@ public class frmRecognitionTest extends javax.swing.JFrame {
                 btnNhanDienActionPerformed(evt);
             }
         });
+        getContentPane().add(btnNhanDien, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 470, -1, 47));
+        getContentPane().add(txtTiLe, new org.netbeans.lib.awtextra.AbsoluteConstraints(663, 286, 71, -1));
+        getContentPane().add(lblDataFace, new org.netbeans.lib.awtextra.AbsoluteConstraints(583, 314, 284, 226));
+        getContentPane().add(lblFaceCapture, new org.netbeans.lib.awtextra.AbsoluteConstraints(583, 26, 284, 226));
 
         jLabel1.setText("Tỉ lệ giống: ");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(583, 289, -1, -1));
 
         btnChonAnh.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnChonAnh.setText("Chọn ảnh");
@@ -152,6 +163,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
                 btnChonAnhActionPerformed(evt);
             }
         });
+        getContentPane().add(btnChonAnh, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 470, 128, 47));
 
         btnMoCamera1.setText("Trở về");
         btnMoCamera1.addActionListener(new java.awt.event.ActionListener() {
@@ -159,6 +171,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
                 btnMoCamera1ActionPerformed(evt);
             }
         });
+        getContentPane().add(btnMoCamera1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 73, -1));
 
         btnRefresh.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnRefresh.setText("Refresh");
@@ -167,168 +180,85 @@ public class frmRecognitionTest extends javax.swing.JFrame {
                 btnRefreshActionPerformed(evt);
             }
         });
+        getContentPane().add(btnRefresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 470, 107, 47));
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel2.setText("Thông tin nhân viên");
+        pnAccountInfo.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Bahnschrift", 0, 24)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 204, 0));
+        jLabel2.setText("Thông tin tài khoản");
+        pnAccountInfo.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 40, 210, 38));
+
+        jLabel3.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 204, 0));
         jLabel3.setText("Họ tên");
+        pnAccountInfo.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 70, -1));
 
         lbName.setBackground(new java.awt.Color(255, 255, 255));
         lbName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbName.setOpaque(true);
+        pnAccountInfo.add(lbName, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 100, 230, 20));
 
+        lbBirthDay.setBackground(new java.awt.Color(255, 255, 255));
         lbBirthDay.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbBirthDay.setOpaque(true);
+        pnAccountInfo.add(lbBirthDay, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 170, 230, 20));
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 204, 0));
         jLabel6.setText("Ngày sinh");
+        pnAccountInfo.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 110, -1));
 
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 204, 0));
         jLabel9.setText("Giới tính");
+        pnAccountInfo.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, 100, -1));
 
+        lbGender.setBackground(new java.awt.Color(255, 255, 255));
         lbGender.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbGender.setOpaque(true);
+        pnAccountInfo.add(lbGender, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 240, 230, 20));
 
+        lbPhone.setBackground(new java.awt.Color(255, 255, 255));
         lbPhone.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbPhone.setOpaque(true);
+        pnAccountInfo.add(lbPhone, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 310, 230, 20));
 
-        jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel12.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 204, 0));
         jLabel12.setText("SDT");
+        pnAccountInfo.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 75, -1));
 
+        lbEmail.setBackground(new java.awt.Color(255, 255, 255));
         lbEmail.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbEmail.setOpaque(true);
+        pnAccountInfo.add(lbEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 400, 230, 20));
 
-        jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel14.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(255, 204, 0));
         jLabel14.setText("Email");
+        pnAccountInfo.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 400, 75, -1));
 
+        lbAddress.setBackground(new java.awt.Color(255, 255, 255));
         lbAddress.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbAddress.setOpaque(true);
+        pnAccountInfo.add(lbAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 470, 230, 20));
 
-        jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel16.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(255, 204, 0));
         jLabel16.setText("Địa chỉ");
+        pnAccountInfo.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 470, 75, -1));
 
-        javax.swing.GroupLayout pnAccountInfoLayout = new javax.swing.GroupLayout(pnAccountInfo);
-        pnAccountInfo.setLayout(pnAccountInfoLayout);
-        pnAccountInfoLayout.setHorizontalGroup(
-            pnAccountInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnAccountInfoLayout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addGroup(pnAccountInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnAccountInfoLayout.createSequentialGroup()
-                        .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
-                        .addComponent(lbAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnAccountInfoLayout.createSequentialGroup()
-                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lbEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnAccountInfoLayout.createSequentialGroup()
-                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lbPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnAccountInfoLayout.createSequentialGroup()
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lbGender, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnAccountInfoLayout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lbName, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnAccountInfoLayout.createSequentialGroup()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lbBirthDay, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))))
-            .addGroup(pnAccountInfoLayout.createSequentialGroup()
-                .addGap(130, 130, 130)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        pnAccountInfoLayout.setVerticalGroup(
-            pnAccountInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnAccountInfoLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(pnAccountInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(51, 51, 51)
-                .addGroup(pnAccountInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbBirthDay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(44, 44, 44)
-                .addGroup(pnAccountInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbGender, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(51, 51, 51)
-                .addGroup(pnAccountInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbPhone, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(51, 51, 51)
-                .addGroup(pnAccountInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbEmail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(51, 51, 51)
-                .addGroup(pnAccountInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbAddress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(135, Short.MAX_VALUE))
-        );
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/profile.png"))); // NOI18N
+        pnAccountInfo.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, 70));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(lblDisplayCapture, javax.swing.GroupLayout.PREFERRED_SIZE, 559, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(14, 14, 14)
-                                .addComponent(btnMoCamera)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnNhanDien)
-                                .addGap(27, 27, 27)
-                                .addComponent(btnChonAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtTiLe, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblDataFace, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblFaceCapture, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(btnMoCamera1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(pnAccountInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(btnMoCamera1)
-                .addGap(3, 3, 3)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblDisplayCapture, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnMoCamera, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btnChonAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btnNhanDien, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblFaceCapture, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(txtTiLe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(6, 6, 6)
-                        .addComponent(lblDataFace, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(25, 25, 25))))
-            .addComponent(pnAccountInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        lbPanelBackGround.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/account_info.jpg"))); // NOI18N
+        pnAccountInfo.add(lbPanelBackGround, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 370, 570));
+
+        getContentPane().add(pnAccountInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 0, 370, -1));
+
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background.jpg"))); // NOI18N
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -4, 890, 580));
 
         pack();
         setLocationRelativeTo(null);
@@ -393,7 +323,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
                 else{
                     JOptionPane.showMessageDialog(null, "Không tìm thấy khuôn mặt trong ảnh chọn");
                 }
-            } catch (Exception ex) {
+            } catch (HeadlessException | IOException ex) {
                 JOptionPane.showConfirmDialog(null, ex);
             }
         }        
@@ -466,13 +396,16 @@ public class frmRecognitionTest extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel lbAddress;
     private javax.swing.JLabel lbBirthDay;
     private javax.swing.JLabel lbEmail;
     private javax.swing.JLabel lbGender;
     private javax.swing.JLabel lbName;
+    private javax.swing.JLabel lbPanelBackGround;
     private javax.swing.JLabel lbPhone;
     private javax.swing.JLabel lblDataFace;
     private javax.swing.JLabel lblDisplayCapture;
