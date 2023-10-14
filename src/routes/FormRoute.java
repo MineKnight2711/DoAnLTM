@@ -18,12 +18,17 @@ import models.Account;
  * @author WitherDragon
  */
 public class FormRoute {
+    
     public static void openFormInfo(JFrame disposeForm,Account acc){
         frmInfo frm = new frmInfo(acc);
         frm.setVisible(true);
         disposeForm.dispose();
     }
-    
+    public static void openFormLogin(JFrame disposeForm){
+        frmLogin frm = new frmLogin();
+        frm.setVisible(true);
+        disposeForm.dispose();
+    }
     public static void openFormRecognitionTest(JFrame disposeForm){
         frmRecognitionTest frm = new frmRecognitionTest();
         frm.setVisible(true);

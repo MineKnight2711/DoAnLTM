@@ -6,12 +6,14 @@ package forms;
 
 
 import facial_recognition.FaceReconigtion;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -22,7 +24,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import models.Account;
 import models.ButtonColumn;
-import models.UserImages;
 
 /**
  *
@@ -46,6 +47,7 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
         face = new FaceReconigtion();
         LoadImage();
         renderButtonDelete();
+        getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.cyan)); 
     }
     
     private void LoadImage() {
@@ -182,7 +184,7 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        // TODO add your handling code here:
+
         try{
             for(byte[] image : listChooseImage){
                 face.saveFaceChoose(image, account);

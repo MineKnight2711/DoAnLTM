@@ -8,6 +8,7 @@ import utils.KeyPressCheck;
 import utils.CheckInput;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.gson.Gson;
+import java.awt.Color;
 import models.Account;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,12 +17,14 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import models.OperationJson;
+import routes.FormRoute;
 import utils.BaseURL;
 import utils.EncodeDecode;
 
@@ -52,6 +55,7 @@ public class frmInfo extends javax.swing.JFrame {
         TextChangeEvent();
         btnChangePassword.setEnabled(false);
         loadInfo(account);
+        getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.cyan)); 
     }
     private void setDefaultProgress(){
         progressLoadImage.setVisible(false);
@@ -107,24 +111,25 @@ public class frmInfo extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        lblThongTinCaNhan.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblThongTinCaNhan.setFont(new java.awt.Font("Bahnschrift", 0, 24)); // NOI18N
         lblThongTinCaNhan.setText("Thông tin cá nhân");
-        getContentPane().add(lblThongTinCaNhan, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 10, -1, -1));
+        getContentPane().add(lblThongTinCaNhan, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 20, -1, -1));
 
         btnLogOut.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        btnLogOut.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/login.png"))); // NOI18N
         btnLogOut.setText("Đăng xuất");
         btnLogOut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLogOutActionPerformed(evt);
             }
         });
-        getContentPane().add(btnLogOut, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 100, 40));
+        getContentPane().add(btnLogOut, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 40));
 
         progressLoadImage.setForeground(new java.awt.Color(255, 153, 51));
         progressLoadImage.setToolTipText("");
         progressLoadImage.setValue(50);
         progressLoadImage.setIndeterminate(true);
-        getContentPane().add(progressLoadImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 400, 30, 30));
+        getContentPane().add(progressLoadImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 390, 40, 40));
 
         btnXemKhuonMat.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         btnXemKhuonMat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/face-list.png"))); // NOI18N
@@ -239,7 +244,7 @@ public class frmInfo extends javax.swing.JFrame {
         progressChangePass.setToolTipText("");
         progressChangePass.setValue(50);
         progressChangePass.setIndeterminate(true);
-        getContentPane().add(progressChangePass, new org.netbeans.lib.awtextra.AbsoluteConstraints(342, 700, 30, 31));
+        getContentPane().add(progressChangePass, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 690, -1, 40));
 
         cbHienMatKhau.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         cbHienMatKhau.setText("Hiện mật khẩu");
@@ -270,12 +275,11 @@ public class frmInfo extends javax.swing.JFrame {
         getContentPane().add(lblTaiKhoan, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 500, -1, -1));
         getContentPane().add(txtAccount, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 490, 270, 30));
 
-        lblDoiMatKhau.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblDoiMatKhau.setFont(new java.awt.Font("Bahnschrift", 0, 24)); // NOI18N
         lblDoiMatKhau.setText("Đôỉ mật khẩu");
-        getContentPane().add(lblDoiMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 430, -1, -1));
+        getContentPane().add(lblDoiMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 440, -1, 40));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/register.jpg"))); // NOI18N
-        jLabel1.setPreferredSize(new java.awt.Dimension(460, 760));
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
@@ -401,11 +405,6 @@ public class frmInfo extends javax.swing.JFrame {
     }//GEN-LAST:event_cbHienMatKhauActionPerformed
     
     
-    private void LogOut(){
-        frmLogin open = new frmLogin();
-        open.setVisible(true);
-        this.dispose();
-    }
     
     private void btnChangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangePasswordActionPerformed
         progressChangePass.setVisible(true);
@@ -479,7 +478,8 @@ public class frmInfo extends javax.swing.JFrame {
     }
     private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
         // TODO add your handling code here:
-        LogOut();
+        FormRoute.openFormLogin(this);
+        account=null;
     }//GEN-LAST:event_btnLogOutActionPerformed
 
     private void btnUpdateInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateInfoActionPerformed

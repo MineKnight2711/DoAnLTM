@@ -6,13 +6,14 @@ package forms;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.awt.Color;
 import models.Account;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import javax.swing.ImageIcon;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -36,6 +37,7 @@ public class frmLogin extends javax.swing.JFrame {
         TextChangeEvent();
         btnLogin.setEnabled(false);     
         gson=new GsonBuilder().setDateFormat("MMM d, yyyy").create();
+        getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.cyan)); 
     }
     
     /**

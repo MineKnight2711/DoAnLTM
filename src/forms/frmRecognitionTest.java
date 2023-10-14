@@ -5,8 +5,8 @@
 package forms;
 
 import facial_recognition.FaceReconigtion;
+import java.awt.Color;
 import java.awt.HeadlessException;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -15,10 +15,12 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import routes.FormRoute;
 
 
 /**
@@ -55,6 +57,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         face.setMode(false);
         
         runableThread();
+        getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.cyan)); 
     }
 //    private void storeOriginalWidth() {
 //        originalWidth = getWidth();
@@ -253,13 +256,16 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         pnRecognition.add(txtTiLe, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 322, 71, 30));
 
         btnReturn.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        btnReturn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/return.png"))); // NOI18N
         btnReturn.setText("Trở về");
+        btnReturn.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btnReturn.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         btnReturn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnReturnActionPerformed(evt);
             }
         });
-        pnRecognition.add(btnReturn, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 100, 40));
+        pnRecognition.add(btnReturn, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 120, 40));
 
         pnBackGroundImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background.jpg"))); // NOI18N
         pnRecognition.add(pnBackGroundImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1030, 650));
@@ -350,20 +356,14 @@ public class frmRecognitionTest extends javax.swing.JFrame {
     
    
     private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
-        // TODO add your handling code here:
         face.setIsRecording(false);
-        frmLogin open = new frmLogin();
-        open.setVisible(true);
-        this.dispose();
+        FormRoute.openFormLogin(this);
     }//GEN-LAST:event_btnReturnActionPerformed
     
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-        // TODO add your handling code here:
         face.setCheck(false);
         face.setIsRecording(false);
-        frmRecognitionTest open = new frmRecognitionTest();
-        open.setVisible(true );
-        this.dispose();
+        FormRoute.openFormRecognitionTest(this);
     }//GEN-LAST:event_btnRefreshActionPerformed
 
     /**
