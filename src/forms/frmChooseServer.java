@@ -106,7 +106,6 @@ public class frmChooseServer extends javax.swing.JFrame {
         // TODO add your handling code here:
         String ipAddress = txtIP_Adress1.getText(); // IP address
         int port = Integer.parseInt(txtPort.getText()); // Port number
-
         try {
             Socket socket = new Socket(ipAddress,  port);
             JOptionPane.showMessageDialog(null, "Kết nối thành công");
@@ -115,8 +114,7 @@ public class frmChooseServer extends javax.swing.JFrame {
             BaseURL.SERVER_ADDRESS = ipAddress;
             frmLogin open = new frmLogin();
             open.setVisible(true);
-            this.dispose();
-           
+            this.dispose();          
             
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Kết nối thất bại");

@@ -307,7 +307,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
             if(!face.isIsRecording())
                 face.facialRecognition(imageChoose);            
             imageChoose = null;
-        }     
+        }    
         
         if(!face.isCheck()){                       
             face.setCheck(true);   
