@@ -9,6 +9,7 @@ import utils.CheckInput;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.awt.Color;
 import models.Account;
 import java.awt.HeadlessException;
 import java.io.BufferedReader;
@@ -18,10 +19,12 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Calendar;
 import java.util.Date;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import models.OperationJson;
+import routes.FormRoute;
 import utils.BaseURL;
 import utils.EncodeDecode;
 
@@ -49,6 +52,7 @@ public class frmRegister extends javax.swing.JFrame {
         keyCheck = new KeyPressCheck();
         GroupRadioBox();
         rbMale.setSelected(true);
+        getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.cyan)); 
     }
 
     /**
@@ -93,7 +97,7 @@ public class frmRegister extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        lblTaoTaiKhoan.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblTaoTaiKhoan.setFont(new java.awt.Font("Bahnschrift", 1, 24)); // NOI18N
         lblTaoTaiKhoan.setText("Tạo tài khoản");
         getContentPane().add(lblTaoTaiKhoan, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 330, -1, -1));
 
@@ -112,7 +116,7 @@ public class frmRegister extends javax.swing.JFrame {
                 btnTroVeActionPerformed(evt);
             }
         });
-        getContentPane().add(btnTroVe, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 110, 30));
+        getContentPane().add(btnTroVe, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 130, 30));
 
         lblEmail.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         lblEmail.setText("Email:");
@@ -212,7 +216,6 @@ public class frmRegister extends javax.swing.JFrame {
 
         jLabel5.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/register.png"))); // NOI18N
-        jLabel5.setPreferredSize(new java.awt.Dimension(459, 602));
         getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 460, -1));
 
         pack();
@@ -309,9 +312,7 @@ public class frmRegister extends javax.swing.JFrame {
     
     private void btnTroVeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTroVeActionPerformed
         // TODO add your handling code here:
-        frmLogin open = new frmLogin();
-        open.setVisible(true);
-        this.dispose();
+        FormRoute.openFormLogin(this);
     }//GEN-LAST:event_btnTroVeActionPerformed
 
     private void btnCreateAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateAccountActionPerformed

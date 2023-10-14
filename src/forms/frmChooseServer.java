@@ -5,10 +5,14 @@
 package forms;
 
 import java.awt.Color;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
+import routes.FormRoute;
 import utils.BaseURL;
 
 /**
@@ -22,7 +26,6 @@ public class frmChooseServer extends javax.swing.JFrame {
      */
     public frmChooseServer() {
         initComponents();
-        BaseURL url = new BaseURL();
         getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.cyan)); 
     }
 
@@ -106,18 +109,26 @@ public class frmChooseServer extends javax.swing.JFrame {
         // TODO add your handling code here:
         String ipAddress = txtIP_Adress1.getText(); // IP address
         int port = Integer.parseInt(txtPort.getText()); // Port number
-        try {
-            Socket socket = new Socket(ipAddress,  port);
-            JOptionPane.showMessageDialog(null, "Kết nối thành công");
+
+        try (Socket socket = new Socket(ipAddress,  port);){
+//            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+//            out.println("Connect");
+//            if(in.readLine().equals("Success")){
+//                JOptionPane.showMessageDialog(this, "Kết nối thành công");
+//            }
+//            else{
+//                JOptionPane.showMessageDialog(this, "Kết nối thất bại","Lỗi",0);
+//            }
+            if(socket.isConnected()){
+                JOptionPane.showMessageDialog(this, "Kết nối thành công");
+            }
             socket.close();
             BaseURL.PORT = port;
             BaseURL.SERVER_ADDRESS = ipAddress;
-            frmLogin open = new frmLogin();
-            open.setVisible(true);
-            this.dispose();          
-            
+            FormRoute.openFormLogin(this);  
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Kết nối thất bại");
+            JOptionPane.showMessageDialog(this, "Kết nối thất bại","Lỗi",0);
         }
     }//GEN-LAST:event_btnKetNoiActionPerformed
 

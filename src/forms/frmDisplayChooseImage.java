@@ -6,12 +6,14 @@ package forms;
 
 
 import facial_recognition.FaceReconigtion;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -22,7 +24,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import models.Account;
 import models.ButtonColumn;
-import models.UserImages;
 
 /**
  *
@@ -46,6 +47,7 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
         face = new FaceReconigtion();
         LoadImage();
         renderButtonDelete();
+        getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.cyan)); 
     }
     
     private void LoadImage() {
@@ -121,6 +123,7 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tbImage = new javax.swing.JTable();
         btnSave = new javax.swing.JButton();
+        btnTroVe = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -153,6 +156,14 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
             }
         });
 
+        btnTroVe.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnTroVe.setText("Trở về");
+        btnTroVe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTroVeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -163,7 +174,10 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 626, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(267, 267, 267)
+                        .addContainerGap()
+                        .addComponent(btnTroVe))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(269, 269, 269)
                         .addComponent(btnSave)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -171,10 +185,12 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnTroVe)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSave)
-                .addGap(12, 12, 12))
+                .addGap(10, 10, 10))
         );
 
         pack();
@@ -182,7 +198,7 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        // TODO add your handling code here:
+
         try{
             for(byte[] image : listChooseImage){
                 face.saveFaceChoose(image, account);
@@ -194,6 +210,14 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, ex);
         }
     }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnTroVeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTroVeActionPerformed
+        // TODO add your handling code here
+        listChooseImage.clear();
+        frmInfo open = new frmInfo(account);
+        open.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnTroVeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -232,6 +256,7 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnTroVe;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tbImage;
     // End of variables declaration//GEN-END:variables
