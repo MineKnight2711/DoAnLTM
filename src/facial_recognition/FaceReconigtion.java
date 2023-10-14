@@ -42,6 +42,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.videoio.VideoCapture;
+import spinner_progress.SpinnerProgress;
 import utils.BaseURL;
 import utils.EncodeDecode;
 
@@ -56,6 +57,7 @@ public class FaceReconigtion {
     private MatOfByte matOfByte;
     private byte[] imageData;
     private byte[] imageChoose;
+    private SpinnerProgress saveimageProgress;
     private JLabel displayCapture;
     private JLabel pictureNumber;
     private JLabel faceCapture;
@@ -67,6 +69,7 @@ public class FaceReconigtion {
     private Account account;
     private int countImages;
      private int originalWidth;
+     private int panelGap=16;
     private JFrame frmRegconition;
     private JPanel pnAccountInfo;
     private List<byte[]> listImages;
@@ -77,7 +80,7 @@ public class FaceReconigtion {
     }
     public void storeOriginalWidth() {
         originalWidth = frmRegconition.getWidth();
-        int newWidth = originalWidth - pnAccountInfo.getWidth();
+        int newWidth = originalWidth - pnAccountInfo.getWidth()-panelGap;
         frmRegconition.setSize(newWidth, frmRegconition.getHeight());
         pnAccountInfo.setVisible(false);
         frmRegconition.setLocationRelativeTo(null);
@@ -86,11 +89,11 @@ public class FaceReconigtion {
 //        int currentWidth = getWidth();
         int panelWidth = pnAccountInfo.getWidth();
         if (extend) {
-            int newWidth = originalWidth + panelWidth;
+            int newWidth = originalWidth + panelWidth+panelGap;
             frmRegconition.setSize(newWidth, frmRegconition.getHeight());
             pnAccountInfo.setVisible(true);
         } else {
-            int newWidth = originalWidth - panelWidth;
+            int newWidth = originalWidth - panelWidth-panelGap;
             frmRegconition.setSize(newWidth, frmRegconition.getHeight());
             pnAccountInfo.setVisible(false);
         }
@@ -297,6 +300,7 @@ public class FaceReconigtion {
                     JOptionPane.showMessageDialog(null, "Thêm ảnh thành công!");
                     check = false;
                     countImages = 0;
+                    saveimageProgress.setVisible(false);
                     return true;
                 } 
                 else 
@@ -304,6 +308,7 @@ public class FaceReconigtion {
                     JOptionPane.showMessageDialog(null, "Có lỗi xảy ra! "+response,"Lỗi",JOptionPane.ERROR_MESSAGE);
                     countImages = 0;
                     check = false;
+                    saveimageProgress.setVisible(false);
                     return false;
                 }
             }
@@ -454,5 +459,9 @@ public class FaceReconigtion {
         this.displayCapture = displayCapture;
         this.pictureNumber = pictureNumber;
         this.account = account;
+    }
+
+    public void getProgress(SpinnerProgress progressSaveImage) {
+       this.saveimageProgress=progressSaveImage;
     }
 }

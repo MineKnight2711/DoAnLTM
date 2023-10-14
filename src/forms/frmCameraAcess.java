@@ -37,6 +37,8 @@ public class frmCameraAcess extends javax.swing.JFrame {
         frmCameraAcess.account = account; 
         face = new FaceReconigtion();
         face.getDisplaySaveValue(lblAnhChup,lblSoAnh, account);
+        face.getProgress(progressSaveImage);
+        progressSaveImage.setVisible(false);
         face.setMode(true);
         runableThread();
         getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.cyan));           
@@ -179,11 +181,11 @@ public class frmCameraAcess extends javax.swing.JFrame {
         if (face.isIsRecording()) {
             // Stop recording
             face.setIsRecording(false);
-            btnMoCamera.setText("Record");
+            btnMoCamera.setText("Mở camera");
         } else {
             // Start recording
             face.setIsRecording(true);
-            btnMoCamera.setText("Stop Recording");
+            btnMoCamera.setText("Tắt camera");
         }
     }//GEN-LAST:event_btnMoCameraActionPerformed
 
@@ -204,6 +206,7 @@ public class frmCameraAcess extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnLuuKhuonMatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuKhuonMatActionPerformed
+        progressSaveImage.setVisible(true);
         if(!face.isIsRecording()){
             JOptionPane.showMessageDialog(null, "Chưa bật camera");
             return;

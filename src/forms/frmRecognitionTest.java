@@ -44,7 +44,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         
         // Calculate the new image dimensions to fit the frame
          initComponents(); 
-
+         
 //        extendForm(isExtended);
         txtTiLe.setEnabled(false);
         face = new FaceReconigtion();
@@ -100,16 +100,6 @@ public class frmRecognitionTest extends javax.swing.JFrame {
     private void initComponents() {
 
         fcChooseImage = new javax.swing.JFileChooser();
-        lblDisplayCapture = new javax.swing.JLabel();
-        btnMoCamera = new javax.swing.JButton();
-        btnNhanDien = new javax.swing.JButton();
-        txtTiLe = new javax.swing.JTextField();
-        lblDataFace = new javax.swing.JLabel();
-        lblFaceCapture = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        btnChonAnh = new javax.swing.JButton();
-        btnMoCamera1 = new javax.swing.JButton();
-        btnRefresh = new javax.swing.JButton();
         pnAccountInfo = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -125,72 +115,29 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         lbAddress = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        lbPanelBackGround = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        pnRecognition = new javax.swing.JPanel();
+        btnRefresh = new javax.swing.JButton();
+        btnMoCamera = new javax.swing.JButton();
+        btnNhanDien = new javax.swing.JButton();
+        btnChonAnh = new javax.swing.JButton();
+        lblDisplayCapture = new javax.swing.JLabel();
+        lblDataFace = new javax.swing.JLabel();
+        lblFaceCapture = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        txtTiLe = new javax.swing.JTextField();
+        btnReturn = new javax.swing.JButton();
+        pnBackGroundImage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        getContentPane().add(lblDisplayCapture, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 26, 559, 424));
 
-        btnMoCamera.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnMoCamera.setText("Mở camera");
-        btnMoCamera.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnMoCameraActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnMoCamera, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 470, -1, 47));
-
-        btnNhanDien.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnNhanDien.setText("Nhận diện");
-        btnNhanDien.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNhanDienActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnNhanDien, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 470, -1, 47));
-        getContentPane().add(txtTiLe, new org.netbeans.lib.awtextra.AbsoluteConstraints(663, 286, 71, -1));
-        getContentPane().add(lblDataFace, new org.netbeans.lib.awtextra.AbsoluteConstraints(583, 314, 284, 226));
-        getContentPane().add(lblFaceCapture, new org.netbeans.lib.awtextra.AbsoluteConstraints(583, 26, 284, 226));
-
-        jLabel1.setText("Tỉ lệ giống: ");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(583, 289, -1, -1));
-
-        btnChonAnh.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnChonAnh.setText("Chọn ảnh");
-        btnChonAnh.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnChonAnhActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnChonAnh, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 470, 128, 47));
-
-        btnMoCamera1.setText("Trở về");
-        btnMoCamera1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnMoCamera1ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnMoCamera1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 73, -1));
-
-        btnRefresh.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnRefresh.setText("Refresh");
-        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRefreshActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnRefresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 470, 107, 47));
-
+        pnAccountInfo.setBackground(new java.awt.Color(204, 204, 204));
         pnAccountInfo.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setFont(new java.awt.Font("Bahnschrift", 0, 24)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 204, 0));
         jLabel2.setText("Thông tin tài khoản");
         pnAccountInfo.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 40, 210, 38));
 
         jLabel3.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 204, 0));
         jLabel3.setText("Họ tên");
         pnAccountInfo.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 70, -1));
 
@@ -202,66 +149,138 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         lbBirthDay.setBackground(new java.awt.Color(255, 255, 255));
         lbBirthDay.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbBirthDay.setOpaque(true);
-        pnAccountInfo.add(lbBirthDay, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 170, 230, 20));
+        pnAccountInfo.add(lbBirthDay, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 190, 230, 20));
 
         jLabel6.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(255, 204, 0));
         jLabel6.setText("Ngày sinh");
-        pnAccountInfo.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 110, -1));
+        pnAccountInfo.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 110, -1));
 
         jLabel9.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(255, 204, 0));
         jLabel9.setText("Giới tính");
-        pnAccountInfo.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, 100, -1));
+        pnAccountInfo.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 290, 100, -1));
 
         lbGender.setBackground(new java.awt.Color(255, 255, 255));
         lbGender.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbGender.setOpaque(true);
-        pnAccountInfo.add(lbGender, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 240, 230, 20));
+        pnAccountInfo.add(lbGender, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 290, 230, 20));
 
         lbPhone.setBackground(new java.awt.Color(255, 255, 255));
         lbPhone.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbPhone.setOpaque(true);
-        pnAccountInfo.add(lbPhone, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 310, 230, 20));
+        pnAccountInfo.add(lbPhone, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 380, 230, 20));
 
         jLabel12.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(255, 204, 0));
         jLabel12.setText("SDT");
-        pnAccountInfo.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 75, -1));
+        pnAccountInfo.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 380, 75, 20));
 
         lbEmail.setBackground(new java.awt.Color(255, 255, 255));
         lbEmail.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbEmail.setOpaque(true);
-        pnAccountInfo.add(lbEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 400, 230, 20));
+        pnAccountInfo.add(lbEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 470, 230, 20));
 
         jLabel14.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(255, 204, 0));
         jLabel14.setText("Email");
-        pnAccountInfo.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 400, 75, -1));
+        pnAccountInfo.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 470, 75, 20));
 
         lbAddress.setBackground(new java.awt.Color(255, 255, 255));
         lbAddress.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbAddress.setOpaque(true);
-        pnAccountInfo.add(lbAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 470, 230, 20));
+        pnAccountInfo.add(lbAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 560, 230, 20));
 
         jLabel16.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
-        jLabel16.setForeground(new java.awt.Color(255, 204, 0));
         jLabel16.setText("Địa chỉ");
-        pnAccountInfo.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 470, 75, -1));
+        pnAccountInfo.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 560, 75, 20));
 
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/profile.png"))); // NOI18N
         pnAccountInfo.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, 70));
 
-        lbPanelBackGround.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/account_info.jpg"))); // NOI18N
-        pnAccountInfo.add(lbPanelBackGround, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 370, 570));
+        pnRecognition.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        getContentPane().add(pnAccountInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 0, 370, -1));
+        btnRefresh.setFont(new java.awt.Font("Bahnschrift", 1, 18)); // NOI18N
+        btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/reset.png"))); // NOI18N
+        btnRefresh.setText("Refresh");
+        btnRefresh.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btnRefresh.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
+        pnRecognition.add(btnRefresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 580, 170, 50));
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background.jpg"))); // NOI18N
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -4, 890, 580));
+        btnMoCamera.setFont(new java.awt.Font("Bahnschrift", 1, 18)); // NOI18N
+        btnMoCamera.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/camera.png"))); // NOI18N
+        btnMoCamera.setText("Mở camera");
+        btnMoCamera.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btnMoCamera.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        btnMoCamera.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMoCameraActionPerformed(evt);
+            }
+        });
+        pnRecognition.add(btnMoCamera, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 510, 180, 50));
+
+        btnNhanDien.setFont(new java.awt.Font("Bahnschrift", 1, 18)); // NOI18N
+        btnNhanDien.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/face-scan.png"))); // NOI18N
+        btnNhanDien.setText("Nhận diện");
+        btnNhanDien.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btnNhanDien.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        btnNhanDien.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNhanDienActionPerformed(evt);
+            }
+        });
+        pnRecognition.add(btnNhanDien, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 510, 170, 50));
+
+        btnChonAnh.setFont(new java.awt.Font("Bahnschrift", 1, 18)); // NOI18N
+        btnChonAnh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/gallery.png"))); // NOI18N
+        btnChonAnh.setText("Chọn ảnh");
+        btnChonAnh.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btnChonAnh.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        btnChonAnh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChonAnhActionPerformed(evt);
+            }
+        });
+        pnRecognition.add(btnChonAnh, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 580, 180, 50));
+        pnRecognition.add(lblDisplayCapture, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 730, 450));
+        pnRecognition.add(lblDataFace, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 360, 300, 280));
+        pnRecognition.add(lblFaceCapture, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 30, 300, 260));
+
+        jLabel1.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        jLabel1.setText("Tỉ lệ giống: ");
+        pnRecognition.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 330, -1, -1));
+        pnRecognition.add(txtTiLe, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 322, 71, 30));
+
+        btnReturn.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        btnReturn.setText("Trở về");
+        btnReturn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReturnActionPerformed(evt);
+            }
+        });
+        pnRecognition.add(btnReturn, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 100, 40));
+
+        pnBackGroundImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background.jpg"))); // NOI18N
+        pnRecognition.add(pnBackGroundImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1030, 650));
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(pnRecognition, javax.swing.GroupLayout.PREFERRED_SIZE, 1022, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(pnAccountInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnRecognition, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pnAccountInfo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
 
         pack();
-        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnMoCameraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoCameraActionPerformed
@@ -269,11 +288,11 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         if (face.isIsRecording()) {
             // Stop recording
             face.setIsRecording(false);
-            btnMoCamera.setText("Record");
+            btnMoCamera.setText("Mở camera");
         } else {
             // Start recording
             face.setIsRecording(true);
-            btnMoCamera.setText("Stop Recording");
+            btnMoCamera.setText("Tắt camera");
         }
     }//GEN-LAST:event_btnMoCameraActionPerformed
 
@@ -330,13 +349,13 @@ public class frmRecognitionTest extends javax.swing.JFrame {
     
     
    
-    private void btnMoCamera1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoCamera1ActionPerformed
+    private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
         // TODO add your handling code here:
         face.setIsRecording(false);
         frmLogin open = new frmLogin();
         open.setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_btnMoCamera1ActionPerformed
+    }//GEN-LAST:event_btnReturnActionPerformed
     
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         // TODO add your handling code here:
@@ -385,9 +404,9 @@ public class frmRecognitionTest extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnChonAnh;
     private javax.swing.JButton btnMoCamera;
-    private javax.swing.JButton btnMoCamera1;
     private javax.swing.JButton btnNhanDien;
     private javax.swing.JButton btnRefresh;
+    private javax.swing.JButton btnReturn;
     private javax.swing.JFileChooser fcChooseImage;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;
@@ -395,7 +414,6 @@ public class frmRecognitionTest extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;
@@ -404,12 +422,13 @@ public class frmRecognitionTest extends javax.swing.JFrame {
     private javax.swing.JLabel lbEmail;
     private javax.swing.JLabel lbGender;
     private javax.swing.JLabel lbName;
-    private javax.swing.JLabel lbPanelBackGround;
     private javax.swing.JLabel lbPhone;
     private javax.swing.JLabel lblDataFace;
     private javax.swing.JLabel lblDisplayCapture;
     private javax.swing.JLabel lblFaceCapture;
     private javax.swing.JPanel pnAccountInfo;
+    private javax.swing.JLabel pnBackGroundImage;
+    private javax.swing.JPanel pnRecognition;
     private javax.swing.JTextField txtTiLe;
     // End of variables declaration//GEN-END:variables
 }

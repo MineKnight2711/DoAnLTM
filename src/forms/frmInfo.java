@@ -68,345 +68,215 @@ public class frmInfo extends javax.swing.JFrame {
 
         btngRadioBox = new javax.swing.ButtonGroup();
         lblThongTinCaNhan = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
+        btnLogOut = new javax.swing.JButton();
+        progressLoadImage = new spinner_progress.SpinnerProgress();
+        btnXemKhuonMat = new javax.swing.JButton();
+        btnUpdateInfo = new javax.swing.JButton();
+        btnAddFace = new javax.swing.JButton();
+        btnResetInfo = new javax.swing.JButton();
         txtEmail = new javax.swing.JTextField();
+        lblEmail = new javax.swing.JLabel();
+        lblDiaChi = new javax.swing.JLabel();
         txtAddress = new javax.swing.JTextField();
         txtPhone = new javax.swing.JTextField();
-        txtFirstName = new javax.swing.JTextField();
-        txtLastName = new javax.swing.JTextField();
-        lblGioiTinh = new javax.swing.JLabel();
         lblSoDienThoai = new javax.swing.JLabel();
-        lblDiaChi = new javax.swing.JLabel();
-        lblEmail = new javax.swing.JLabel();
-        lblHo = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        dcBrithday = new com.toedter.calendar.JDateChooser();
+        lblGioiTinh = new javax.swing.JLabel();
+        rbMale = new javax.swing.JRadioButton();
         rbFemale = new javax.swing.JRadioButton();
         rbOther = new javax.swing.JRadioButton();
-        rbMale = new javax.swing.JRadioButton();
-        btnUpdateInfo = new javax.swing.JButton();
-        btnResetInfo = new javax.swing.JButton();
-        btnAddFace = new javax.swing.JButton();
-        btnXemKhuonMat = new javax.swing.JButton();
-        progressLoadImage = new spinner_progress.SpinnerProgress();
-        jPanel2 = new javax.swing.JPanel();
-        lblMatKhauCu = new javax.swing.JLabel();
-        lblMatKhau = new javax.swing.JLabel();
-        lblNhapLaiMatKhau = new javax.swing.JLabel();
-        cbHienMatKhau = new javax.swing.JCheckBox();
+        dcBrithday = new com.toedter.calendar.JDateChooser();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        txtFirstName = new javax.swing.JTextField();
+        txtLastName = new javax.swing.JTextField();
+        lblHo = new javax.swing.JLabel();
         btnChangePassword = new javax.swing.JButton();
+        progressChangePass = new spinner_progress.SpinnerProgress();
+        cbHienMatKhau = new javax.swing.JCheckBox();
         passfRe_enterNewPassword = new javax.swing.JPasswordField();
-        passfOldPassword = new javax.swing.JPasswordField();
+        lblNhapLaiMatKhau = new javax.swing.JLabel();
         passfNewPassword = new javax.swing.JPasswordField();
-        lblDoiMatKhau = new javax.swing.JLabel();
+        lblMatKhau = new javax.swing.JLabel();
+        passfOldPassword = new javax.swing.JPasswordField();
+        lblMatKhauCu = new javax.swing.JLabel();
         lblTaiKhoan = new javax.swing.JLabel();
         txtAccount = new javax.swing.JTextField();
-        progressChangePass = new spinner_progress.SpinnerProgress();
-        btnLogOut = new javax.swing.JButton();
+        lblDoiMatKhau = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblThongTinCaNhan.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblThongTinCaNhan.setText("Thông tin cá nhân");
+        getContentPane().add(lblThongTinCaNhan, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 10, -1, -1));
 
-        lblGioiTinh.setText("Giới tính:");
-
-        lblSoDienThoai.setText("Số điện thoại:");
-
-        lblDiaChi.setText("Địa chỉ:");
-
-        lblEmail.setText("Email:");
-
-        lblHo.setText("Họ:");
-
-        jLabel2.setText("Tên lót/Tên:");
-
-        jLabel3.setText("Ngày sinh:");
-
-        dcBrithday.setDateFormatString("dd/MM/yyyy");
-        dcBrithday.setMaxSelectableDate(new java.util.Date(253370743280000L));
-
-        rbFemale.setText("Nữ");
-
-        rbOther.setText("Khác");
-
-        rbMale.setText("Nam");
-
-        btnUpdateInfo.setText("Cập nhật thông tin");
-        btnUpdateInfo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateInfoActionPerformed(evt);
-            }
-        });
-
-        btnResetInfo.setText("Đặt lại thông tin");
-        btnResetInfo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnResetInfoActionPerformed(evt);
-            }
-        });
-
-        btnAddFace.setText("Thêm khuôn mặt");
-        btnAddFace.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddFaceActionPerformed(evt);
-            }
-        });
-
-        btnXemKhuonMat.setText("Xem khuôn mặt");
-        btnXemKhuonMat.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnXemKhuonMatActionPerformed(evt);
-            }
-        });
-
-        progressLoadImage.setForeground(new java.awt.Color(255, 153, 51));
-        progressLoadImage.setToolTipText("");
-        progressLoadImage.setValue(50);
-        progressLoadImage.setIndeterminate(true);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(10, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(lblSoDienThoai)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblDiaChi))
-                                .addGap(42, 42, 42)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnAddFace)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnXemKhuonMat, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnResetInfo)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnUpdateInfo)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(progressLoadImage, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(lblHo)
-                            .addComponent(jLabel3)
-                            .addComponent(lblGioiTinh))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtLastName)
-                                .addComponent(txtFirstName)
-                                .addComponent(dcBrithday, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(rbMale)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(rbFemale)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
-                                .addComponent(rbOther)))))
-                .addGap(42, 42, 42))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblHo)
-                    .addComponent(txtLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(dcBrithday, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(rbMale)
-                            .addComponent(rbFemale)
-                            .addComponent(rbOther))
-                        .addGap(6, 6, 6))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblGioiTinh)
-                        .addGap(18, 18, 18)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblSoDienThoai)
-                    .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblDiaChi)
-                    .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblEmail)
-                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnUpdateInfo)
-                    .addComponent(btnResetInfo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(progressLoadImage, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnXemKhuonMat)
-                        .addComponent(btnAddFace)))
-                .addContainerGap(22, Short.MAX_VALUE))
-        );
-
-        lblMatKhauCu.setText("Mật khẩu cũ:");
-
-        lblMatKhau.setText("Mật khẩu mới:");
-
-        lblNhapLaiMatKhau.setText("Nhập lại mật khẩu:");
-
-        cbHienMatKhau.setText("Hiện mật khẩu");
-        cbHienMatKhau.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbHienMatKhauActionPerformed(evt);
-            }
-        });
-
-        btnChangePassword.setText("Đổi mật khẩu");
-        btnChangePassword.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnChangePasswordActionPerformed(evt);
-            }
-        });
-
-        lblDoiMatKhau.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        lblDoiMatKhau.setText("Đôỉ mật khẩu");
-
-        lblTaiKhoan.setText("Tài khoản:");
-
-        progressChangePass.setForeground(new java.awt.Color(255, 153, 51));
-        progressChangePass.setToolTipText("");
-        progressChangePass.setValue(50);
-        progressChangePass.setIndeterminate(true);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(40, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(cbHienMatKhau)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
-                        .addComponent(btnChangePassword)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(progressChangePass, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(lblNhapLaiMatKhau)
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(lblMatKhau)
-                                        .addComponent(lblMatKhauCu))
-                                    .addGap(22, 22, 22)))
-                            .addComponent(lblTaiKhoan))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtAccount)
-                            .addComponent(passfRe_enterNewPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
-                            .addComponent(passfOldPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
-                            .addComponent(passfNewPassword))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(70, 70, 70)
-                .addComponent(lblDoiMatKhau)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblDoiMatKhau)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTaiKhoan)
-                    .addComponent(txtAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(passfOldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblMatKhauCu))
-                .addGap(24, 24, 24)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(passfNewPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblMatKhau))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNhapLaiMatKhau)
-                    .addComponent(passfRe_enterNewPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(cbHienMatKhau))
-                    .addComponent(progressChangePass, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(btnChangePassword, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-
+        btnLogOut.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         btnLogOut.setText("Đăng xuất");
         btnLogOut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLogOutActionPerformed(evt);
             }
         });
+        getContentPane().add(btnLogOut, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 100, 40));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(59, 59, 59)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnLogOut)
-                .addGap(45, 45, 45)
-                .addComponent(lblThongTinCaNhan))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(46, 46, 46)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(lblThongTinCaNhan))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnLogOut)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
-        );
+        progressLoadImage.setForeground(new java.awt.Color(255, 153, 51));
+        progressLoadImage.setToolTipText("");
+        progressLoadImage.setValue(50);
+        progressLoadImage.setIndeterminate(true);
+        getContentPane().add(progressLoadImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 400, 30, 30));
+
+        btnXemKhuonMat.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        btnXemKhuonMat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/face-list.png"))); // NOI18N
+        btnXemKhuonMat.setText("Xem khuôn mặt");
+        btnXemKhuonMat.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btnXemKhuonMat.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        btnXemKhuonMat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXemKhuonMatActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnXemKhuonMat, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 400, 170, 30));
+
+        btnUpdateInfo.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        btnUpdateInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/update-info.png"))); // NOI18N
+        btnUpdateInfo.setText("Cập nhật thông tin");
+        btnUpdateInfo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btnUpdateInfo.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        btnUpdateInfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateInfoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnUpdateInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 350, 190, 30));
+
+        btnAddFace.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        btnAddFace.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/add-image.png"))); // NOI18N
+        btnAddFace.setText("Thêm khuôn mặt");
+        btnAddFace.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btnAddFace.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        btnAddFace.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddFaceActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnAddFace, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 400, 180, 30));
+
+        btnResetInfo.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        btnResetInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/reset.png"))); // NOI18N
+        btnResetInfo.setText("Đặt lại thông tin");
+        btnResetInfo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btnResetInfo.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        btnResetInfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetInfoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnResetInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 350, 190, 30));
+        getContentPane().add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 300, 260, 30));
+
+        lblEmail.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        lblEmail.setText("Email:");
+        getContentPane().add(lblEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 50, 20));
+
+        lblDiaChi.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        lblDiaChi.setText("Địa chỉ:");
+        getContentPane().add(lblDiaChi, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, -1, -1));
+        getContentPane().add(txtAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 260, 260, 30));
+        getContentPane().add(txtPhone, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 220, 260, 30));
+
+        lblSoDienThoai.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        lblSoDienThoai.setText("Số điện thoại:");
+        getContentPane().add(lblSoDienThoai, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, -1, -1));
+
+        lblGioiTinh.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        lblGioiTinh.setText("Giới tính:");
+        getContentPane().add(lblGioiTinh, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, -1, -1));
+
+        rbMale.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        rbMale.setText("Nam");
+        getContentPane().add(rbMale, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 190, -1, -1));
+
+        rbFemale.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        rbFemale.setText("Nữ");
+        getContentPane().add(rbFemale, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 190, -1, -1));
+
+        rbOther.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        rbOther.setText("Khác");
+        getContentPane().add(rbOther, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 190, -1, -1));
+
+        dcBrithday.setDateFormatString("dd/MM/yyyy");
+        dcBrithday.setMaxSelectableDate(new java.util.Date(253370743280000L));
+        getContentPane().add(dcBrithday, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 140, 260, 30));
+
+        jLabel3.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        jLabel3.setText("Ngày sinh:");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, -1, -1));
+
+        jLabel2.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        jLabel2.setText("Tên lót/Tên:");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, -1, -1));
+        getContentPane().add(txtFirstName, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 100, 260, 30));
+        getContentPane().add(txtLastName, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 60, 260, 30));
+
+        lblHo.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        lblHo.setText("Họ:");
+        getContentPane().add(lblHo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, -1, -1));
+
+        btnChangePassword.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        btnChangePassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/reset-password.png"))); // NOI18N
+        btnChangePassword.setText("Đổi mật khẩu");
+        btnChangePassword.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btnChangePassword.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        btnChangePassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChangePasswordActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnChangePassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 691, 160, 40));
+
+        progressChangePass.setForeground(new java.awt.Color(255, 153, 51));
+        progressChangePass.setToolTipText("");
+        progressChangePass.setValue(50);
+        progressChangePass.setIndeterminate(true);
+        getContentPane().add(progressChangePass, new org.netbeans.lib.awtextra.AbsoluteConstraints(342, 700, 30, 31));
+
+        cbHienMatKhau.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        cbHienMatKhau.setText("Hiện mật khẩu");
+        cbHienMatKhau.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbHienMatKhauActionPerformed(evt);
+            }
+        });
+        getContentPane().add(cbHienMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 660, -1, -1));
+        getContentPane().add(passfRe_enterNewPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 620, 270, 30));
+
+        lblNhapLaiMatKhau.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        lblNhapLaiMatKhau.setText("Nhập lại mật khẩu:");
+        getContentPane().add(lblNhapLaiMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 630, -1, -1));
+        getContentPane().add(passfNewPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 580, 270, 30));
+
+        lblMatKhau.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        lblMatKhau.setText("Mật khẩu mới:");
+        getContentPane().add(lblMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 590, -1, -1));
+        getContentPane().add(passfOldPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 530, 270, 30));
+
+        lblMatKhauCu.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        lblMatKhauCu.setText("Mật khẩu cũ:");
+        getContentPane().add(lblMatKhauCu, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 540, -1, -1));
+
+        lblTaiKhoan.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        lblTaiKhoan.setText("Tài khoản:");
+        getContentPane().add(lblTaiKhoan, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 500, -1, -1));
+        getContentPane().add(txtAccount, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 490, 270, 30));
+
+        lblDoiMatKhau.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblDoiMatKhau.setText("Đôỉ mật khẩu");
+        getContentPane().add(lblDoiMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 430, -1, -1));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/register.jpg"))); // NOI18N
+        jLabel1.setPreferredSize(new java.awt.Dimension(460, 760));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
         setLocationRelativeTo(null);
@@ -730,10 +600,9 @@ public class frmInfo extends javax.swing.JFrame {
     private javax.swing.ButtonGroup btngRadioBox;
     private javax.swing.JCheckBox cbHienMatKhau;
     private com.toedter.calendar.JDateChooser dcBrithday;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblDiaChi;
     private javax.swing.JLabel lblDoiMatKhau;
     private javax.swing.JLabel lblEmail;

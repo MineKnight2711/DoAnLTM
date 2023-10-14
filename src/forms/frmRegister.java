@@ -61,284 +61,159 @@ public class frmRegister extends javax.swing.JFrame {
     private void initComponents() {
 
         btgRadioBox = new javax.swing.ButtonGroup();
-        pnlInfo = new javax.swing.JPanel();
-        txtEmail = new javax.swing.JTextField();
-        txtAddress = new javax.swing.JTextField();
-        txtPhone = new javax.swing.JTextField();
-        txtFirstName = new javax.swing.JTextField();
-        txtLastName = new javax.swing.JTextField();
-        lblGioiTinh = new javax.swing.JLabel();
-        lblSoDienThoai = new javax.swing.JLabel();
-        lblDiaChi = new javax.swing.JLabel();
-        lblEmail = new javax.swing.JLabel();
-        lblHo = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        dcBrithday = new com.toedter.calendar.JDateChooser();
-        rbFemale = new javax.swing.JRadioButton();
-        rbOther = new javax.swing.JRadioButton();
-        rbMale = new javax.swing.JRadioButton();
-        pnlAccount = new javax.swing.JPanel();
-        lblTaiKhoan = new javax.swing.JLabel();
-        lblMatKhau = new javax.swing.JLabel();
-        lblNhapLaiMatKhau = new javax.swing.JLabel();
-        txtAccount = new javax.swing.JTextField();
-        cbShowPassword = new javax.swing.JCheckBox();
-        btnCreateAccount = new javax.swing.JButton();
-        passfRe_enterPassword = new javax.swing.JPasswordField();
-        passfPassword = new javax.swing.JPasswordField();
         lblTaoTaiKhoan = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         btnTroVe = new javax.swing.JButton();
+        lblEmail = new javax.swing.JLabel();
+        txtEmail = new javax.swing.JTextField();
+        txtAddress = new javax.swing.JTextField();
+        lblDiaChi = new javax.swing.JLabel();
+        lblSoDienThoai = new javax.swing.JLabel();
+        txtPhone = new javax.swing.JTextField();
+        rbOther = new javax.swing.JRadioButton();
+        rbFemale = new javax.swing.JRadioButton();
+        rbMale = new javax.swing.JRadioButton();
+        lblGioiTinh = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        dcBrithday = new com.toedter.calendar.JDateChooser();
+        txtFirstName = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        lblHo = new javax.swing.JLabel();
+        txtLastName = new javax.swing.JTextField();
+        btnCreateAccount = new javax.swing.JButton();
+        cbShowPassword = new javax.swing.JCheckBox();
+        lblNhapLaiMatKhau = new javax.swing.JLabel();
+        passfRe_enterPassword = new javax.swing.JPasswordField();
+        passfPassword = new javax.swing.JPasswordField();
+        lblMatKhau = new javax.swing.JLabel();
+        lblTaiKhoan = new javax.swing.JLabel();
+        txtAccount = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        lblTaoTaiKhoan.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblTaoTaiKhoan.setText("Tạo tài khoản");
+        getContentPane().add(lblTaoTaiKhoan, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 330, -1, -1));
+
+        jLabel4.setFont(new java.awt.Font("Bahnschrift", 0, 20)); // NOI18N
+        jLabel4.setText("Nhập thông tin cá nhân");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 20, -1, -1));
+
+        btnTroVe.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        btnTroVe.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/return.png"))); // NOI18N
+        btnTroVe.setText("Trở về");
+        btnTroVe.setHideActionText(true);
+        btnTroVe.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnTroVe.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnTroVe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTroVeActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnTroVe, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 110, 30));
+
+        lblEmail.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        lblEmail.setText("Email:");
+        getContentPane().add(lblEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, 50, -1));
 
         txtEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtEmailActionPerformed(evt);
             }
         });
+        getContentPane().add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 202, 280, 30));
+        getContentPane().add(txtAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 242, 280, 30));
+
+        lblDiaChi.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        lblDiaChi.setText("Địa chỉ:");
+        getContentPane().add(lblDiaChi, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 250, 60, -1));
+
+        lblSoDienThoai.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        lblSoDienThoai.setText("Số điện thoại:");
+        getContentPane().add(lblSoDienThoai, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 290, 100, -1));
+        getContentPane().add(txtPhone, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 282, 280, 30));
+
+        rbOther.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        rbOther.setText("Khác");
+        getContentPane().add(rbOther, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 180, -1, -1));
+
+        rbFemale.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        rbFemale.setText("Nữ");
+        getContentPane().add(rbFemale, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 180, -1, -1));
+
+        rbMale.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        rbMale.setText("Nam");
+        getContentPane().add(rbMale, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 180, -1, -1));
+
+        lblGioiTinh.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        lblGioiTinh.setText("Giới tính:");
+        getContentPane().add(lblGioiTinh, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 70, -1));
+
+        jLabel3.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        jLabel3.setText("Ngày sinh:");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 80, 20));
+
+        dcBrithday.setDateFormatString("dd/MM/yyyy");
+        getContentPane().add(dcBrithday, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 142, 280, 30));
+        getContentPane().add(txtFirstName, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 102, 280, 30));
+
+        jLabel2.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        jLabel2.setText("Tên lót/Tên:");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 90, -1));
+
+        lblHo.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        lblHo.setText("Họ:");
+        getContentPane().add(lblHo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 30, -1));
 
         txtLastName.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtLastNameKeyPressed(evt);
             }
         });
+        getContentPane().add(txtLastName, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 62, 280, 30));
 
-        lblGioiTinh.setText("Giới tính:");
+        btnCreateAccount.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        btnCreateAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/register.png"))); // NOI18N
+        btnCreateAccount.setText("Tạo tài khoản");
+        btnCreateAccount.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btnCreateAccount.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        btnCreateAccount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreateAccountActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnCreateAccount, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 530, -1, 40));
 
-        lblSoDienThoai.setText("Số điện thoại:");
-
-        lblDiaChi.setText("Địa chỉ:");
-
-        lblEmail.setText("Email:");
-
-        lblHo.setText("Họ:");
-
-        jLabel2.setText("Tên lót/Tên:");
-
-        jLabel3.setText("Ngày sinh:");
-
-        dcBrithday.setDateFormatString("dd/MM/yyyy");
-
-        rbFemale.setText("Nữ");
-
-        rbOther.setText("Khác");
-
-        rbMale.setText("Nam");
-
-        javax.swing.GroupLayout pnlInfoLayout = new javax.swing.GroupLayout(pnlInfo);
-        pnlInfo.setLayout(pnlInfoLayout);
-        pnlInfoLayout.setHorizontalGroup(
-            pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlInfoLayout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(pnlInfoLayout.createSequentialGroup()
-                        .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(lblHo)
-                            .addComponent(jLabel3)
-                            .addComponent(lblGioiTinh))
-                        .addGap(18, 18, 18)
-                        .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtLastName)
-                                .addComponent(txtFirstName)
-                                .addComponent(dcBrithday, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE))
-                            .addGroup(pnlInfoLayout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(rbMale)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(rbFemale)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(rbOther))))
-                    .addGroup(pnlInfoLayout.createSequentialGroup()
-                        .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlInfoLayout.createSequentialGroup()
-                                .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblDiaChi))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtAddress)
-                                    .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)))
-                            .addGroup(pnlInfoLayout.createSequentialGroup()
-                                .addComponent(lblSoDienThoai)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(6, 6, 6)))
-                .addGap(42, 42, 42))
-        );
-        pnlInfoLayout.setVerticalGroup(
-            pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlInfoLayout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblHo)
-                    .addComponent(txtLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(dcBrithday, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlInfoLayout.createSequentialGroup()
-                        .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(rbMale)
-                            .addComponent(rbFemale)
-                            .addComponent(rbOther))
-                        .addGap(6, 6, 6))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlInfoLayout.createSequentialGroup()
-                        .addComponent(lblGioiTinh)
-                        .addGap(18, 18, 18)))
-                .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblSoDienThoai)
-                    .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblDiaChi)
-                    .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblEmail)
-                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(24, Short.MAX_VALUE))
-        );
-
-        lblTaiKhoan.setText("Tài khoản:");
-
-        lblMatKhau.setText("Mật khẩu:");
-
-        lblNhapLaiMatKhau.setText("Nhập lại mật khẩu:");
-
+        cbShowPassword.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         cbShowPassword.setText("Hiện mật khẩu");
         cbShowPassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbShowPasswordActionPerformed(evt);
             }
         });
+        getContentPane().add(cbShowPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 500, -1, -1));
 
-        btnCreateAccount.setText("Tạo tài khoản");
-        btnCreateAccount.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCreateAccountActionPerformed(evt);
-            }
-        });
+        lblNhapLaiMatKhau.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        lblNhapLaiMatKhau.setText("Nhập lại mật khẩu:");
+        getContentPane().add(lblNhapLaiMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 470, 130, -1));
+        getContentPane().add(passfRe_enterPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 462, 280, 30));
+        getContentPane().add(passfPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 422, 280, 30));
 
-        javax.swing.GroupLayout pnlAccountLayout = new javax.swing.GroupLayout(pnlAccount);
-        pnlAccount.setLayout(pnlAccountLayout);
-        pnlAccountLayout.setHorizontalGroup(
-            pnlAccountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlAccountLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(pnlAccountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlAccountLayout.createSequentialGroup()
-                        .addComponent(cbShowPassword)
-                        .addGap(45, 45, 45)
-                        .addComponent(btnCreateAccount))
-                    .addGroup(pnlAccountLayout.createSequentialGroup()
-                        .addGroup(pnlAccountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblNhapLaiMatKhau)
-                            .addGroup(pnlAccountLayout.createSequentialGroup()
-                                .addGroup(pnlAccountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblMatKhau, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblTaiKhoan))
-                                .addGap(43, 43, 43)))
-                        .addGroup(pnlAccountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(pnlAccountLayout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addGroup(pnlAccountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(passfPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
-                                    .addComponent(txtAccount)))
-                            .addGroup(pnlAccountLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(passfRe_enterPassword)))))
-                .addContainerGap(25, Short.MAX_VALUE))
-        );
-        pnlAccountLayout.setVerticalGroup(
-            pnlAccountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlAccountLayout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addGroup(pnlAccountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlAccountLayout.createSequentialGroup()
-                        .addGroup(pnlAccountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblTaiKhoan)
-                            .addComponent(txtAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(26, 26, 26)
-                        .addGroup(pnlAccountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblMatKhau)
-                            .addComponent(passfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(45, 45, 45))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlAccountLayout.createSequentialGroup()
-                        .addGap(96, 96, 96)
-                        .addGroup(pnlAccountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblNhapLaiMatKhau)
-                            .addComponent(passfRe_enterPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(14, 14, 14)
-                .addGroup(pnlAccountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbShowPassword)
-                    .addComponent(btnCreateAccount))
-                .addContainerGap(21, Short.MAX_VALUE))
-        );
+        lblMatKhau.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        lblMatKhau.setText("Mật khẩu:");
+        getContentPane().add(lblMatKhau, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, 70, -1));
 
-        lblTaoTaiKhoan.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        lblTaoTaiKhoan.setText("Tạo tài khoản");
+        lblTaiKhoan.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        lblTaiKhoan.setText("Tài khoản:");
+        getContentPane().add(lblTaiKhoan, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, 80, -1));
+        getContentPane().add(txtAccount, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 382, 280, 30));
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel4.setText("Nhập thông tin cá nhân");
-
-        btnTroVe.setText("Trở về");
-        btnTroVe.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTroVeActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(74, 74, 74)
-                .addComponent(pnlInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnTroVe)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
-                        .addComponent(jLabel4)
-                        .addGap(84, 84, 84))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(pnlAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(66, 66, 66))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblTaoTaiKhoan)
-                .addGap(149, 149, 149))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(btnTroVe))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblTaoTaiKhoan)
-                .addGap(18, 18, 18)
-                .addComponent(pnlAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
-        );
+        jLabel5.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/register.png"))); // NOI18N
+        jLabel5.setPreferredSize(new java.awt.Dimension(459, 602));
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 460, -1));
 
         pack();
         setLocationRelativeTo(null);
@@ -402,11 +277,7 @@ public class frmRegister extends javax.swing.JFrame {
      private void SetDateNow(){
          Calendar calendar = Calendar.getInstance();
          dcBrithday.setDate(calendar.getTime());
-     }
-    private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtEmailActionPerformed
-    
+     }    
    
     /*CHECK INPUT*/
     private String ChonGioiTinh(){
@@ -525,6 +396,10 @@ public class frmRegister extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtLastNameKeyPressed
 
+    private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEmailActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -570,6 +445,7 @@ public class frmRegister extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel lblDiaChi;
     private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblGioiTinh;
@@ -581,8 +457,6 @@ public class frmRegister extends javax.swing.JFrame {
     private javax.swing.JLabel lblTaoTaiKhoan;
     private javax.swing.JPasswordField passfPassword;
     private javax.swing.JPasswordField passfRe_enterPassword;
-    private javax.swing.JPanel pnlAccount;
-    private javax.swing.JPanel pnlInfo;
     private javax.swing.JRadioButton rbFemale;
     private javax.swing.JRadioButton rbMale;
     private javax.swing.JRadioButton rbOther;
