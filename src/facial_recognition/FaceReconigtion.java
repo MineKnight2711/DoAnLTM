@@ -372,10 +372,10 @@ public class FaceReconigtion {
                         loadAccount(gson.fromJson(decodeAccount, Account.class));
                         isExtended = !isExtended;
                         extendForm(isExtended);
-                        JOptionPane.showMessageDialog(null, "Tìm thấy khuôn mặt","Thông báo",1);
+                        JOptionPane.showMessageDialog(frmRegconition, "Tìm thấy khuôn mặt","Thông báo",1);
                         return "Detected";
                     }
-                    JOptionPane.showMessageDialog(null, "Không tìm thấy khuôn mặt","Thông báo",2);
+                    JOptionPane.showMessageDialog(frmRegconition, "Không tìm thấy khuôn mặt","Thông báo",2);
                     return "NotDetected";
                 }
                 case 3 -> {
@@ -390,9 +390,10 @@ public class FaceReconigtion {
                 }
                 default -> {
                     //Xử lý không nhận diện được không mặt
+                    JOptionPane.showMessageDialog(null, "Vui lòng nhìn thẳng vào camera","Thông báo",2);
                     imageChoose = null;
                     check = false;
-                    return "NotDetected";
+                    return "NoFace";
                 }
             }
         } else if(resultJson.getOperation().equals("NotDetected")) {
@@ -408,7 +409,7 @@ public class FaceReconigtion {
                 return resultJson.getOperation();
             }
             else if(resultJson.getOperation().equals("NoFace")){
-                JOptionPane.showMessageDialog(null, "Vui lòng nhìn thẳng vào","Thông báo",2);
+                JOptionPane.showMessageDialog(null, "Vui lòng nhìn thẳng vào camera","Thông báo",2);
                 imageChoose = null;
                 check = false;
                 return resultJson.getOperation();

@@ -111,14 +111,17 @@ public class frmChooseServer extends javax.swing.JFrame {
         int port = Integer.parseInt(txtPort.getText()); // Port number
 
         try (Socket socket = new Socket(ipAddress,  port);){
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            out.println("Connect");
-            if(in.readLine().equals("Success")){
+//            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+//            out.println("Connect");
+//            if(in.readLine().equals("Success")){
+//                JOptionPane.showMessageDialog(this, "Kết nối thành công");
+//            }
+//            else{
+//                JOptionPane.showMessageDialog(this, "Kết nối thất bại","Lỗi",0);
+//            }
+            if(socket.isConnected()){
                 JOptionPane.showMessageDialog(this, "Kết nối thành công");
-            }
-            else{
-                JOptionPane.showMessageDialog(this, "Kết nối thất bại","Lỗi",0);
             }
             socket.close();
             BaseURL.PORT = port;
