@@ -76,16 +76,23 @@ public class frmCameraAcess extends javax.swing.JFrame {
         lblSoAnh = new javax.swing.JLabel();
         btnChonAnh = new javax.swing.JButton();
         progressSaveImage = new spinner_progress.SpinnerProgress();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().add(lblCameraDisplay, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 36, 652, 388));
 
         btnMoCamera.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnMoCamera.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/camera.png"))); // NOI18N
         btnMoCamera.setText("Mở camera");
+        btnMoCamera.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btnMoCamera.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         btnMoCamera.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnMoCameraActionPerformed(evt);
             }
         });
+        getContentPane().add(btnMoCamera, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 440, 190, 40));
 
         btnBack.setText("Trở về");
         btnBack.addActionListener(new java.awt.event.ActionListener() {
@@ -93,84 +100,49 @@ public class frmCameraAcess extends javax.swing.JFrame {
                 btnBackActionPerformed(evt);
             }
         });
+        getContentPane().add(btnBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 82, 30));
 
         btnLuuKhuonMat.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnLuuKhuonMat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/face-scan.png"))); // NOI18N
         btnLuuKhuonMat.setText("Lưu khuôn mặt");
+        btnLuuKhuonMat.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btnLuuKhuonMat.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         btnLuuKhuonMat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLuuKhuonMatActionPerformed(evt);
             }
         });
+        getContentPane().add(btnLuuKhuonMat, new org.netbeans.lib.awtextra.AbsoluteConstraints(229, 442, 210, 40));
+        getContentPane().add(lblAnhChup, new org.netbeans.lib.awtextra.AbsoluteConstraints(685, 36, 286, 260));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("/10");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(827, 302, 37, -1));
 
         lblSoAnh.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblSoAnh.setText("0");
+        getContentPane().add(lblSoAnh, new org.netbeans.lib.awtextra.AbsoluteConstraints(796, 302, 25, -1));
 
         btnChonAnh.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnChonAnh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/gallery.png"))); // NOI18N
         btnChonAnh.setText("Chọn ảnh");
+        btnChonAnh.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btnChonAnh.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         btnChonAnh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnChonAnhActionPerformed(evt);
             }
         });
+        getContentPane().add(btnChonAnh, new org.netbeans.lib.awtextra.AbsoluteConstraints(513, 442, 150, 40));
 
         progressSaveImage.setForeground(new java.awt.Color(255, 153, 51));
         progressSaveImage.setValue(50);
         progressSaveImage.setIndeterminate(true);
+        getContentPane().add(progressSaveImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(451, 442, 38, 38));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(btnMoCamera, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(62, 62, 62)
-                        .addComponent(btnLuuKhuonMat, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(progressSaveImage, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(24, 24, 24)
-                        .addComponent(btnChonAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnBack)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblCameraDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 652, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblAnhChup, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(lblSoAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(115, 115, 115)))))
-                .addContainerGap(27, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnBack)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblCameraDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblAnhChup, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(lblSoAnh))))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnMoCamera, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnChonAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnLuuKhuonMat, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(progressSaveImage, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(8, 8, 8))
-        );
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add_image.jpg"))); // NOI18N
+        jLabel2.setText("jLabel2");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 990, 490));
 
         pack();
         setLocationRelativeTo(null);
@@ -295,6 +267,7 @@ public class frmCameraAcess extends javax.swing.JFrame {
     private javax.swing.JButton btnMoCamera;
     private javax.swing.JFileChooser fcChooseImages;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lblAnhChup;
     private javax.swing.JLabel lblCameraDisplay;
     private javax.swing.JLabel lblSoAnh;
