@@ -7,6 +7,7 @@ package forms;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.awt.Color;
+import java.awt.event.KeyEvent;
 import models.Account;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -63,12 +64,23 @@ public class frmLogin extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(136, 136, 189));
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                loginKeyPressed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         jLabel1.setText("Tài khoản:");
 
         jLabel2.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         jLabel2.setText("Mật khẩu:");
+
+        txtAccount.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                loginKeyPressed(evt);
+            }
+        });
 
         btnLogin.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
         btnLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/login.png"))); // NOI18N
@@ -86,6 +98,12 @@ public class frmLogin extends javax.swing.JFrame {
         cbShowPassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbShowPasswordActionPerformed(evt);
+            }
+        });
+
+        passfPassword.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                loginKeyPressed(evt);
             }
         });
 
@@ -294,6 +312,12 @@ public class frmLogin extends javax.swing.JFrame {
         // TODO add your handling code here:
         FormRoute.opFormChoseServer(this);
     }//GEN-LAST:event_btnChangeServerActionPerformed
+
+    private void loginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_loginKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+             btnLogin.doClick();
+        }
+    }//GEN-LAST:event_loginKeyPressed
 
     /**
      * @param args the command line arguments
