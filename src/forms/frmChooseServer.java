@@ -5,6 +5,7 @@
 package forms;
 
 import java.awt.Color;
+import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -50,6 +51,11 @@ public class frmChooseServer extends javax.swing.JFrame {
         jLabel1.setText("Nhập port");
 
         txtPort.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtPort.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPortKeyPressed(evt);
+            }
+        });
 
         btnKetNoi.setText("Kết nối");
         btnKetNoi.addActionListener(new java.awt.event.ActionListener() {
@@ -59,6 +65,11 @@ public class frmChooseServer extends javax.swing.JFrame {
         });
 
         txtIP_Adress1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtIP_Adress1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtIP_Adress1KeyPressed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setText("Nhập địa chỉ IP Server");
@@ -68,14 +79,13 @@ public class frmChooseServer extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jLabel1)
                         .addGap(119, 119, 119)
                         .addComponent(txtPort, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jLabel2)
                         .addGap(18, 18, 18)
                         .addComponent(txtIP_Adress1, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -131,6 +141,18 @@ public class frmChooseServer extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Kết nối thất bại","Lỗi",0);
         }
     }//GEN-LAST:event_btnKetNoiActionPerformed
+
+    private void txtIP_Adress1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIP_Adress1KeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            btnKetNoi.doClick();
+        }
+    }//GEN-LAST:event_txtIP_Adress1KeyPressed
+
+    private void txtPortKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPortKeyPressed
+         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            btnKetNoi.doClick();
+        }
+    }//GEN-LAST:event_txtPortKeyPressed
 
     /**
      * @param args the command line arguments
