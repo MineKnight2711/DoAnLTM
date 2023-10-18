@@ -170,11 +170,6 @@ public class FaceReconigtion {
             isRecording = false;
             return false;
         } 
-        if(!isRecording){  
-            videoCapture.release();
-            cameraDisplay.setIcon(null);   
-            return true;
-        }
         if(isRecording){
             if (videoCapture.isOpened()) {
             while (isRecording) {      
@@ -316,32 +311,31 @@ public class FaceReconigtion {
         return true;
     }
 
-    public boolean saveFaceChoose(byte[] image, Account account){
+    public boolean saveFaceChoose(List<byte[]> imageList, Account account){
         try {            
-            byte[] faceImage = detctFace(image);
-            if(faceImage != null)
-            {
-                Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT);
-
-
-                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-
-                OperationJson operationJson = new OperationJson();
-                operationJson.setOperation("save-image/"+account.getID_User());
-                operationJson.setData(Base64.getEncoder().encodeToString(faceImage));
-                String sendJson = gson.toJson(operationJson);
-                out.println(sendJson);                
-                socket.close();
-            } 
-            return true;
+                String encodeListImagesToJson=gson.toJson(imageList);
+                String response=sendRequestToServer("save-image/"+account.getID_User(),encodeListImagesToJson);
+                if (response.equals("Success")) 
+                {
+                    JOptionPane.showMessageDialog(null, "Thêm ảnh thành công!");
+                    check = false;
+                    countImages = 0;
+                    saveimageProgress.setVisible(false);
+                    return true;
+                } 
+                else 
+                {
+                    JOptionPane.showMessageDialog(null, "Có lỗi xảy ra! "+response,"Lỗi",JOptionPane.ERROR_MESSAGE);
+                    countImages = 0;
+                    check = false;
+                    saveimageProgress.setVisible(false);
+                    return false;
+                }
         }
-        catch (IOException ex) {
-            Logger.getLogger(frmCameraAcess.class.getName()).log(Level.SEVERE, null, ex);
-            check = false;
+        catch(Exception ex){
             return false;
-        }   
-   }
+        }
+    }
     
     public String facialRecognition(byte[] imageCapture) {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -414,8 +408,7 @@ public class FaceReconigtion {
                 check = false;
                 return resultJson.getOperation();
             }
-        }
-        
+        }       
         imageChoose = null;
         check = false;
         return resultJson.getOperation();
