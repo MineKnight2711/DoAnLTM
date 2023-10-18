@@ -214,8 +214,6 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
     private void btnTroVeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTroVeActionPerformed
         // TODO add your handling code here
         listChooseImage.clear();
-        frmInfo open = new frmInfo(account);
-        open.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnTroVeActionPerformed
 

@@ -13,21 +13,29 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import routes.FormRoute;
 import utils.BaseURL;
+import utils.KeyPressCheck;
 
 /**
  *
  * @author dell
  */
 public class frmChooseServer extends javax.swing.JFrame {
-
+    private DocumentListener textChangeListener;
+    private final KeyPressCheck keyCheck;
     /**
      * Creates new form frmChooseServer
      */
     public frmChooseServer() {
         initComponents();
+        btnKetNoi.setEnabled(false);
+        keyCheck = new KeyPressCheck();        
         getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.cyan)); 
+        TextChangeEvent();
+        KeyPressCheck();
     }
 
     /**
@@ -42,7 +50,7 @@ public class frmChooseServer extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         txtPort = new javax.swing.JTextField();
         btnKetNoi = new javax.swing.JButton();
-        txtIP_Adress1 = new javax.swing.JTextField();
+        txtIP_Adress = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -53,7 +61,7 @@ public class frmChooseServer extends javax.swing.JFrame {
         txtPort.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtPort.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtPortKeyPressed(evt);
+                keyPressKetNoi(evt);
             }
         });
 
@@ -64,10 +72,10 @@ public class frmChooseServer extends javax.swing.JFrame {
             }
         });
 
-        txtIP_Adress1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtIP_Adress1.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtIP_Adress.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtIP_Adress.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtIP_Adress1KeyPressed(evt);
+                keyPressKetNoi(evt);
             }
         });
 
@@ -88,7 +96,7 @@ public class frmChooseServer extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addGap(18, 18, 18)
-                        .addComponent(txtIP_Adress1, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtIP_Adress, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(37, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -100,7 +108,7 @@ public class frmChooseServer extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtIP_Adress1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtIP_Adress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -115,9 +123,41 @@ public class frmChooseServer extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void TextChangeEvent(){       
+        textChangeListener = new DocumentListener(){
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateTextFields();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateTextFields();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateTextFields();
+            }
+            private void updateTextFields(){
+                if(txtIP_Adress.getText().isEmpty() || txtPort.getText().isEmpty()){
+                    btnKetNoi.setEnabled(false);
+                    return;
+                }
+                btnKetNoi.setEnabled(true);
+            }
+        };
+        txtIP_Adress.getDocument().addDocumentListener(textChangeListener);
+        txtPort.getDocument().addDocumentListener(textChangeListener);
+    }
+    
+    private void KeyPressCheck(){
+        txtPort.addKeyListener(keyCheck.OnlyNumberTextField());
+    }
+    
     private void btnKetNoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKetNoiActionPerformed
         // TODO add your handling code here:
-        String ipAddress = txtIP_Adress1.getText(); // IP address
+        String ipAddress = txtIP_Adress.getText(); // IP address
         int port = Integer.parseInt(txtPort.getText()); // Port number
 
         try (Socket socket = new Socket(ipAddress,  port);){
@@ -142,17 +182,12 @@ public class frmChooseServer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnKetNoiActionPerformed
 
-    private void txtIP_Adress1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIP_Adress1KeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+    private void keyPressKetNoi(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressKetNoi
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {           
             btnKetNoi.doClick();
         }
-    }//GEN-LAST:event_txtIP_Adress1KeyPressed
-
-    private void txtPortKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPortKeyPressed
-         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            btnKetNoi.doClick();
-        }
-    }//GEN-LAST:event_txtPortKeyPressed
+    }//GEN-LAST:event_keyPressKetNoi
 
     /**
      * @param args the command line arguments
@@ -193,7 +228,7 @@ public class frmChooseServer extends javax.swing.JFrame {
     private javax.swing.JButton btnKetNoi;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JTextField txtIP_Adress1;
+    private javax.swing.JTextField txtIP_Adress;
     private javax.swing.JTextField txtPort;
     // End of variables declaration//GEN-END:variables
 }
