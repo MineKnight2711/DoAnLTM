@@ -294,6 +294,7 @@ public class FaceReconigtion {
                 {
                     JOptionPane.showMessageDialog(null, "Thêm ảnh thành công!");
                     check = false;
+                    listImages.clear();
                     countImages = 0;
                     saveimageProgress.setVisible(false);
                     return true;
@@ -303,6 +304,7 @@ public class FaceReconigtion {
                     JOptionPane.showMessageDialog(null, "Có lỗi xảy ra! "+response,"Lỗi",JOptionPane.ERROR_MESSAGE);
                     countImages = 0;
                     check = false;
+                    listImages.clear();
                     saveimageProgress.setVisible(false);
                     return false;
                 }
