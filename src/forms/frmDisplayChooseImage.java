@@ -123,7 +123,7 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tbImage = new javax.swing.JTable();
         btnSave = new javax.swing.JButton();
-        btnTroVe = new javax.swing.JButton();
+        btnHuy = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -156,11 +156,11 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
             }
         });
 
-        btnTroVe.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnTroVe.setText("Trở về");
-        btnTroVe.addActionListener(new java.awt.event.ActionListener() {
+        btnHuy.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnHuy.setText("Huỷ");
+        btnHuy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTroVeActionPerformed(evt);
+                btnHuyActionPerformed(evt);
             }
         });
 
@@ -175,7 +175,7 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 626, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(btnTroVe))
+                        .addComponent(btnHuy))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(269, 269, 269)
                         .addComponent(btnSave)))
@@ -185,7 +185,7 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnTroVe)
+                .addComponent(btnHuy)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -200,10 +200,7 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
 
         try{
-            for(byte[] image : listChooseImage){
-                face.saveFaceChoose(image, account);
-            }
-            JOptionPane.showMessageDialog(null, "Lưu ảnh thành công");
+            face.saveFaceChoose(listChooseImage, account);
             this.dispose();
         }
         catch(HeadlessException ex){
@@ -211,13 +208,11 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 
-    private void btnTroVeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTroVeActionPerformed
+    private void btnHuyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHuyActionPerformed
         // TODO add your handling code here
         listChooseImage.clear();
-        frmInfo open = new frmInfo(account);
-        open.setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_btnTroVeActionPerformed
+    }//GEN-LAST:event_btnHuyActionPerformed
 
     /**
      * @param args the command line arguments
@@ -255,8 +250,8 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnHuy;
     private javax.swing.JButton btnSave;
-    private javax.swing.JButton btnTroVe;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tbImage;
     // End of variables declaration//GEN-END:variables
