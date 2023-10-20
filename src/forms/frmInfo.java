@@ -8,6 +8,7 @@ import utils.KeyPressCheck;
 import utils.CheckInput;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.awt.Color;
 import models.Account;
 import java.io.BufferedReader;
@@ -17,6 +18,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -25,6 +28,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import models.OperationJson;
 import routes.FormRoute;
+import utils.AES;
 import utils.BaseURL;
 import utils.EncodeDecode;
 
@@ -45,7 +49,7 @@ public class frmInfo extends javax.swing.JFrame {
     public frmInfo(Account account) {
         initComponents();
         txtAccount.setEnabled(false);
-        gson=new Gson();
+        gson=new GsonBuilder().setDateFormat("MMM d, yyyy").create();
         inputCheck = new CheckInput();
         keyCheck = new KeyPressCheck();
         setDefaultProgress();
@@ -129,7 +133,7 @@ public class frmInfo extends javax.swing.JFrame {
         progressLoadImage.setToolTipText("");
         progressLoadImage.setValue(50);
         progressLoadImage.setIndeterminate(true);
-        getContentPane().add(progressLoadImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 390, 40, 40));
+        getContentPane().add(progressLoadImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 390, 40, 30));
 
         btnXemKhuonMat.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         btnXemKhuonMat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/face-list.png"))); // NOI18N
@@ -141,7 +145,7 @@ public class frmInfo extends javax.swing.JFrame {
                 btnXemKhuonMatActionPerformed(evt);
             }
         });
-        getContentPane().add(btnXemKhuonMat, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 400, 170, 30));
+        getContentPane().add(btnXemKhuonMat, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 390, 190, 40));
 
         btnUpdateInfo.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         btnUpdateInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/update-info.png"))); // NOI18N
@@ -153,7 +157,7 @@ public class frmInfo extends javax.swing.JFrame {
                 btnUpdateInfoActionPerformed(evt);
             }
         });
-        getContentPane().add(btnUpdateInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 350, 190, 30));
+        getContentPane().add(btnUpdateInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 340, 190, 40));
 
         btnAddFace.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         btnAddFace.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/add-image.png"))); // NOI18N
@@ -165,7 +169,7 @@ public class frmInfo extends javax.swing.JFrame {
                 btnAddFaceActionPerformed(evt);
             }
         });
-        getContentPane().add(btnAddFace, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 400, 180, 30));
+        getContentPane().add(btnAddFace, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, 180, 40));
 
         btnResetInfo.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         btnResetInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/reset.png"))); // NOI18N
@@ -177,7 +181,7 @@ public class frmInfo extends javax.swing.JFrame {
                 btnResetInfoActionPerformed(evt);
             }
         });
-        getContentPane().add(btnResetInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 350, 190, 30));
+        getContentPane().add(btnResetInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 190, 40));
         getContentPane().add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 300, 260, 30));
 
         lblEmail.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
@@ -408,6 +412,7 @@ public class frmInfo extends javax.swing.JFrame {
     
     private void btnChangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangePasswordActionPerformed
         progressChangePass.setVisible(true);
+        //Thực hiện đổi mật khẩu dưới nền để tránh chèn luồng giao diện
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
@@ -418,55 +423,63 @@ public class frmInfo extends javax.swing.JFrame {
         worker.execute();
     }//GEN-LAST:event_btnChangePasswordActionPerformed
     private void changePassword() {
+        //Thử nghiệm phương thức bất đồng bộ async
         CompletableFuture.runAsync(()->{
-            String oldPass = new String(passfOldPassword.getPassword());
-            String newPass = new String(passfNewPassword.getPassword());
-            String reEnterPass = new String(passfRe_enterNewPassword.getPassword());
-            OperationJson sendJson=new OperationJson();
-            sendJson.setOperation("change-password/"+account.getID_User());
-            if(!inputCheck.CheckPassword(newPass, reEnterPass))
-                return;
             try{
-                Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT); 
-
-                // Khởi tạo InputStream và output Stream để giao tiếp với server
-                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                newPass =  BCrypt.withDefaults().hashToString(12, newPass.toCharArray());
+                AES aes=new AES();
+                String oldPass = new String(passfOldPassword.getPassword());
+                String newPass = new String(passfNewPassword.getPassword());
+                String reEnterPass = new String(passfRe_enterNewPassword.getPassword());
+                if(!newPass.equals(reEnterPass)){
+                    JOptionPane.showMessageDialog(this, "Mật khẩu nhập lại chưa chính xác!","Lỗi",0);
+                    return;
+                }
+                newPass = BCrypt.withDefaults().hashToString(12, newPass.toCharArray());
+                //Lấy public key của server
+                OperationJson requestPublicKey=new OperationJson();
+                requestPublicKey.setOperation("GET_PUBLIC_KEY");
+                String publicKeyReceived=sendRequestToServer(requestPublicKey);
+                //Mã hoá mật khẩu với public key của server
                 String passwordValidate=oldPass+"-"+newPass;
-                String encodedPasswordValidate=EncodeDecode.encodeToBase64(passwordValidate);
-                sendJson.setData(encodedPasswordValidate);
-                out.println(gson.toJson(sendJson));
-                String result=EncodeDecode.decodeBase64FromJson(in.readLine());
+                String encryptPassword=aes.encrypt(passwordValidate, aes.getPublicKeyFromString(publicKeyReceived));
+                //Tạo đối tượng json để chứa dữ liệu gửi đi
+                OperationJson changePassRequestJson=new OperationJson();
+                changePassRequestJson.setOperation("change-password/"+account.getID_User());
+                changePassRequestJson.setPublicKey(aes.encodePublicKey(aes.getPublicKey()));
+                changePassRequestJson.setData(encryptPassword);
+                //Gửi request lên server và nhận kết quả trả về
+                String response = sendRequestToServer(changePassRequestJson);
+                System.out.println("Ket qua tra ve:::"+response);
+                OperationJson receivedResponse = gson.fromJson(response, OperationJson.class);
+                String result=receivedResponse.getOperation();
+                //Bắt các trường hợp đổi mật khẩu thành công và thất bại
                 switch (result) {
                     case "Success":
-                        JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công!");
-                        frmLogin login=new frmLogin();
-                        login.setVisible(true);
+                        JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công");
+                        FormRoute.openFormLogin(this);
                         account=null;
-                        this.dispose();
+                        break;
+                    case "MissingField":
+                        JOptionPane.showMessageDialog(this, "Vui lòng điền mật khẩu cũ và mật khẩu mới","Lỗi",0);
+                        break;
+                    case "WrongPass":
+                        JOptionPane.showMessageDialog(this, "Mật khẩu cũ không đúng","Lỗi",0);
                         break;
                     case "Unknown":
-                        JOptionPane.showMessageDialog(this, "Lỗi chưa chưa xác định!"+result,"Cảnh báo",0);
+                        JOptionPane.showMessageDialog(this, "Lỗi chưa xác định","Lỗi",0);
                         break;
                     default:
-                        if(result.equals("AccountNotFound")){
-                            JOptionPane.showMessageDialog(this, "Không tìm thấy tài khoản !","Cảnh báo",0);
-                        }
-                        else if(result.equals("WrongOldOrNewPass")||result.equals("WrongPass")){
-                            JOptionPane.showMessageDialog(this, "Bạn nhập sai mật khẩu cũ hoặc mật khẩu mới!","Cảnh báo",0);
-                        }else{
-                            JOptionPane.showMessageDialog(this, "Lỗi chưa  xác định!"+result,"Cảnh báo",0);
-                        }
+                        JOptionPane.showMessageDialog(this, "Lỗi chưa xác định","Lỗi",0);
                         break;
                 }
-
-                socket.close();
+                
+                
             }
-            catch(IOException ex) {
-                JOptionPane.showMessageDialog(this, "Lỗi!"+ex.toString(),"Cảnh báo",0);
+            catch(Exception ex) {
+                JOptionPane.showMessageDialog(this, "Lỗi chưa xác định:"+ex,"Lỗi",0);
             }
         }).whenComplete((result, exception) -> {
+            //Phương thức bất đồng bộ được thực hiện xong và bắt các ngoại lệ nếu có
             if (exception == null) {
                 setDefaultProgress();
             } else {
@@ -477,25 +490,27 @@ public class frmInfo extends javax.swing.JFrame {
         });
     }
     private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
-        // TODO add your handling code here:
+
         FormRoute.openFormLogin(this);
         account=null;
     }//GEN-LAST:event_btnLogOutActionPerformed
 
     private void btnUpdateInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateInfoActionPerformed
-        // TODO add your handling code here:
-        if(!inputCheck.CheckBrithday(dcBrithday.getDate()))
-            return;
-        if(!inputCheck.CheckSDT(txtPhone.getText()))
-            return;
-        if(!inputCheck.CheckEmail(txtEmail.getText()))
-            return;
-        try{
-            Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT); 
-
-            // Khởi tạo InputStream và output Stream để giao tiếp với server
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+        
+        try{                                              
+            
+            if(!inputCheck.CheckBrithday(dcBrithday.getDate()))
+                return;
+            if(!inputCheck.CheckSDT(txtPhone.getText()))
+                return;
+            if(!inputCheck.CheckEmail(txtEmail.getText()))
+                return;
+            AES aes=new AES();
+            //Lấy public key của server
+            OperationJson requestPublicKey=new OperationJson();
+            requestPublicKey.setOperation("GET_PUBLIC_KEY");
+            String publicKeyReceived=sendRequestToServer(requestPublicKey);
+            //cập nhật các trường dữ liệu của account nếu có
             account.setFrist_Name(txtFirstName.getText());
             account.setLast_Name(txtLastName.getText());
             account.setBrithday(dcBrithday.getDate());
@@ -504,26 +519,74 @@ public class frmInfo extends javax.swing.JFrame {
             account.setPhone(txtPhone.getText());
             account.setGender(chonGioiTinh());
             account.setAccount(txtAccount.getText());
-            OperationJson operationJson=new OperationJson();
-            operationJson.setOperation("update");
-            String accountToJson=gson.toJson(account);
-            operationJson.setData(EncodeDecode.encodeToBase64(accountToJson));
-            String sendJson=gson.toJson(operationJson);
-            out.println(sendJson);
-            String respone=EncodeDecode.decodeBase64FromJson(in.readLine());
-            if(respone.equals("Success"))
-            {
-                 JOptionPane.showMessageDialog(null, "Cập nhật thông tin thành công");
+            //Mã hoá account trước khi gửi lên server
+            String encryptAccount=aes.encrypt(gson.toJson(account), aes.getPublicKeyFromString(publicKeyReceived));
+            //Tạo đối tượng json để chứa dữ liệu gửi đi
+            OperationJson updateAccountRequestJson=new OperationJson();
+            updateAccountRequestJson.setOperation("update");
+            updateAccountRequestJson.setPublicKey(aes.encodePublicKey(aes.getPublicKey()));
+            updateAccountRequestJson.setData(encryptAccount);
+            //Gửi request lên server và nhận kết quả trả về
+            String response = sendRequestToServer(updateAccountRequestJson);
+            OperationJson responseFromServer=gson.fromJson(response, OperationJson.class);
+            String responeResult=responseFromServer.getOperation();
+            switch (responeResult) {
+                case "Success":
+                    JOptionPane.showMessageDialog(this, "Cập nhật tài khoản thành công");
+                    String decryptAccount=aes.decrypt(responseFromServer.getData().toString(), aes.getPrivateKey());
+                    Account updatedAccount=gson.fromJson(decryptAccount, Account.class);
+                    loadInfo(updatedAccount);
+                    FormRoute.openFormLogin(this);
+                    account=null;
+                    break;
+                case "UpdateFail":
+                    JOptionPane.showMessageDialog(this, "Cập nhật thất bại","Lỗi",0);
+                    break;
+                case "DateTimeFormat":
+                    JOptionPane.showMessageDialog(this, "Lỗi định dạng ngày tháng!","Lỗi",0);
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(this, "Lỗi chưa xác định","Lỗi",0);
+                    break;
             }
-            else
-            {
-                 JOptionPane.showMessageDialog(null, "Có lỗi xảy ra!\n"+"Lỗi :"+respone,"Lỗi",0);
-            }
-            loadInfo(account);
-            socket.close();
+//            try{
+//                Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT);
+//                
+//                // Khởi tạo InputStream và output Stream để giao tiếp với server
+//                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+//                account.setFrist_Name(txtFirstName.getText());
+//                account.setLast_Name(txtLastName.getText());
+//                account.setBrithday(dcBrithday.getDate());
+//                account.setAddress(txtAddress.getText());
+//                account.setEmail(txtEmail.getText());
+//                account.setPhone(txtPhone.getText());
+//                account.setGender(chonGioiTinh());
+//                account.setAccount(txtAccount.getText());
+//                OperationJson operationJson=new OperationJson();
+//                operationJson.setOperation("update");
+//                String accountToJson=gson.toJson(account);
+//                operationJson.setData(EncodeDecode.encodeToBase64(accountToJson));
+//                String sendJson=gson.toJson(operationJson);
+//                out.println(sendJson);
+//                String respone=EncodeDecode.decodeBase64FromJson(in.readLine());
+//                if(respone.equals("Success"))
+//                {
+//                    JOptionPane.showMessageDialog(null, "Cập nhật thông tin thành công");
+//                }
+//                else
+//                {
+//                    JOptionPane.showMessageDialog(null, "Có lỗi xảy ra!\n"+"Lỗi :"+respone,"Lỗi",0);
+//                }
+//                loadInfo(account);
+//                socket.close();
+//            }
+//            catch(IOException ex){
+//                JOptionPane.showMessageDialog(null, ex);
+//            }
         }
-        catch(IOException ex){
-            JOptionPane.showMessageDialog(null, ex);            
+        catch(Exception ex){
+             JOptionPane.showMessageDialog(this, "Lỗi chưa xác định:"+ex,"Lỗi",0);     
         }        
     }//GEN-LAST:event_btnUpdateInfoActionPerformed
 
@@ -531,7 +594,22 @@ public class frmInfo extends javax.swing.JFrame {
         // TODO add your handling code here:
         loadInfo(account);
     }//GEN-LAST:event_btnResetInfoActionPerformed
-
+    private static String sendRequestToServer(OperationJson json){
+        try (Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT)){
+            
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            
+            String sendJson =new Gson().toJson(json);
+            out.println(sendJson);
+            String result=in.readLine();
+            socket.close();
+            return result;
+        } catch (IOException ex) {
+            System.out.println("Lỗi"+ex.toString());
+            return "Fail";
+        }
+    }
     private void btnAddFaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddFaceActionPerformed
         // TODO add your handling code here:
         frmCameraAcess open = new frmCameraAcess(account,"capNhat");

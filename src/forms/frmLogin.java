@@ -22,6 +22,7 @@ import models.OperationJson;
 import routes.FormRoute;
 import utils.BaseURL;
 import utils.EncodeDecode;
+import utils.AES;
 
 /**
  *
@@ -225,27 +226,31 @@ public class frmLogin extends javax.swing.JFrame {
         login();
     }//GEN-LAST:event_btnLoginActionPerformed
     private void login(){
+        AES aes=new AES();
         try (Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT)){
             // TODO add your handling code here:
             String account = txtAccount.getText();
             //char[] password = passfMatKhau.getPassword();
             String password = new String(passfPassword.getPassword());
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            OperationJson requestPublicKey=new OperationJson();
+            requestPublicKey.setOperation("GET_PUBLIC_KEY");
+            String publicKeyReceived=sendRequestToServer(requestPublicKey);
             
-            OperationJson operationJson=new OperationJson();
-            operationJson.setOperation("login/"+account);
-            operationJson.setData(EncodeDecode.encodeToBase64(password));
-            String sendJson=gson.toJson(operationJson);
-            //Gửi dữ liệu lên server
-            out.println(sendJson);
-           
-            OperationJson receivedJson=gson.fromJson(in.readLine(), OperationJson.class);
-            switch (receivedJson.getOperation()) {
+            String encryptPassword=aes.encrypt(password, aes.getPublicKeyFromString(publicKeyReceived));
+            OperationJson loginRequestJson=new OperationJson();
+            loginRequestJson.setOperation("login/"+account);
+            loginRequestJson.setPublicKey(aes.encodePublicKey(aes.getPublicKey()));
+            loginRequestJson.setData(encryptPassword);
+            
+            String response = sendRequestToServer(loginRequestJson);
+            System.out.println("Ket qua tra ve:::"+response);
+            OperationJson receivedResponse = gson.fromJson(response, OperationJson.class);
+
+            switch (receivedResponse.getOperation()) {
                 case "Success":
                     JOptionPane.showMessageDialog(this, "Đăng nhập thành công!");
-                    String receivedAccountJson=EncodeDecode.decodeBase64FromJson(receivedJson.getData().toString());                  
-                    Account acc = gson.fromJson(receivedAccountJson, Account.class);
+                    String decryptAccount=aes.decrypt(receivedResponse.getData().toString(), aes.getPrivateKey());
+                    Account acc = gson.fromJson(decryptAccount, Account.class);
                     FormRoute.openFormInfo(this, acc);
                     this.dispose();
                     break;
@@ -259,9 +264,24 @@ public class frmLogin extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Lỗi chưa xác định!","Lỗi",0);
                     break;
             }
-            socket.close();
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Có lỗi xảy ra!"+ex.toString(),"Lỗi",JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    private static String sendRequestToServer(OperationJson json){
+        try (Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT)){
+            
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            
+            String sendJson =new Gson().toJson(json);
+            out.println(sendJson);
+            String result=in.readLine();
+            socket.close();
+            return result;
+        } catch (IOException ex) {
+            System.out.println("Lỗi"+ex.toString());
+            return "Fail";
         }
     }
     private void TextChangeEvent(){
