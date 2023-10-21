@@ -6,8 +6,6 @@ package facial_recognition;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import forms.frmCameraAcess;
-import forms.frmRecognitionTest;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -16,9 +14,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,6 +42,7 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.videoio.VideoCapture;
 import spinner_progress.SpinnerProgress;
+import utils.AES;
 import utils.BaseURL;
 import utils.EncodeDecode;
 
@@ -338,7 +338,22 @@ public class FaceReconigtion {
             return false;
         }
     }
-    
+    private String sendGetRequestToServer(OperationJson json){
+        try (Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT)){
+            
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            
+            String sendJson =new Gson().toJson(json);
+            out.println(sendJson);
+            String result=in.readLine();
+            socket.close();
+            return result;
+        } catch (IOException ex) {
+            System.out.println("Lỗi"+ex.toString());
+            return "Fail";
+        }
+    }
     public String facialRecognition(byte[] imageCapture) {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         byte[] faces = detctFace(imageCapture);
@@ -353,27 +368,47 @@ public class FaceReconigtion {
             String[] imagesReceived= resultJson.getData().toString().split("@");
             switch (imagesReceived.length) {
                 case 4 -> {
-                    byte[] image1=gson.fromJson(imagesReceived[0], byte[].class);
-                    byte[] image2=gson.fromJson(imagesReceived[1], byte[].class);
-                    double similarity = gson.fromJson(imagesReceived[2], double.class);
-                    String idUser=imagesReceived[3];
-                    displayDetectedImage(image1,image2,similarity);
-                    check = false;
-                    imageChoose = null;
-                    String responeAccount=sendRequestToServer("get-account",idUser);
-                    OperationJson responeJson=gson.fromJson(responeAccount, OperationJson.class);
-                    if(responeJson.getOperation().equals("Success")){
-                        System.out.println("Account nhận ::"+responeJson.getData().toString());
-                        String decodeAccount=EncodeDecode.decodeBase64FromJson(responeJson.getData().toString());
-                        loadAccount(gson.fromJson(decodeAccount, Account.class));
-                        isExtended = !isExtended;
-                        extendForm(isExtended);
-                        JOptionPane.showMessageDialog(frmRegconition, "Tìm thấy khuôn mặt","Thông báo",1);
-                        return "Detected";
-                    }
-                    JOptionPane.showMessageDialog(frmRegconition, "Không tìm thấy khuôn mặt","Thông báo",2);
-                    return "NotDetected";
+                    try {
+                        byte[] image1=gson.fromJson(imagesReceived[0], byte[].class);
+                        byte[] image2=gson.fromJson(imagesReceived[1], byte[].class);
+                        double similarity = gson.fromJson(imagesReceived[2], double.class);
+                        String idUser=imagesReceived[3];
+                        displayDetectedImage(image1,image2,similarity);
+                        check = false;
+                        imageChoose = null;
+                        
+                        AES aes=new AES();
+                        OperationJson requestPublicKey=new OperationJson();
+                        requestPublicKey.setOperation("GET_PUBLIC_KEY");
+                        String publicKeyReceived=sendGetRequestToServer(requestPublicKey);
+                        //Mã hoá mã user với public key của server
+                        String encryptID=aes.encrypt(idUser, aes.getPublicKeyFromString(publicKeyReceived));
+                        
+                        //Tạo đối tượng json để chứa dữ liệu gửi đi
+                        OperationJson updateAccountRequestJson=new OperationJson();
+                        updateAccountRequestJson.setOperation("get-account");
+                        updateAccountRequestJson.setPublicKey(aes.encodePublicKey(aes.getPublicKey()));
+                        updateAccountRequestJson.setData(encryptID);
+                        
+                        String responeAccountEncrypt=sendGetRequestToServer(updateAccountRequestJson);
+                        
+                        OperationJson responeJson=gson.fromJson(responeAccountEncrypt, OperationJson.class);
+                        if(responeJson.getOperation().equals("Success")){
+                            System.out.println("Account nhận ::"+responeJson.getData().toString());
+                            String decryptAccount=aes.decrypt(responeJson.getData().toString(), aes.getPrivateKey());
+                            loadAccount(gson.fromJson(decryptAccount, Account.class));
+                            isExtended = !isExtended;
+                            extendForm(isExtended);
+                            JOptionPane.showMessageDialog(frmRegconition, "Tìm thấy khuôn mặt","Thông báo",1);
+                            return "Detected";
+                        }
+                        JOptionPane.showMessageDialog(frmRegconition, "Không tìm thấy khuôn mặt","Thông báo",2);
+                        return "NotDetected";
+                    } catch (Exception ex) {
+                        System.err.println("Loi request toi server");
+                    } 
                 }
+
                 case 3 -> {
                         byte[] image1=gson.fromJson(imagesReceived[0], byte[].class);
                         byte[] image2=gson.fromJson(imagesReceived[1], byte[].class);

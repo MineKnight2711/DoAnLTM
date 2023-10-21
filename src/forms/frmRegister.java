@@ -25,6 +25,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import models.OperationJson;
 import routes.FormRoute;
+import utils.AES;
 import utils.BaseURL;
 import utils.EncodeDecode;
 
@@ -327,12 +328,6 @@ public class frmRegister extends javax.swing.JFrame {
         if(!inputCheck.CheckPassword(password, password1))
             return;
         try{ 
-            Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT); 
-
-            // Khởi tạo InputStream và output Stream để giao tiếp với server
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-
             // Send a request to the server
             password =  BCrypt.withDefaults().hashToString(12, password.toCharArray());
             Date selectedDate = dcBrithday.getDate();
@@ -347,39 +342,65 @@ public class frmRegister extends javax.swing.JFrame {
             acc.setEmail(txtEmail.getText());
             acc.setAccount(txtAccount.getText());
             acc.setPassword(password);   
-            OperationJson operationJson=new OperationJson();
-            operationJson.setOperation("create");
-            operationJson.setData(EncodeDecode.encodeToBase64(gson.toJson(acc)));
-            System.out.println(operationJson.toString());
-            String accountJson = gson.toJson(operationJson);
-            
+            AES aes=new AES();
+            OperationJson requestPublicKey=new OperationJson();
+            requestPublicKey.setOperation("GET_PUBLIC_KEY");
+            String publicKeyReceived=sendRequestToServer(requestPublicKey);
+            //Mã hoá mã user với public key của server
+            String encryptAccount=aes.encrypt(gson.toJson(acc), aes.getPublicKeyFromString(publicKeyReceived));
             //Gửi account lên server dưới dạng json
-            out.println(accountJson);
-
-            // Nhận kết quả từ server
-            String decodeRespone=EncodeDecode.decodeBase64FromJson(in.readLine());
-            OperationJson response = gson.fromJson(decodeRespone, OperationJson.class);
-            if (response.getOperation().equals("Success")) 
-            {
-                JOptionPane.showMessageDialog(this, "Đăng ký thành công!");
-                Account accountRespone = gson.fromJson(response.getData().toString(), Account.class);
-                frmCameraAcess open = new frmCameraAcess(accountRespone, "dangKy");
-                open.setVisible(true);
-                this.dispose();
-                ClearAllText();
-            } else 
-            {
-                JOptionPane.showMessageDialog(this, "Có lỗi xảy ra!"+response,"Lỗi",JOptionPane.ERROR_MESSAGE);
+            OperationJson createAccountJson=new OperationJson();
+            createAccountJson.setOperation("create");
+            createAccountJson.setPublicKey(aes.encodePublicKey(aes.getPublicKey()));
+            createAccountJson.setData(encryptAccount);
+            String respone=sendRequestToServer(createAccountJson);
+            System.out.println("respone:::"+respone);
+            OperationJson responseAccountCreated = gson.fromJson(respone, OperationJson.class);
+            String result=responseAccountCreated.getOperation();
+            switch (result) {
+                case "Success":
+                    JOptionPane.showMessageDialog(this, "Đăng ký thành công!");
+                    String decryptAccount=aes.decrypt(responseAccountCreated.getData().toString(), aes.getPrivateKey());
+                    Account accountRespone = gson.fromJson(decryptAccount, Account.class);
+                    frmCameraAcess open = new frmCameraAcess(accountRespone, "dangKy");
+                    open.setVisible(true);
+                    this.dispose();
+                    break;
+                case "AccountNotFound":
+                    JOptionPane.showMessageDialog(this, "Có lỗi xảy ra!","Lỗi",0);
+                    break;
+                case "CreateAccountFail":
+                    JOptionPane.showMessageDialog(this, "Có lỗi xảy ra!","Lỗi",0);
+                    break;
+                case "DateTimeFormat":
+                    JOptionPane.showMessageDialog(this, "Lỗi định dạng ngày tháng!","Lỗi",0);
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(this, "Có lỗi xảy ra!","Lỗi",0);
+                    break;
             }
-            socket.close();
-            
         }
-        catch(HeadlessException | IOException ex){
+        catch(Exception ex){
             JOptionPane.showMessageDialog(rootPane, ex,"Lỗi",JOptionPane.ERROR_MESSAGE);
         }     
         
     }//GEN-LAST:event_btnCreateAccountActionPerformed
-
+    private String sendRequestToServer(OperationJson json){
+        try (Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT)){
+            
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            
+            String sendJson =new Gson().toJson(json);
+            out.println(sendJson);
+            String result=in.readLine();
+            socket.close();
+            return result;
+        } catch (IOException ex) {
+            System.out.println("Lỗi"+ex.toString());
+            return "Fail";
+        }
+    }
     private void cbShowPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbShowPasswordActionPerformed
         // TODO add your handling code here:
         if(cbShowPassword.isSelected()){
