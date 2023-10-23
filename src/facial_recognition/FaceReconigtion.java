@@ -15,9 +15,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -42,6 +46,7 @@ import spinner_progress.SpinnerProgress;
 import utils.AES;
 import utils.BaseURL;
 import utils.EncodeDecode;
+import utils.RequestServer;
 
 /**
  *
@@ -274,7 +279,7 @@ public class FaceReconigtion {
             return "Fail";
         }
     }
-    public boolean saveFace(byte[] image, boolean save, Account account){       
+    public void saveFace(byte[] image, boolean save, Account account) {       
         byte[] faceImage = detctFace(image);
         if(faceImage != null)
         {
@@ -282,56 +287,69 @@ public class FaceReconigtion {
             listImages.add(faceImage);
             countImages++;
             if (countImages == 10) {
-                countImages = 0;
-                check = false;
-                String encodeListImagesToJson=gson.toJson(listImages);
-                String response=sendRequestToServer("save-image/"+account.getID_User(),encodeListImagesToJson);
-                if (response.equals("Success")) 
-                {
-                    JOptionPane.showMessageDialog(null, "Thêm ảnh thành công!");
-                    check = false;
-                    listImages.clear();
+                try {
                     countImages = 0;
-                    saveimageProgress.setVisible(false);
-                    return true;
+                    check = false;
+                    sendSaveImageRequest(listImages,account.getID_User());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, ex.toString(),"Lỗi",0);
                 } 
-                else 
-                {
-                    JOptionPane.showMessageDialog(null, "Có lỗi xảy ra! "+response,"Lỗi",JOptionPane.ERROR_MESSAGE);
-                    countImages = 0;
-                    check = false;
-                    listImages.clear();
-                    saveimageProgress.setVisible(false);
-                    return false;
-                }
             }
         } 
-        return true;
     }
+    private void sendSaveImageRequest(List<byte[]> imageList,String accountId) throws Exception{
+        AES aes=new AES();
+        String publicKeyReceived=RequestServer.requestPublicKey();
+        String encryptImageList=aes.encrypt(gson.toJson(imageList), aes.getPublicKeyFromString(publicKeyReceived));
+        String encryptAccountId=aes.encrypt(accountId, aes.getPublicKeyFromString(publicKeyReceived));
 
-    public boolean saveFaceChoose(List<byte[]> imageList, Account account){
-        try {            
-                String encodeListImagesToJson=gson.toJson(imageList);
-                String response=sendRequestToServer("save-image/"+account.getID_User(),encodeListImagesToJson);
-                if (response.equals("Success")) 
-                {
-                    JOptionPane.showMessageDialog(null, "Thêm ảnh thành công!");
-                    check = false;
-                    countImages = 0;
-                    saveimageProgress.setVisible(false);
-                    return true;
-                } 
-                else 
-                {
-                    JOptionPane.showMessageDialog(null, "Có lỗi xảy ra! "+response,"Lỗi",JOptionPane.ERROR_MESSAGE);
-                    countImages = 0;
-                    check = false;
-                    saveimageProgress.setVisible(false);
-                    return false;
-                }
+        OperationJson sendListImageJson=new OperationJson();
+
+        sendListImageJson.setOperation("save-image@"+encryptAccountId);
+        sendListImageJson.setPublicKey(aes.encodePublicKey(aes.getPublicKey()));
+        sendListImageJson.setData(encryptImageList);
+
+        String response=RequestServer.sendRequestToServer(sendListImageJson);
+        OperationJson responseJson=gson.fromJson(response, OperationJson.class);
+        String result=responseJson.getOperation();
+        switch (result) {
+            case "Success":
+                JOptionPane.showMessageDialog(null, "Thêm ảnh thành công!");
+                check = false;
+                listImages.clear();
+                countImages = 0;
+                saveimageProgress.setVisible(false);
+                break;
+            case "EmptyList":
+                JOptionPane.showMessageDialog(null, "Thêm ảnh thất bại!\n Không có khuôn mặt nào!","Lỗi",0);
+                check = false;
+                listImages.clear();
+                countImages = 0;
+                saveimageProgress.setVisible(false);
+                break;
+            case "AccountNotFound":
+                JOptionPane.showMessageDialog(null, "Thêm ảnh thất bại!\n Không tìm thấy tài khoản!","Lỗi",0);
+                check = false;
+                listImages.clear();
+                countImages = 0;
+                saveimageProgress.setVisible(false);
+                break;
+            default:
+                JOptionPane.showMessageDialog(null, "Lỗi chưa xác định!","Lỗi",0);
+                check = false;
+                listImages.clear();
+                countImages = 0;
+                saveimageProgress.setVisible(false);
+                break;
         }
-        catch(HeadlessException ex){
-            return false;
+    }
+    
+    public void saveFaceChoose(List<byte[]> imageList, Account account){
+        try {            
+            sendSaveImageRequest(imageList,account.getID_User());
+        }
+        catch(Exception ex){
+            System.out.println("Lỗi"+ex.toString());
         }
     }
     private String sendGetRequestToServer(OperationJson json){

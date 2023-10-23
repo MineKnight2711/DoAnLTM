@@ -28,6 +28,7 @@ import models.OperationJson;
 import routes.FormRoute;
 import utils.AES;
 import utils.BaseURL;
+import utils.RequestServer;
 
 /**
  *
@@ -433,19 +434,18 @@ public class frmInfo extends javax.swing.JFrame {
                 }
                 newPass = BCrypt.withDefaults().hashToString(12, newPass.toCharArray());
                 //Lấy public key của server
-                OperationJson requestPublicKey=new OperationJson();
-                requestPublicKey.setOperation("GET_PUBLIC_KEY");
-                String publicKeyReceived=sendRequestToServer(requestPublicKey);
+                String publicKeyReceived=RequestServer.requestPublicKey();
                 //Mã hoá mật khẩu với public key của server
                 String passwordValidate=oldPass+"-"+newPass;
                 String encryptPassword=aes.encrypt(passwordValidate, aes.getPublicKeyFromString(publicKeyReceived));
+                String encryptAccountID=aes.encrypt(account.getID_User(), aes.getPublicKeyFromString(publicKeyReceived));
                 //Tạo đối tượng json để chứa dữ liệu gửi đi
                 OperationJson changePassRequestJson=new OperationJson();
-                changePassRequestJson.setOperation("change-password/"+account.getID_User());
+                changePassRequestJson.setOperation("change-password@"+encryptAccountID);
                 changePassRequestJson.setPublicKey(aes.encodePublicKey(aes.getPublicKey()));
                 changePassRequestJson.setData(encryptPassword);
                 //Gửi request lên server và nhận kết quả trả về
-                String response = sendRequestToServer(changePassRequestJson);
+                String response = RequestServer.sendRequestToServer(changePassRequestJson);
                 System.out.println("Ket qua tra ve:::"+response);
                 OperationJson receivedResponse = gson.fromJson(response, OperationJson.class);
                 String result=receivedResponse.getOperation();
@@ -504,9 +504,8 @@ public class frmInfo extends javax.swing.JFrame {
                 return;
             AES aes=new AES();
             //Lấy public key của server
-            OperationJson requestPublicKey=new OperationJson();
-            requestPublicKey.setOperation("GET_PUBLIC_KEY");
-            String publicKeyReceived=sendRequestToServer(requestPublicKey);
+            
+            String publicKeyReceived=RequestServer.requestPublicKey();
             //cập nhật các trường dữ liệu của account nếu có
             account.setFrist_Name(txtFirstName.getText());
             account.setLast_Name(txtLastName.getText());
@@ -524,7 +523,7 @@ public class frmInfo extends javax.swing.JFrame {
             updateAccountRequestJson.setPublicKey(aes.encodePublicKey(aes.getPublicKey()));
             updateAccountRequestJson.setData(encryptAccount);
             //Gửi request lên server và nhận kết quả trả về
-            String response = sendRequestToServer(updateAccountRequestJson);
+            String response = RequestServer.sendRequestToServer(updateAccountRequestJson);
             OperationJson responseFromServer=gson.fromJson(response, OperationJson.class);
             String responeResult=responseFromServer.getOperation();
             switch (responeResult) {
@@ -556,22 +555,7 @@ public class frmInfo extends javax.swing.JFrame {
         // TODO add your handling code here:
         loadInfo(account);
     }//GEN-LAST:event_btnResetInfoActionPerformed
-    private String sendRequestToServer(OperationJson json){
-        try (Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT)){
-            
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            
-            String sendJson =new Gson().toJson(json);
-            out.println(sendJson);
-            String result=in.readLine();
-            socket.close();
-            return result;
-        } catch (IOException ex) {
-            System.out.println("Lỗi"+ex.toString());
-            return "Fail";
-        }
-    }
+   
     private void btnAddFaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddFaceActionPerformed
         // TODO add your handling code here:
         frmCameraAcess open = new frmCameraAcess(account,"capNhat");

@@ -22,6 +22,7 @@ import models.OperationJson;
 import routes.FormRoute;
 import utils.BaseURL;
 import utils.AES;
+import utils.RequestServer;
 
 /**
  *
@@ -226,13 +227,12 @@ public class frmLogin extends javax.swing.JFrame {
             String account = txtAccount.getText();
             //char[] password = passfMatKhau.getPassword();
             String password = new String(passfPassword.getPassword());
-            OperationJson requestPublicKey=new OperationJson();
-            requestPublicKey.setOperation("GET_PUBLIC_KEY");
-            String publicKeyReceived=sendRequestToServer(requestPublicKey);
+            String publicKeyReceived=RequestServer.requestPublicKey();
             
             String encryptPassword=aes.encrypt(password, aes.getPublicKeyFromString(publicKeyReceived));
+            String encryptAccount=aes.encrypt(account, aes.getPublicKeyFromString(publicKeyReceived));
             OperationJson loginRequestJson=new OperationJson();
-            loginRequestJson.setOperation("login/"+account);
+            loginRequestJson.setOperation("login@"+encryptAccount);
             loginRequestJson.setPublicKey(aes.encodePublicKey(aes.getPublicKey()));
             loginRequestJson.setData(encryptPassword);
             

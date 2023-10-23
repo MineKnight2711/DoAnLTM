@@ -4,18 +4,24 @@
  */
 package forms;
 
+import com.google.gson.Gson;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 
 import java.net.Socket;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import models.OperationJson;
 import routes.FormRoute;
 import utils.BaseURL;
 import utils.KeyPressCheck;
+import utils.RequestServer;
 
 /**
  *
@@ -97,9 +103,9 @@ public class frmChooseServer extends javax.swing.JFrame {
                         .addComponent(txtIP_Adress, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(37, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnKetNoi)
-                .addGap(122, 122, 122))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnKetNoi, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(92, 92, 92))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -112,9 +118,9 @@ public class frmChooseServer extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txtPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnKetNoi)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnKetNoi, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();
@@ -155,31 +161,37 @@ public class frmChooseServer extends javax.swing.JFrame {
     
     private void btnKetNoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKetNoiActionPerformed
         // TODO add your handling code here:
-        String ipAddress = txtIP_Adress.getText(); // IP address
+        String serverAddress = txtIP_Adress.getText(); // IP address
         int port = Integer.parseInt(txtPort.getText()); // Port number
-
-        try (Socket socket = new Socket(ipAddress,  port);){
-//            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-//            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-//            out.println("Connect");
-//            if(in.readLine().equals("Success")){
-//                JOptionPane.showMessageDialog(this, "Kết nối thành công");
-//            }
-//            else{
-//                JOptionPane.showMessageDialog(this, "Kết nối thất bại","Lỗi",0);
-//            }
-            if(socket.isConnected()){
-                JOptionPane.showMessageDialog(this, "Kết nối thành công");
-            }
-            socket.close();
+        OperationJson connectionJson=new OperationJson();
+        connectionJson.setOperation("EstablishConnection");
+        String sendConnectionResult=sendRequestToServer(serverAddress,port,connectionJson);
+        if(sendConnectionResult.equals("OK")){
+            JOptionPane.showMessageDialog(this, "Kết nối thành công");
             BaseURL.PORT = port;
-            BaseURL.SERVER_ADDRESS = ipAddress;
+            BaseURL.SERVER_ADDRESS = serverAddress;
             FormRoute.openFormLogin(this);  
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "Kết nối thất bại","Lỗi",0);
         }
+        else{
+             JOptionPane.showMessageDialog(this, "Kết nối thất bại!","Lỗi",0);
+        }
+        
     }//GEN-LAST:event_btnKetNoiActionPerformed
-
+    public String sendRequestToServer(String serverAddress,int port,OperationJson operationJson){
+        try (Socket socket = new Socket(serverAddress, port)){
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            
+            String sendJson =new Gson().toJson(operationJson);
+            out.println(sendJson);
+            String result=in.readLine();
+            socket.close();
+            return result;
+        } catch (IOException ex) {
+            System.out.println("Lỗi"+ex.toString());
+            return "Fail";
+        }
+    }
     private void keyPressKetNoi(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressKetNoi
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {           

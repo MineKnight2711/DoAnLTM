@@ -27,6 +27,7 @@ import routes.FormRoute;
 import utils.AES;
 import utils.BaseURL;
 import utils.EncodeDecode;
+import utils.RequestServer;
 
 /**
  *
@@ -342,9 +343,8 @@ public class frmRegister extends javax.swing.JFrame {
             acc.setAccount(txtAccount.getText());
             acc.setPassword(password);   
             AES aes=new AES();
-            OperationJson requestPublicKey=new OperationJson();
-            requestPublicKey.setOperation("GET_PUBLIC_KEY");
-            String publicKeyReceived=sendRequestToServer(requestPublicKey);
+            //yêu cầu khoá public từ server
+            String publicKeyReceived=RequestServer.requestPublicKey();
             //Mã hoá mã user với public key của server
             String encryptAccount=aes.encrypt(gson.toJson(acc), aes.getPublicKeyFromString(publicKeyReceived));
             //Gửi account lên server dưới dạng json
@@ -352,7 +352,8 @@ public class frmRegister extends javax.swing.JFrame {
             createAccountJson.setOperation("create");
             createAccountJson.setPublicKey(aes.encodePublicKey(aes.getPublicKey()));
             createAccountJson.setData(encryptAccount);
-            String respone=sendRequestToServer(createAccountJson);
+            
+            String respone=RequestServer.sendRequestToServer(createAccountJson);
             System.out.println("respone:::"+respone);
             OperationJson responseAccountCreated = gson.fromJson(respone, OperationJson.class);
             String result=responseAccountCreated.getOperation();
@@ -384,22 +385,7 @@ public class frmRegister extends javax.swing.JFrame {
         }     
         
     }//GEN-LAST:event_btnCreateAccountActionPerformed
-    private String sendRequestToServer(OperationJson json){
-        try (Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT)){
-            
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            
-            String sendJson =new Gson().toJson(json);
-            out.println(sendJson);
-            String result=in.readLine();
-            socket.close();
-            return result;
-        } catch (IOException ex) {
-            System.out.println("Lỗi"+ex.toString());
-            return "Fail";
-        }
-    }
+
     private void cbShowPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbShowPasswordActionPerformed
         // TODO add your handling code here:
         if(cbShowPassword.isSelected()){
