@@ -32,8 +32,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import models.OperationJson;
+import utils.AES;
 import utils.BaseURL;
 import utils.EncodeDecode;
+import utils.RequestServer;
 
 /**
  *
@@ -133,47 +135,96 @@ public class frmLoadImageData extends javax.swing.JFrame {
         open.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnTroVeActionPerformed
-    
+    private void loadTable(List<UserImages> listUserImages){
+        if(!listUserImages.isEmpty()){
+            DefaultTableModel model = (DefaultTableModel) tbImage.getModel();
+            model.setRowCount(0);
+            for (UserImages image : listUserImages) {
+                String userID = image.getID_User();
+                String imageID = image.getID_Image();
+                byte[] imageData = image.getImages();
+                ImageIcon imageIcon = new ImageIcon(imageData);
+                Image scaledImage = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+                ImageIcon scaledImageIcon = new ImageIcon(scaledImage);
+                model.addRow(new Object[]{userID, imageID, scaledImageIcon});
+            }
+            // Set the custom cell renderer for the image column
+            TableColumn imageColumn = tbImage.getColumnModel().getColumn(2);
+            imageColumn.setCellRenderer(new ImageRenderer());
+            tbImage.setRowHeight(100);
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Người dùng chưa có ảnh!","Lỗi",0);
+        }
+    }
     private void loadImage() {
         try {
-            Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT);
+            AES aes=new AES();
+            String publicKeyReceived=RequestServer.requestPublicKey();
             
-            // Khởi tạo InputStream và output Stream để giao tiếp với server
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            OperationJson sendJson=new OperationJson();
-            sendJson.setOperation("load-image/"+acc.getID_User());
-            System.out.println("AccountID:::::"+acc.getID_User());
-            out.println(gson.toJson(sendJson));
-            String fromServer=in.readLine();
-            OperationJson result=gson.fromJson(fromServer, OperationJson.class);
-            if(result.getOperation().equals("Success")){
-                String listImagesJson=EncodeDecode.decodeBase64FromJson(result.getData().toString());
-                userImages = gson.fromJson(listImagesJson, new TypeToken<List<UserImages>>() {}.getType());
-//                        access.getUserImage(acc.getID_User());
-                DefaultTableModel model = (DefaultTableModel) tbImage.getModel();
-                model.setRowCount(0);
-                for (UserImages image : userImages) {
-                    String userID = image.getID_User();
-                    String imageID = image.getID_Image();
-                    byte[] imageData = image.getImages();
-                    ImageIcon imageIcon = new ImageIcon(imageData);
-                    Image scaledImage = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-                    ImageIcon scaledImageIcon = new ImageIcon(scaledImage);
-                    model.addRow(new Object[]{userID, imageID, scaledImageIcon});
-                }
-                // Set the custom cell renderer for the image column
-                TableColumn imageColumn = tbImage.getColumnModel().getColumn(2);
-                imageColumn.setCellRenderer(new ImageRenderer());
-                tbImage.setRowHeight(100);
+            String encryptAccountID=aes.encrypt(acc.getID_User(), aes.getPublicKeyFromString(publicKeyReceived));
+            
+            OperationJson requestLoadImageJson=new OperationJson();
+            requestLoadImageJson.setOperation("load-image");
+            requestLoadImageJson.setPublicKey(aes.encodePublicKey(aes.getPublicKey()));
+            requestLoadImageJson.setData(encryptAccountID);
+            
+            String responseFromServer=RequestServer.sendRequestToServer(requestLoadImageJson);
+            OperationJson responseJson=gson.fromJson(responseFromServer, OperationJson.class);
+            if(responseJson.getOperation().equals("Success"))
+            {
+                String listImagesDecypted=aes.decrypt(responseJson.getData().toString(), aes.getPrivateKey());
+                userImages = gson.fromJson(listImagesDecypted, new TypeToken<List<UserImages>>() {}.getType());
+                loadTable(userImages);
+                JOptionPane.showMessageDialog(this, "Đã load "+userImages.size()+" khuôn mặt!");
             }
-            else{
-                JOptionPane.showMessageDialog(this, "Có lỗi xảy ra!","Lỗi",0);
+            else
+            {
+                JOptionPane.showMessageDialog(this, "Không thể load ảnh!","Lỗi",0);
             }
-            socket.close();
-        } catch (IOException ex) {
-            Logger.getLogger(frmLoadImageData.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Có lỗi xảy ra!"+ex.toString(),"Lỗi",0);
+        }    
+//        try {
+//            Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT);
+//            
+//            // Khởi tạo InputStream và output Stream để giao tiếp với server
+//            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+//            OperationJson sendJson=new OperationJson();
+//            sendJson.setOperation("load-image/"+acc.getID_User());
+//            System.out.println("AccountID:::::"+acc.getID_User());
+//            out.println(gson.toJson(sendJson));
+//            String fromServer=in.readLine();
+//            OperationJson result=gson.fromJson(fromServer, OperationJson.class);
+//            if(result.getOperation().equals("Success")){
+//                String listImagesJson=EncodeDecode.decodeBase64FromJson(result.getData().toString());
+//                userImages = gson.fromJson(listImagesJson, new TypeToken<List<UserImages>>() {}.getType());
+////                        access.getUserImage(acc.getID_User());
+//                DefaultTableModel model = (DefaultTableModel) tbImage.getModel();
+//                model.setRowCount(0);
+//                for (UserImages image : userImages) {
+//                    String userID = image.getID_User();
+//                    String imageID = image.getID_Image();
+//                    byte[] imageData = image.getImages();
+//                    ImageIcon imageIcon = new ImageIcon(imageData);
+//                    Image scaledImage = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+//                    ImageIcon scaledImageIcon = new ImageIcon(scaledImage);
+//                    model.addRow(new Object[]{userID, imageID, scaledImageIcon});
+//                }
+//                // Set the custom cell renderer for the image column
+//                TableColumn imageColumn = tbImage.getColumnModel().getColumn(2);
+//                imageColumn.setCellRenderer(new ImageRenderer());
+//                tbImage.setRowHeight(100);
+//            }
+//            else{
+//                JOptionPane.showMessageDialog(this, "Có lỗi xảy ra!","Lỗi",0);
+//            }
+//            socket.close();
+//        } catch (IOException ex) {
+//            Logger.getLogger(frmLoadImageData.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        
     }
     
     private void renderButtonDelete(){       
@@ -202,23 +253,30 @@ public class frmLoadImageData extends javax.swing.JFrame {
                     if (result == JOptionPane.YES_OPTION)
                     {
                         try {
-                            Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT);
-                            // Khởi tạo InputStream và output Stream để giao tiếp với server
-                            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                            OperationJson sendJson=new OperationJson();
-                            sendJson.setOperation("delete-image/"+idImage.toString());
-                            out.println(gson.toJson(sendJson));
-                            String resultFromServer=EncodeDecode.decodeBase64FromJson(in.readLine());
-                            if(resultFromServer.equals("Success")){
+                            AES aes=new AES();
+                            //Khởi tạo model OperationJson để tạo request Public Key lên server
+                            OperationJson requestPublicKeyJson=new OperationJson();
+                            requestPublicKeyJson.setOperation("GET_PUBLIC_KEY");
+                            String receivedPublicKey=sendRequestToServer(requestPublicKeyJson);
+                            //Mã hoá idImage với Public key của ser nhận được
+                            String encryptedIdImage=aes.encrypt(idImage.toString(), aes.getPublicKeyFromString(receivedPublicKey));
+                            //Khởi tạo model OperationJson để tạo request lên server
+                            OperationJson requestDeleteImageJson=new OperationJson();
+                            requestDeleteImageJson.setOperation("delete-image");
+                            requestDeleteImageJson.setPublicKey(aes.encodePublicKey(aes.getPublicKey()));
+                            requestDeleteImageJson.setData(encryptedIdImage);
+                            //Gửi request và nhận kết quả từ server
+                            String resultFromServer=sendRequestToServer(requestDeleteImageJson);
+                            OperationJson resultDeleteJson=gson.fromJson(resultFromServer, OperationJson.class);
+                            if(resultDeleteJson.getOperation().equals("Success")){
                                 JOptionPane.showMessageDialog(frmLoadImageData.this, "Đã xoá ảnh!");
                                 loadImage();
                             }
                             else{
                                  JOptionPane.showMessageDialog(frmLoadImageData.this, "Có lỗi xảy ra!"+resultFromServer,"Lỗi",0);
                             }
-                            socket.close();
-                        } catch (IOException ex) {
+
+                        } catch (Exception ex) {
                             JOptionPane.showMessageDialog(frmLoadImageData.this, "Có lỗi xảy ra!"+ex.toString(),"Lỗi",0);
                         }
                     }
@@ -227,7 +285,22 @@ public class frmLoadImageData extends javax.swing.JFrame {
             }
         });
     }
-
+    private String sendRequestToServer(OperationJson json){
+        try (Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT)){
+            
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            
+            String sendJson =new Gson().toJson(json);
+            out.println(sendJson);
+            String result=in.readLine();
+            socket.close();
+            return result;
+        } catch (IOException ex) {
+            System.out.println("Lỗi"+ex.toString());
+            return "Fail";
+        }
+    }
     // Custom cell renderer to display the image
     class ImageRenderer extends JLabel implements TableCellRenderer {
         public ImageRenderer() {

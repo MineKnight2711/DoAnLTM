@@ -18,8 +18,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -30,7 +28,6 @@ import models.OperationJson;
 import routes.FormRoute;
 import utils.AES;
 import utils.BaseURL;
-import utils.EncodeDecode;
 
 /**
  *
@@ -549,41 +546,6 @@ public class frmInfo extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Lỗi chưa xác định","Lỗi",0);
                     break;
             }
-//            try{
-//                Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT);
-//                
-//                // Khởi tạo InputStream và output Stream để giao tiếp với server
-//                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-//                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-//                account.setFrist_Name(txtFirstName.getText());
-//                account.setLast_Name(txtLastName.getText());
-//                account.setBrithday(dcBrithday.getDate());
-//                account.setAddress(txtAddress.getText());
-//                account.setEmail(txtEmail.getText());
-//                account.setPhone(txtPhone.getText());
-//                account.setGender(chonGioiTinh());
-//                account.setAccount(txtAccount.getText());
-//                OperationJson operationJson=new OperationJson();
-//                operationJson.setOperation("update");
-//                String accountToJson=gson.toJson(account);
-//                operationJson.setData(EncodeDecode.encodeToBase64(accountToJson));
-//                String sendJson=gson.toJson(operationJson);
-//                out.println(sendJson);
-//                String respone=EncodeDecode.decodeBase64FromJson(in.readLine());
-//                if(respone.equals("Success"))
-//                {
-//                    JOptionPane.showMessageDialog(null, "Cập nhật thông tin thành công");
-//                }
-//                else
-//                {
-//                    JOptionPane.showMessageDialog(null, "Có lỗi xảy ra!\n"+"Lỗi :"+respone,"Lỗi",0);
-//                }
-//                loadInfo(account);
-//                socket.close();
-//            }
-//            catch(IOException ex){
-//                JOptionPane.showMessageDialog(null, ex);
-//            }
         }
         catch(Exception ex){
              JOptionPane.showMessageDialog(this, "Lỗi chưa xác định:"+ex,"Lỗi",0);     
@@ -594,7 +556,7 @@ public class frmInfo extends javax.swing.JFrame {
         // TODO add your handling code here:
         loadInfo(account);
     }//GEN-LAST:event_btnResetInfoActionPerformed
-    private static String sendRequestToServer(OperationJson json){
+    private String sendRequestToServer(OperationJson json){
         try (Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT)){
             
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));

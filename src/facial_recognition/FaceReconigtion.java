@@ -6,6 +6,7 @@ package facial_recognition;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -14,13 +15,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -210,33 +207,33 @@ public class FaceReconigtion {
     
     public byte[] detctFace(byte[] imageCapture) {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        // Convert the byte[] imageData to a Mat object
-        Mat frame = Imgcodecs.imdecode(new MatOfByte(imageCapture), Imgcodecs.IMREAD_COLOR);
+        // chuyển hoá hỉnh ảnh dạng byte[] về thành đối tượng mat của opencv
+        Mat matFrame = Imgcodecs.imdecode(new MatOfByte(imageCapture), Imgcodecs.IMREAD_COLOR);
 
-        // Convert the frame to grayscale
+        // Convert khung hình thành màu xám
         Mat grayFrame = new Mat();
-        Imgproc.cvtColor(frame, grayFrame, Imgproc.COLOR_BGR2GRAY);
+        Imgproc.cvtColor(matFrame, grayFrame, Imgproc.COLOR_BGR2GRAY);
 
-        // Load the face cascade classifier
+        // Nạp các lớp Cascade khuôn mặt
         CascadeClassifier faceCascade = new CascadeClassifier("src\\PreTrainData\\haarcascade_frontalface_default.xml");
-        // Detect faces in the grayscale frame
+        // Phát hiện khuôn mặt trong khung hình
         MatOfRect faces = new MatOfRect();
         faceCascade.detectMultiScale(grayFrame, faces);     
         
         MatOfByte faceImageData = new MatOfByte();
         Imgcodecs.imencode(".jpg", grayFrame, faceImageData);
         imageCapture = faceImageData.toArray();
-        // Check if a face is detected
+        // Nếu có khuôn mặt
         if (faces.toArray().length > 0) {
 
-            // Encode the face image to JPEG
-            Rect faceRect = faces.toArray()[0]; // Assuming only one face is detected
+            
+            Rect faceRect = faces.toArray()[0];
 
-            // Crop the face region from the gray frame
-            Mat faceImage = new Mat(grayFrame, faceRect); // Crop from the grayscale frame   
-            Size resizedSize = new Size(256, 256); // Adjust the size as needed
+            // Cắt ảnh từ khung hình
+            Mat faceImage = new Mat(grayFrame, faceRect); 
+            Size resizedSize = new Size(256, 256); //Tuỳ chỉnh size ảnh
             Imgproc.resize(faceImage, faceImage, resizedSize);
-            // Encode the face image to JPEG
+            // Mã hoá ảnh thành định dạng JPEG
             Imgcodecs.imencode(".jpg", faceImage, faceImageData);
             imageCapture = faceImageData.toArray();            
             return imageCapture;
@@ -258,8 +255,7 @@ public class FaceReconigtion {
         }
     }
     private String sendRequestToServer(String operation,String data){
-        try {
-            Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT);
+        try (Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT)){
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             
@@ -334,7 +330,7 @@ public class FaceReconigtion {
                     return false;
                 }
         }
-        catch(Exception ex){
+        catch(HeadlessException ex){
             return false;
         }
     }
