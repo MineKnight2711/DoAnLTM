@@ -11,7 +11,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.awt.Color;
 import models.Account;
-import java.awt.HeadlessException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

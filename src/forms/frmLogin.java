@@ -21,7 +21,6 @@ import javax.swing.event.DocumentListener;
 import models.OperationJson;
 import routes.FormRoute;
 import utils.BaseURL;
-import utils.EncodeDecode;
 import utils.AES;
 
 /**
@@ -222,7 +221,7 @@ public class frmLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLoginActionPerformed
     private void login(){
         AES aes=new AES();
-        try (Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT)){
+        try {
             // TODO add your handling code here:
             String account = txtAccount.getText();
             //char[] password = passfMatKhau.getPassword();
