@@ -168,7 +168,7 @@ public class FaceReconigtion {
         frame = new Mat();
         matOfByte = new MatOfByte();
         if (!videoCapture.isOpened() && isRecording){
-            JOptionPane.showMessageDialog(null,"Can not access camera" );
+            JOptionPane.showMessageDialog(null,"Không thể truy cập camera!","Lỗi",0);
             isRecording = false;
             return false;
         } 
