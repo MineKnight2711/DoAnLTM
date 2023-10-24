@@ -255,26 +255,7 @@ public class FaceReconigtion {
             Imgproc.rectangle(frame, rect.tl(), rect.br(), new Scalar(0, 255, 0), 2);
         }
     }
-    private String sendRequestToServer(String operation,String data){
-        try (Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT)){
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            
-            OperationJson operationJson = new OperationJson();
-            operationJson.setOperation(operation);
-            operationJson.setData(data);
-            String sendJson = gson.toJson(operationJson);
-            out.println(sendJson);
-            String result=EncodeDecode.decodeBase64FromJson(in.readLine());
-            System.out.println("Kết quả trả về :"+result);
-            socket.close();
-            return result;
-        } catch (IOException ex) {
-            System.out.println("Lỗi"+ex.toString());
-            check = false;
-            return "Fail";
-        }
-    }
+
     public void saveFace(byte[] image, boolean save, Account account) {       
         byte[] faceImage = detctFace(image);
         if(faceImage != null)
@@ -348,22 +329,7 @@ public class FaceReconigtion {
             System.out.println("Lỗi"+ex.toString());
         }
     }
-    private String sendGetRequestToServer(OperationJson json){
-        try (Socket socket = new Socket(BaseURL.SERVER_ADDRESS, BaseURL.PORT)){
-            
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            
-            String sendJson =new Gson().toJson(json);
-            out.println(sendJson);
-            String result=in.readLine();
-            socket.close();
-            return result;
-        } catch (IOException ex) {
-            System.out.println("Lỗi"+ex.toString());
-            return "Fail";
-        }
-    }
+    
     public void facialRecognition(byte[] imageCapture) {
         try {
             System.loadLibrary(Core.NATIVE_LIBRARY_NAME);

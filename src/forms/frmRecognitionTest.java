@@ -41,13 +41,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
      * Creates new form frmRecognitionTest
      */
     public frmRecognitionTest() {
-        
-       
-        
-        // Calculate the new image dimensions to fit the frame
          initComponents(); 
-         
-//        extendForm(isExtended);
         txtTiLe.setEnabled(false);
         face = new FaceReconigtion();
         face.getAccountInfoLabel(frmRecognitionTest.this,lbName, lbBirthDay, lbAddress, lbPhone, lbGender, lbEmail,pnAccountInfo);
@@ -59,29 +53,7 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         runableThread();
         getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.cyan)); 
     }
-//    private void storeOriginalWidth() {
-//        originalWidth = getWidth();
-//        int newWidth = originalWidth - pnAccountInfo.getWidth();
-//        setSize(newWidth, getHeight());
-//        pnAccountInfo.setVisible(false);
-//        setLocationRelativeTo(null);
-//    }
-//    private void extendForm(boolean extend) {
-////        int currentWidth = getWidth();
-//        int panelWidth = pnAccountInfo.getWidth();
-//
-//        if (extend) {
-//            int newWidth = originalWidth + panelWidth;
-//            setSize(newWidth, getHeight());
-//            pnAccountInfo.setVisible(true);
-//        } else {
-//            int newWidth = originalWidth - panelWidth;
-//            setSize(newWidth, getHeight());
-//            pnAccountInfo.setVisible(false);
-//        }
-//
-//        setLocationRelativeTo(null);
-//    }
+
     private void runableThread(){
         Runnable frameGrabber = () -> {
                 while (true) {
@@ -323,17 +295,17 @@ public class frmRecognitionTest extends javax.swing.JFrame {
 
     private void btnChonAnhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChonAnhActionPerformed
         // TODO add your handling code here:
-        JFileChooser fcChooseImage = new JFileChooser();
-        fcChooseImage.setVisible(true);
-        fcChooseImage.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        JFileChooser fcImageChoose = new JFileChooser();
+        fcImageChoose.setVisible(true);
+        fcImageChoose.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
         // Set file filter to allow only image files
         FileNameExtensionFilter imageFilter = new FileNameExtensionFilter("Image files", "jpg", "jpeg", "png", "gif");
-        fcChooseImage.setFileFilter(imageFilter);
+        fcImageChoose.setFileFilter(imageFilter);
 
-        if (fcChooseImage.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+        if (fcImageChoose.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
-                File selectedFile = fcChooseImage.getSelectedFile();
+                File selectedFile = fcImageChoose.getSelectedFile();
                 Path imagePath = selectedFile.toPath();
                 byte[] imageBytes = Files.readAllBytes(imagePath);  
                 byte[] faceImage = face.detctFace(imageBytes);
