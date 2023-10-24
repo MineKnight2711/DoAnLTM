@@ -360,7 +360,7 @@ public class frmInfo extends javax.swing.JFrame {
     }
     
     private void UpdateInfoButtonStatus(){
-        if(txtLastName.getText().isEmpty() || txtFirstName.getText().isEmpty() || txtPhone.getText().isEmpty() || 
+        if(txtLastName.getText().isEmpty() ||  txtFirstName.getText().isEmpty() || txtPhone.getText().isEmpty() || 
             txtPhone.getText().isEmpty() || txtAddress.getText().isEmpty() || txtEmail.getText().isEmpty())
              btnUpdateInfo.setEnabled(false);
         else 
