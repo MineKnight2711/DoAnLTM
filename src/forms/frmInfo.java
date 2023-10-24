@@ -167,7 +167,7 @@ public class frmInfo extends javax.swing.JFrame {
                 btnAddFaceActionPerformed(evt);
             }
         });
-        getContentPane().add(btnAddFace, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, 180, 40));
+        getContentPane().add(btnAddFace, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, 190, 40));
 
         btnResetInfo.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         btnResetInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/reset.png"))); // NOI18N
@@ -360,7 +360,7 @@ public class frmInfo extends javax.swing.JFrame {
     }
     
     private void UpdateInfoButtonStatus(){
-        if(txtLastName.getText().isEmpty() || txtFirstName.getText().isEmpty() || txtPhone.getText().isEmpty() || 
+        if(txtLastName.getText().isEmpty() ||  txtFirstName.getText().isEmpty() || txtPhone.getText().isEmpty() || 
             txtPhone.getText().isEmpty() || txtAddress.getText().isEmpty() || txtEmail.getText().isEmpty())
              btnUpdateInfo.setEnabled(false);
         else 
