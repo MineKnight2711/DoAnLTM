@@ -11,11 +11,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.awt.Color;
 import models.Account;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.BorderFactory;
@@ -25,8 +20,6 @@ import javax.swing.event.DocumentListener;
 import models.OperationJson;
 import routes.FormRoute;
 import utils.AES;
-import utils.BaseURL;
-import utils.EncodeDecode;
 import utils.RequestServer;
 
 /**

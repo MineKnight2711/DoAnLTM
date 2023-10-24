@@ -20,8 +20,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -34,7 +32,6 @@ import javax.swing.table.TableColumn;
 import models.OperationJson;
 import utils.AES;
 import utils.BaseURL;
-import utils.EncodeDecode;
 import utils.RequestServer;
 
 /**

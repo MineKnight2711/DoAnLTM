@@ -41,8 +41,6 @@ import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.videoio.VideoCapture;
 import spinner_progress.SpinnerProgress;
 import utils.AES;
-import utils.BaseURL;
-import utils.EncodeDecode;
 import utils.RequestServer;
 
 /**
