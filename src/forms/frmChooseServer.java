@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -38,6 +39,7 @@ public class frmChooseServer extends javax.swing.JFrame {
         getRootPane().setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.cyan)); 
         TextChangeEvent();
         KeyPressCheck();
+        
     }
 
     /**
@@ -56,6 +58,8 @@ public class frmChooseServer extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Kết nối server");
+        setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Nhập port");

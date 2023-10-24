@@ -126,6 +126,8 @@ public class frmDisplayChooseImage extends javax.swing.JFrame {
         btnHuy = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Ảnh đã chọn");
+        setResizable(false);
 
         tbImage.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

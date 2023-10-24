@@ -5,6 +5,7 @@
 package facial_recognition;
 
 import forms.frmChooseServer;
+import routes.FormRoute;
 
 /**
  *
@@ -12,11 +13,10 @@ import forms.frmChooseServer;
  */
 public class main {
 
-    /**
-     * @param args the command line arguments
-     */
+    
     public static void main(String[] args) {
         frmChooseServer open = new frmChooseServer();
+        FormRoute.setImageIcon(open);
         open.setVisible(true);
     }
     

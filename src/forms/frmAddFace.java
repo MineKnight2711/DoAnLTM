@@ -21,7 +21,7 @@ import routes.FormRoute;
  *
  * @author dell
  */
-public class frmCameraAcess extends javax.swing.JFrame {
+public class frmAddFace extends javax.swing.JFrame {
     private static Account account;
     private Thread thread;
     private static String frm;
@@ -32,10 +32,10 @@ public class frmCameraAcess extends javax.swing.JFrame {
      * @param account
      * @param frm
      */
-    public frmCameraAcess(Account account, String frm) {
+    public frmAddFace(Account account, String frm) {
         initComponents();
-        frmCameraAcess.frm = frm;
-        frmCameraAcess.account = account; 
+        frmAddFace.frm = frm;
+        frmAddFace.account = account; 
         face = new FaceReconigtion();
         face.getDisplaySaveValue(lblAnhChup,lblSoAnh, account);
         face.getProgress(progressSaveImage);
@@ -80,6 +80,8 @@ public class frmCameraAcess extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Thêm khuôn mặt");
+        setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         getContentPane().add(lblCameraDisplay, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 36, 652, 388));
 
@@ -247,20 +249,21 @@ public class frmCameraAcess extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmCameraAcess.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmAddFace.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmCameraAcess.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmAddFace.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmCameraAcess.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmAddFace.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmCameraAcess.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmAddFace.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new frmCameraAcess(account, frm).setVisible(true);
+                new frmAddFace(account, frm).setVisible(true);
             }
         });
     }

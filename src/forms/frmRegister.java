@@ -89,6 +89,8 @@ public class frmRegister extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Đăng ký");
+        setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblTaoTaiKhoan.setFont(new java.awt.Font("Bahnschrift", 1, 24)); // NOI18N
@@ -355,9 +357,7 @@ public class frmRegister extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Đăng ký thành công!");
                     String decryptAccount=aes.decrypt(responseAccountCreated.getData().toString(), aes.getPrivateKey());
                     Account accountRespone = gson.fromJson(decryptAccount, Account.class);
-                    frmCameraAcess open = new frmCameraAcess(accountRespone, "dangKy");
-                    open.setVisible(true);
-                    this.dispose();
+                    FormRoute.openFormAddFace(this, accountRespone,"dangKy");
                     break;
                 case "AccountNotFound":
                     JOptionPane.showMessageDialog(this, "Có lỗi xảy ra!","Lỗi",0);

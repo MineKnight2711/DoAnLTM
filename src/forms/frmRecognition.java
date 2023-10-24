@@ -27,7 +27,7 @@ import routes.FormRoute;
  *
  * @author dell
  */
-public class frmRecognitionTest extends javax.swing.JFrame {
+public class frmRecognition extends javax.swing.JFrame {
 
     private Thread thread;
     private byte[] imageChoose;
@@ -40,11 +40,11 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         /**
      * Creates new form frmRecognitionTest
      */
-    public frmRecognitionTest() {
+    public frmRecognition() {
          initComponents(); 
         txtTiLe.setEnabled(false);
         face = new FaceReconigtion();
-        face.getAccountInfoLabel(frmRecognitionTest.this,lbName, lbBirthDay, lbAddress, lbPhone, lbGender, lbEmail,pnAccountInfo);
+        face.getAccountInfoLabel(frmRecognition.this,lbName, lbBirthDay, lbAddress, lbPhone, lbGender, lbEmail,pnAccountInfo);
         face.storeOriginalWidth();
         face.getDisplayDetectValue(lblFaceCapture, lblDataFace, txtTiLe);
         pnAccountInfo.setVisible(false);
@@ -104,6 +104,8 @@ public class frmRecognitionTest extends javax.swing.JFrame {
         pnBackGroundImage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Nhận diện khuôn mặt");
+        setResizable(false);
 
         pnAccountInfo.setBackground(new java.awt.Color(204, 204, 204));
         pnAccountInfo.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -355,20 +357,21 @@ public class frmRecognitionTest extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmRecognitionTest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmRecognition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmRecognitionTest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmRecognition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmRecognitionTest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmRecognition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmRecognitionTest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmRecognition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new frmRecognitionTest().setVisible(true);
+                new frmRecognition().setVisible(true);
             }
         });
     }

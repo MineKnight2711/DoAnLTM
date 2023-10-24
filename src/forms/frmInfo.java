@@ -11,11 +11,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.awt.Color;
 import models.Account;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 import javax.swing.BorderFactory;
@@ -27,7 +22,6 @@ import javax.swing.event.DocumentListener;
 import models.OperationJson;
 import routes.FormRoute;
 import utils.AES;
-import utils.BaseURL;
 import utils.RequestServer;
 
 /**
@@ -111,6 +105,8 @@ public class frmInfo extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Thông tin người dùng");
+        setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblThongTinCaNhan.setFont(new java.awt.Font("Bahnschrift", 0, 24)); // NOI18N
@@ -555,21 +551,16 @@ public class frmInfo extends javax.swing.JFrame {
     }//GEN-LAST:event_btnResetInfoActionPerformed
    
     private void btnAddFaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddFaceActionPerformed
-        // TODO add your handling code here:
-        frmCameraAcess open = new frmCameraAcess(account,"capNhat");
-        open.setVisible(true);
-        this.dispose();
+        FormRoute.openFormAddFace(this, account, "capNhat");
     }//GEN-LAST:event_btnAddFaceActionPerformed
 
     private void btnXemKhuonMatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXemKhuonMatActionPerformed
-        // TODO add your handling code here:f
         progressLoadImage.setVisible(true);
+        
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
-                frmLoadImageData open = new frmLoadImageData(account);
-                open.setVisible(true);
-                frmInfo.this.dispose();
+                FormRoute.openFormUserImages(frmInfo.this, account);
                 return null;
             }
         };
