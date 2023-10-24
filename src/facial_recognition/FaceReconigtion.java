@@ -6,7 +6,6 @@ package facial_recognition;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -15,8 +14,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -227,7 +224,6 @@ public class FaceReconigtion {
         
         MatOfByte faceImageData = new MatOfByte();
         Imgcodecs.imencode(".jpg", grayFrame, faceImageData);
-        imageCapture = faceImageData.toArray();
         // Nếu có khuôn mặt
         if (faces.toArray().length > 0) {
 
@@ -368,21 +364,32 @@ public class FaceReconigtion {
             return "Fail";
         }
     }
-    public String facialRecognition(byte[] imageCapture) {
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        byte[] faces = detctFace(imageCapture);
-        String respone=sendRequestToServer("regconition", gson.toJson(faces));
-        OperationJson resultJson=gson.fromJson(respone, OperationJson.class);
-        if(isExtended){
-            isExtended = !isExtended;
-            extendForm(isExtended);
-        }       
-        
-        if (resultJson.getOperation().equals("Detected")) { 
-            String[] imagesReceived= resultJson.getData().toString().split("@");
-            switch (imagesReceived.length) {
-                case 4 -> {
-                    try {
+    public void facialRecognition(byte[] imageCapture) {
+        try {
+            System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+            byte[] faces = detctFace(imageCapture);
+            AES aes=new AES();
+            String receivedPublicKey=RequestServer.requestPublicKey();
+            
+            String encryptImage=aes.encrypt(gson.toJson(faces), aes.getPublicKeyFromString(receivedPublicKey));
+            
+            OperationJson recognitionJson=new OperationJson();
+            recognitionJson.setOperation("recognition");
+            recognitionJson.setPublicKey(aes.encodePublicKey(aes.getPublicKey()));
+            recognitionJson.setData(encryptImage);
+            
+            String respone=RequestServer.sendRequestToServer(recognitionJson);
+            OperationJson resultJson=gson.fromJson(respone, OperationJson.class);
+            if(isExtended){
+                isExtended = !isExtended;
+                extendForm(isExtended);
+            }
+            
+            if (resultJson.getOperation().equals("Detected")) {
+                String dataDecrypt=aes.decrypt(resultJson.getData().toString(), aes.getPrivateKey());
+                String[] imagesReceived= dataDecrypt.split("@");
+                switch (imagesReceived.length) {
+                    case 4 -> {
                         byte[] image1=gson.fromJson(imagesReceived[0], byte[].class);
                         byte[] image2=gson.fromJson(imagesReceived[1], byte[].class);
                         double similarity = gson.fromJson(imagesReceived[2], double.class);
@@ -390,22 +397,18 @@ public class FaceReconigtion {
                         displayDetectedImage(image1,image2,similarity);
                         check = false;
                         imageChoose = null;
-                        
-                        AES aes=new AES();
-                        OperationJson requestPublicKey=new OperationJson();
-                        requestPublicKey.setOperation("GET_PUBLIC_KEY");
-                        String publicKeyReceived=sendGetRequestToServer(requestPublicKey);
+
                         //Mã hoá mã user với public key của server
-                        String encryptID=aes.encrypt(idUser, aes.getPublicKeyFromString(publicKeyReceived));
-                        
+                        String encryptID=aes.encrypt(idUser, aes.getPublicKeyFromString(receivedPublicKey));
+
                         //Tạo đối tượng json để chứa dữ liệu gửi đi
-                        OperationJson updateAccountRequestJson=new OperationJson();
-                        updateAccountRequestJson.setOperation("get-account");
-                        updateAccountRequestJson.setPublicKey(aes.encodePublicKey(aes.getPublicKey()));
-                        updateAccountRequestJson.setData(encryptID);
-                        
-                        String responeAccountEncrypt=sendGetRequestToServer(updateAccountRequestJson);
-                        
+                        OperationJson accountRequestJson=new OperationJson();
+                        accountRequestJson.setOperation("get-account");
+                        accountRequestJson.setPublicKey(aes.encodePublicKey(aes.getPublicKey()));
+                        accountRequestJson.setData(encryptID);
+
+                        String responeAccountEncrypt=RequestServer.sendRequestToServer(accountRequestJson);
+
                         OperationJson responeJson=gson.fromJson(responeAccountEncrypt, OperationJson.class);
                         if(responeJson.getOperation().equals("Success")){
                             System.out.println("Account nhận ::"+responeJson.getData().toString());
@@ -414,16 +417,10 @@ public class FaceReconigtion {
                             isExtended = !isExtended;
                             extendForm(isExtended);
                             JOptionPane.showMessageDialog(frmRegconition, "Tìm thấy khuôn mặt","Thông báo",1);
-                            return "Detected";
                         }
-                        JOptionPane.showMessageDialog(frmRegconition, "Không tìm thấy khuôn mặt","Thông báo",2);
-                        return "NotDetected";
-                    } catch (Exception ex) {
-                        System.err.println("Loi request toi server");
-                    } 
-                }
-
-                case 3 -> {
+                    }
+                    
+                    case 3 -> {
                         byte[] image1=gson.fromJson(imagesReceived[0], byte[].class);
                         byte[] image2=gson.fromJson(imagesReceived[1], byte[].class);
                         
@@ -431,38 +428,38 @@ public class FaceReconigtion {
                         displayDetectedImage(image1,image2,similarity);
                         check = false;
                         imageChoose = null;
-                        return "NotDetected";
+                    }
+                    default -> {
+                        //Xử lý không nhận diện được không mặt
+                        JOptionPane.showMessageDialog(null, "Vui lòng nhìn thẳng vào camera","Thông báo",2);
+                        imageChoose = null;
+                        check = false;
+                    }
                 }
-                default -> {
-                    //Xử lý không nhận diện được không mặt
+            } else if(resultJson.getOperation().equals("NotDetected")) {
+                String dataDecrypt=aes.decrypt(resultJson.getData().toString(), aes.getPrivateKey());
+                String[] imagesReceived= dataDecrypt.split("@");
+                if(imagesReceived.length == 3) {
+                    byte[] image1=gson.fromJson(imagesReceived[0], byte[].class);
+                    byte[] image2=gson.fromJson(imagesReceived[1], byte[].class);
+                    double similarity = gson.fromJson(imagesReceived[2], double.class);
+                    displayDetectedImage(image1,image2,similarity);
+                    check = false;
+                    imageChoose = null;
+                    JOptionPane.showMessageDialog(null, "Không tìm thấy khuôn mặt","Thông báo",2);
+                }
+               
+            }
+            else{
                     JOptionPane.showMessageDialog(null, "Vui lòng nhìn thẳng vào camera","Thông báo",2);
                     imageChoose = null;
                     check = false;
-                    return "NoFace";
-                }
             }
-        } else if(resultJson.getOperation().equals("NotDetected")) {
-            String[] imagesReceived= resultJson.getData().toString().split("@");
-            if(imagesReceived.length == 3) {
-                byte[] image1=gson.fromJson(imagesReceived[0], byte[].class);
-                byte[] image2=gson.fromJson(imagesReceived[1], byte[].class);
-                double similarity = gson.fromJson(imagesReceived[2], double.class);
-                displayDetectedImage(image1,image2,similarity);
-                check = false;
-                imageChoose = null;
-                JOptionPane.showMessageDialog(null, "Không tìm thấy khuôn mặt","Thông báo",2);
-                return resultJson.getOperation();
-            }
-            else if(resultJson.getOperation().equals("NoFace")){
-                JOptionPane.showMessageDialog(null, "Vui lòng nhìn thẳng vào camera","Thông báo",2);
-                imageChoose = null;
-                check = false;
-                return resultJson.getOperation();
-            }
-        }       
-        imageChoose = null;
-        check = false;
-        return resultJson.getOperation();
+            imageChoose = null;
+            check = false;
+        } catch (Exception ex) {
+            System.out.println("Loi"+ex.toString());
+        }
     }
     
     public void DispalaySave(byte[] image1, int countImages) {

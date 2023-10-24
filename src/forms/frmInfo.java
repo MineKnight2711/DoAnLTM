@@ -532,8 +532,6 @@ public class frmInfo extends javax.swing.JFrame {
                     String decryptAccount=aes.decrypt(responseFromServer.getData().toString(), aes.getPrivateKey());
                     Account updatedAccount=gson.fromJson(decryptAccount, Account.class);
                     loadInfo(updatedAccount);
-                    FormRoute.openFormLogin(this);
-                    account=null;
                     break;
                 case "UpdateFail":
                     JOptionPane.showMessageDialog(this, "Cập nhật thất bại","Lỗi",0);
